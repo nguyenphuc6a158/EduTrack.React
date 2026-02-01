@@ -2,10 +2,12 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-
+import {GradeLevelService } from './services/services_autogen';
 function App() {
   const [count, setCount] = useState(0)
-
+  let gradeLevelService = new GradeLevelService(import.meta.env.VITE_API_BASE_URL);
+  gradeLevelService.getAll();
+  console.log(gradeLevelService);
   return (
     <>
       <div>
