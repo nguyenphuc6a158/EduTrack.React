@@ -1,13 +1,10 @@
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, Row } from "antd";
+import { Card, Col, Row } from "antd";
 import Title from "antd/es/typography/Title";
 import React from "react";
 import { colResponsive } from "../../lib/appconst";
+import FormLogin from "./formLogin";
 
 export default class Login extends React.Component {
-	onFinish = () => {
-
-	}
 	render() {
 		return (
 			<Row
@@ -33,43 +30,7 @@ export default class Login extends React.Component {
 							Đăng Nhập
 						</Title>
 						&nbsp;
-						<Form
-							name="login"
-							onFinish={this.onFinish}
-							layout="vertical"
-						>
-							<Form.Item
-								name="username"
-								rules={[{ required: true, message: "Please enter username!" }]}
-							>
-								<Input
-									prefix={<UserOutlined />}
-									placeholder="Tên đăng nhập"
-									size="large"
-								/>
-							</Form.Item>
-							<Form.Item
-								name="password"
-								rules={[{ required: true, message: "Please enter password!" }]}
-							>
-								<Input.Password
-									prefix={<LockOutlined />}
-									placeholder="Mật khẩu"
-									size="large"
-								/>
-							</Form.Item>
-
-							<Form.Item>
-								<Button
-									type="primary"
-									htmlType="submit"
-									size="large"
-									block
-								>
-									Sign In
-								</Button>
-							</Form.Item>
-						</Form>
+						<FormLogin />
 					</Card>
 				</Col>
 			</Row>

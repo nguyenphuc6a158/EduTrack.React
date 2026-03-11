@@ -8,3 +8,6 @@ export const colResponsive = (xs: number, sm: number, md: number, lg: number, xl
 		xxl: { span: xxl },
 	};
 };
+export const AppConsts = {
+	remoteServiceBaseUrl: import.meta.env.VITE_API_BASE_URL,
+};

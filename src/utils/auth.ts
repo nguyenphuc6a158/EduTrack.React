@@ -1,10 +1,21 @@
-import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
 
-export const isAuthenticated = (): boolean => {
-	const token = Cookies.get("accessToken");
-	return !!token;
+export const isAuthenticated = () => {
+	const token = localStorage.getItem("accessToken");
+	if (!token) return false;
+
+	const decoded: any = jwtDecode(token);
+
+	if (decoded.exp * 1000 < Date.now()) {
+		localStorage.logout();
+		return false;
+	}
+
+	return true;
 };
 
 export const logout = () => {
-  Cookies.remove("accessToken");
+	localStorage.removeItem("accessToken");
+	localStorage.removeItem("encryptedAccessToken");
+	localStorage.removeItem("userId");
 };
