@@ -18,12 +18,5 @@ export default class AuthenticationStore {
 		localStorage.setItem("accessToken", result.accessToken!);
 		localStorage.setItem("encryptedAccessToken", result.encryptedAccessToken!);
 		localStorage.setItem("userId", result.userId?.toString() || "");
-		// var tokenExpireDate = remember ? new Date(new Date().getTime() + 1000 * result.expireInSeconds!) : undefined;
-		// localStorage.setItem("tokenExpireDate", tokenExpireDate ? tokenExpireDate.toISOString() : "");
-		// document.cookie = `AuthToken=${result.accessToken}; path=/;`;
-		// document.cookie = `AuthToken=${result.accessToken}; path=/;`;
-		// document.cookie = `AuthToken=${result.accessToken}; path=/;`;
-		//bp.utils.setCookieValue(AppConsts.authorization.encrptedAuthTokenName, result.encryptedAccessToken, tokenExpireDate, abp.appPath);
-		//abp.utils.setCookieValue(AppConsts.authorization.userId, result.userId, tokenExpireDate, abp.appPath);
 	}
 }
