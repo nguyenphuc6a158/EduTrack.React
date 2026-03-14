@@ -1,10 +1,12 @@
 import AuthenticationStore from "./authenticationStore";
-import ClassManagementStore from "./classmanagementStore";
+import ClassStore from "./classStore";
+import UserStore from "./userStore";
 
 function initializeStores() {
 	return {
 		authenticationStore: new AuthenticationStore(),
-		classManagementStore: new ClassManagementStore()
+		classStore: new ClassStore(),
+		userStore: new UserStore(),
 	};
 }
 export  const stores = initializeStores();

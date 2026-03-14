@@ -1,9 +1,9 @@
 import { Button, Card, Form, Input } from "antd";
 import React from "react";
-interface IFormCreatOrUpdateClassmanagementProps {
+interface IFormCreatOrUpdateClassProps {
 	onCancel?: () => void;
 }
-export default class FormCreatOrUpdateClassmanagement extends React.Component<IFormCreatOrUpdateClassmanagementProps> {
+export default class FormCreatOrUpdateClass extends React.Component<IFormCreatOrUpdateClassProps> {
 	render() {
 		const { onCancel } = this.props;
 		return (

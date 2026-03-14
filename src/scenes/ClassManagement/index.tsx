@@ -4,7 +4,7 @@ import TableClassManagement from "./table/tableClassManagement";
 import { stores } from "../../stores/store";
 import { ClassDto } from "../../services/services_autogen";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import FormCreatOrUpdateClassmanagement from "./formCreatOrUpdateClassmanagement";
+import FormCreatOrUpdateClass from "./formCreatOrUpdateClass";
 
 export default class ClassManagement extends React.Component {
 	state = {
@@ -18,7 +18,7 @@ export default class ClassManagement extends React.Component {
 		this.setState({isLoading: false});
 	}
 	getAll = async() => {
-		this.listClass = await stores.classManagementStore.getAllClassFromService(undefined, undefined, undefined);
+		this.listClass = await stores.classStore.getAllClassFromService(undefined, undefined, undefined);
 	}
 	openFormCreateOrUpdate = () => {
 		this.setState({visibleFormCreateOrUpdate: true});
@@ -54,7 +54,7 @@ export default class ClassManagement extends React.Component {
 					width="50%"
 					footer={null}
 				>
-					<FormCreatOrUpdateClassmanagement 
+					<FormCreatOrUpdateClass
 						onCancel={() => this.setState({visibleFormCreateOrUpdate: false})}
 					/>
 				</Modal>

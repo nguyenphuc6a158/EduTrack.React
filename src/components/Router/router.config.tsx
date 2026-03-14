@@ -10,7 +10,7 @@ export interface IMenuItem {
 }
 export const menuItems: IMenuItem[] = [
 	{
-		key: "1",
+		key: "/",
 		title: "Trang chủ",
 		path: "/",
 		icon: <HomeOutlined />,
@@ -18,7 +18,7 @@ export const menuItems: IMenuItem[] = [
 		component: React.lazy(() => import("../../scenes/Dashboard")),
 	},
 	{
-		key: "2",
+		key: "/classManagement",
 		title: "Quản lý lớp học",
 		path: "/classManagement",
 		icon: <SettingOutlined />,
@@ -26,20 +26,20 @@ export const menuItems: IMenuItem[] = [
 		component: React.lazy(() => import("../../scenes/ClassManagement")),
 	},
 	{
-		key: "3",
-		title: "Quản lý giáo viên",
-		path: "/teacherManagement",
-		icon: <UserOutlined />,
-		permissions: 'admin',
-		component: React.lazy(() => import("../../scenes/Dashboard")),
-	},
-	{
-		key: "4",
+		key: "/assignAssignments",
 		title: "Giao bài tập",
 		path: "/assignAssignments",
 		icon: <BookOutlined />,
 		permissions: 'teacher',
 		component: React.lazy(() => import("../../scenes/Dashboard")),
-	}
+	},
+	{
+		key: "/userManagement",
+		title: "Người dùng",
+		path: "/userManagement",
+		icon: <UserOutlined />,
+		permissions: 'admin',
+		component: React.lazy(() => import("../../scenes/UserManagement")),
+	},
 ];
 export default menuItems;

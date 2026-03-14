@@ -15,7 +15,11 @@ export class Router extends React.Component {
 							<MainLayout />
 						</ProtectedRoute>
 					}>
-						{menuItems.map(item => {return <Route path={item.path} key={item.key} element={<item.component />}/>;})}
+						{menuItems.map(item => {
+							const Component = item.component;
+							if (!Component) return null;
+							return (<Route path={item.path} key={item.key} element={<Component />}/>);
+						})}
 					</Route>
 				</Routes>
 			</BrowserRouter>

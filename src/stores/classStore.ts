@@ -2,7 +2,7 @@ import type { CancelToken } from "axios";
 import http from "../services/httpService";
 import { ClassDto, ClassService } from "../services/services_autogen";
 
-export default class ClassManagementStore {
+export default class ClassStore {
 	private classService: ClassService;
 	constructor() {
 		this.classService = new ClassService("",http);
