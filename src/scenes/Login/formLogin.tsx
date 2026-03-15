@@ -10,6 +10,7 @@ export default class FormLogin extends React.Component {
 		try{
 
 			await stores.authenticationStore.login(input);
+			await stores.sessionStore.getCurrentLoginInformationsFromService();
 			window.location.href = "/";
 		}
 		catch (error) {

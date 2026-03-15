@@ -48,7 +48,6 @@ export default class ClassManagement extends React.Component {
 					</Col>
 				</Row>
 				<Modal
-					title="Thêm lớp học"
 					open={this.state.visibleFormCreateOrUpdate}
 					onCancel={() => this.setState({visibleFormCreateOrUpdate: false})}
 					width="50%"

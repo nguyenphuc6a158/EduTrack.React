@@ -1,13 +1,24 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
-import { Button, Layout, Menu } from "antd";
+import { Layout, Menu } from "antd";
 import React from "react";
-const { Header, Content, Sider } = Layout;
-import menuItems from "../Router/router.config";
-import { Link, Outlet } from "react-router-dom";
+const { Content, Sider } = Layout;
+import HeaderLayout from "./headerLayout";
+import itemsMenuLayout from "../Router/itemsMenuLayout";
+import { Outlet } from "react-router-dom";
+import { stores } from "../../stores/store";
 export default class MainLayout extends React.Component {
 	state = {
 		closeSider: false,
+		isLoding: true,
 	};
+	async componentDidMount () {
+		this.setState({isLoading: true});
+		await stores.sessionStore.getCurrentLoginInformationsFromService();
+		console.log(window.abp.auth.isGranted("Pages.Users"))
+		this.setState({isLoading: false});
+	}
+	toggleSider = () => {
+		this.setState({closeSider: !this.state.closeSider});
+	}
 	render() {
 		return (
 			<Layout style={{minHeight: "100vh" }}>
@@ -33,28 +44,14 @@ export default class MainLayout extends React.Component {
 						theme="dark"
 						mode="inline"
 						defaultSelectedKeys={[location.pathname]}
-						items={menuItems.map(item => {
-							return {
-								key: item.key,
-								icon: item.icon,
-								label: <Link to={item.path}>{item.title}</Link>,
-							}
-						})}
+						items={itemsMenuLayout}
         			/>
       			</Sider>
 				<Layout>
-					<Header style={{width: '100%', padding: 0, background: '#e1d7d7'}}>
-						<Button
-							type="text"
-							icon={this.state.closeSider ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-							onClick={() => this.setState({closeSider: !this.state.closeSider})}
-							style={{
-							fontSize: '16px',
-							width: 64,
-							height: 64,
-							}}
-						/>
-					</Header>
+					<HeaderLayout
+						closeSider={this.state.closeSider}
+						toggleSider={this.toggleSider}
+					/>
 					<Content
 						style={{
 							margin: '24px 16px',

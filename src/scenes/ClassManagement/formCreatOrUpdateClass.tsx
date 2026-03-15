@@ -29,7 +29,7 @@ export default class FormCreatOrUpdateClass extends React.Component<IFormCreatOr
 					</Form.Item>
 					<Form.Item style={{ textAlign: "center" , marginBottom: 0 }}>
 						<Button type="primary" htmlType="submit">
-							Thêm mới
+							Thêm
 						</Button>
 						&nbsp;&nbsp;
 						<Button type="dashed" onClick={onCancel}>

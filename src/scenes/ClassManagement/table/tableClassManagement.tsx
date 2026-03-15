@@ -29,7 +29,7 @@ export default class TableClassManagement extends React.Component<ITableClassMan
 			<Table 
 				columns={columns}
 				dataSource={listClass}
-				rowKey="classId"
+				rowKey="classManagement"
 				pagination={false}
 			/>
 		)

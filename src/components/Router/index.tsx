@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes} from "react-router-dom";
-import menuItems from "./router.config";
+import routerConfig from "./router.config";
 import MainLayout from "../Layout";
 import Login from "../../scenes/Login";
 import ProtectedRoute from "./protectedRouter";
@@ -15,10 +15,8 @@ export class Router extends React.Component {
 							<MainLayout />
 						</ProtectedRoute>
 					}>
-						{menuItems.map(item => {
-							const Component = item.component;
-							if (!Component) return null;
-							return (<Route path={item.path} key={item.key} element={<Component />}/>);
+						{routerConfig.map(item => {
+							return <Route path={item.path} key={item.key} element={<item.component/>}/>;
 						})}
 					</Route>
 				</Routes>
