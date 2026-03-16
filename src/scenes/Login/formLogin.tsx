@@ -10,7 +10,6 @@ export default class FormLogin extends React.Component {
 		try{
 
 			await stores.authenticationStore.login(input);
-			await stores.sessionStore.getCurrentLoginInformationsFromService();
 			window.location.href = "/";
 		}
 		catch (error) {
@@ -20,10 +19,10 @@ export default class FormLogin extends React.Component {
 	render = () => {
 		return (
 			<Form name="login" onFinish={this.onFinish} layout="vertical" >
-				<Form.Item name="username" rules={[{ required: true, message: "Please enter username!" }]} >
+				<Form.Item name="username" rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập" }]} >
 					<Input prefix={<UserOutlined />} placeholder="Tên đăng nhập" size="large" />
 				</Form.Item>
-				<Form.Item name="password" rules={[{ required: true, message: "Please enter password!" }]} >
+				<Form.Item name="password" rules={[{ required: true, message: "Vui lòng nhập mật khẩu" }]} >
 					<Input.Password prefix={<LockOutlined />} placeholder="Mật khẩu" size="large" />
 				</Form.Item>
 				<Form.Item>

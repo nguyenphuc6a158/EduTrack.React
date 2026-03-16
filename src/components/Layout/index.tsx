@@ -4,18 +4,11 @@ const { Content, Sider } = Layout;
 import HeaderLayout from "./headerLayout";
 import itemsMenuLayout from "../Router/itemsMenuLayout";
 import { Outlet } from "react-router-dom";
-import { stores } from "../../stores/store";
 export default class MainLayout extends React.Component {
 	state = {
 		closeSider: false,
-		isLoding: true,
+		isLoading: true,
 	};
-	async componentDidMount () {
-		this.setState({isLoading: true});
-		await stores.sessionStore.getCurrentLoginInformationsFromService();
-		console.log(window.abp.auth.isGranted("Pages.Users"))
-		this.setState({isLoading: false});
-	}
 	toggleSider = () => {
 		this.setState({closeSider: !this.state.closeSider});
 	}

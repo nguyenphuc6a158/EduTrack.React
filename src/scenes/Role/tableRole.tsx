@@ -41,8 +41,8 @@ export default class TableRole extends React.Component<ITableRole>{
 			<Table 
 				dataSource={listRole}
 				columns={columns}
-				rowKey="roleManagement"
 				pagination={false}
+				rowKey={(record) => record.id}
 			/>
 		)
 	}

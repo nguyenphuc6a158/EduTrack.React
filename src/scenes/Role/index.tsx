@@ -2,8 +2,9 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Modal, Row } from "antd";
 import React from "react";
 import TableRole from "./tableRole";
-import { PermissionDto, RoleDto } from "../../services/services_autogen";
+import { GetRoleForEditOutput, PermissionDto, RoleDto } from "../../services/services_autogen";
 import { stores } from "../../stores/store";
+import FormCreateOrUpdateRole from "./formCreateOrUpdateRole";
 
 export default class RoleManagement extends React.Component{
 	state={
@@ -15,14 +16,15 @@ export default class RoleManagement extends React.Component{
 	}
 	listRole: RoleDto [] = [];
 	listPermission: PermissionDto [] = [];
+	curGranted: GetRoleForEditOutput = new GetRoleForEditOutput();
 	getAll = async () => {
 		this.setState({isLoading: true});
 		this.listRole = await stores.roleStore.getAllRoleFromService(undefined, undefined, undefined, undefined);
 		this.listPermission = await stores.roleStore.getAllPermissions();
-		console.log(this.listPermission)
+		this.curGranted = await stores.roleStore.getRoleForEdit(Number(localStorage.getItem("userId")));
 		this.setState({isLoading: true});
 	}
-	openFormCreateOrUpdateUser = () => {
+	openFormCreateOrUpdateUser = async () => {
 		this.setState({visibleModalRole: true});
 	}
 	render(){
@@ -51,7 +53,9 @@ export default class RoleManagement extends React.Component{
 					footer={null}
 					onCancel={() => this.setState({visibleModalRole: false})}
 				>
-
+					<FormCreateOrUpdateRole
+						curGranted={this.curGranted}
+					/>
 				</Modal>
 			</Card>
 		)
