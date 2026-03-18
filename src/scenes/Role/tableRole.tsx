@@ -4,7 +4,7 @@ import type { RoleDto } from "../../services/services_autogen";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 interface ITableRole {
 	listRole: RoleDto[];
-	openFormCreateOrUpdateUser: () => void;
+	openFormCreateOrUpdateUser: (item: RoleDto | undefined) => void;
 }
 export default class TableRole extends React.Component<ITableRole>{
 	render(): React.ReactNode {
@@ -28,9 +28,9 @@ export default class TableRole extends React.Component<ITableRole>{
 			{
 				title: "Hành động",
 				width: '200px',
-				render: () => 
+				render: (_: any, item:RoleDto) => 
 					<>
-						<Button type="primary" onClick={openFormCreateOrUpdateUser}><EditOutlined /></Button>
+						<Button type="primary" onClick={()=>openFormCreateOrUpdateUser(item)}><EditOutlined /></Button>
 						&nbsp;&nbsp;&nbsp;
 						<Button type="dashed" ><DeleteOutlined /></Button>
 					</>

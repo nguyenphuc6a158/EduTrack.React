@@ -1,6 +1,6 @@
 import type { CancelToken } from "axios";
 import http from "../services/httpService";
-import { GetRoleForEditOutput, PermissionDto, RoleDto, RoleService } from "../services/services_autogen";
+import { GetRoleForEditOutput, GrantedPermissionsDto, PermissionDto, RoleDto, RoleService } from "../services/services_autogen";
 
 export default class RoleStore {
 	private roleService: RoleService;
@@ -18,5 +18,23 @@ export default class RoleStore {
 	getRoleForEdit = async (RoleId: number | undefined, cancelToken?: CancelToken) : Promise<GetRoleForEditOutput> => {
 		let result = await this.roleService.getRoleForEdit(RoleId, cancelToken);
 		return result || [];
+	}
+	grantedPermissons = async (): Promise<GrantedPermissionsDto> => {
+		const userId = localStorage.getItem("userId");
+
+		if (!userId) {
+			console.error("Không tìm thấy userId");
+			return new (GrantedPermissionsDto);
+		}
+		let result = await this.roleService.isGranted(Number(userId))
+		return result;
+	}
+	createOrUpdateRole = async (newRole: RoleDto, roleSelected?: RoleDto) => {
+		if(roleSelected == undefined ){
+			this.roleService.create(newRole);
+		} else {
+			newRole.id = roleSelected.id;
+			this.roleService.update(newRole)
+		};
 	}
 }

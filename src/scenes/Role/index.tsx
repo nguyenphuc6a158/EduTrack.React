@@ -10,6 +10,7 @@ export default class RoleManagement extends React.Component{
 	state={
 		isLoading: true,
 		visibleModalRole: false,
+		selectedRole: undefined
 	}
 	componentDidMount = async() => {
 		await this.getAll();
@@ -24,8 +25,11 @@ export default class RoleManagement extends React.Component{
 		this.curGranted = await stores.roleStore.getRoleForEdit(Number(localStorage.getItem("userId")));
 		this.setState({isLoading: true});
 	}
-	openFormCreateOrUpdateUser = async () => {
-		this.setState({visibleModalRole: true});
+	openFormCreateOrUpdateUser = async (selectedRole?: RoleDto) => {
+		this.setState({
+			visibleModalRole: true,
+			selectedRole: selectedRole
+		});
 	}
 	render(){
 		return(
@@ -35,7 +39,7 @@ export default class RoleManagement extends React.Component{
 						<h2>Quản lý vai trò</h2>
 					</Col>
 					<Col span={20} style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-						<Button type="primary" onClick={this.openFormCreateOrUpdateUser}>
+						<Button type="primary" onClick={()=>this.openFormCreateOrUpdateUser()}>
 							<PlusOutlined />Thêm vai trò
 						</Button>
 					</Col>
@@ -55,6 +59,8 @@ export default class RoleManagement extends React.Component{
 				>
 					<FormCreateOrUpdateRole
 						curGranted={this.curGranted}
+						selectedRole={this.state.selectedRole}
+						onCancel={() => this.setState({visibleModalRole: false})}
 					/>
 				</Modal>
 			</Card>

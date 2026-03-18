@@ -13,8 +13,3 @@ export const isAuthenticated = () => {
 
 	return true;
 };
-export const logout = () => {
-	localStorage.removeItem("accessToken");
-	localStorage.removeItem("encryptedAccessToken");
-	localStorage.removeItem("userId");
-};

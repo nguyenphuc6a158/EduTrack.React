@@ -19,4 +19,11 @@ export default class AuthenticationStore {
 		localStorage.setItem("encryptedAccessToken", result.encryptedAccessToken!);
 		localStorage.setItem("userId", result.userId?.toString() || "");
 	}
+	logout = () => {
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("encryptedAccessToken");
+		localStorage.removeItem("userId");
+		localStorage.removeItem("greantedPermission");
+		window.location.href = "/login"
+	};
 }

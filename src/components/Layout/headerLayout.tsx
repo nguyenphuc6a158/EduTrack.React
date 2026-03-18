@@ -3,7 +3,7 @@ import { Avatar, Button, Col, Dropdown, Space } from "antd";
 import { Header } from "antd/es/layout/layout";
 import React from "react";
 import itemsMenuProps from "../Router/itemsMenuProps"
-import { logout } from "../../utils/auth";
+import { stores } from "../../stores/store";
 interface IHeaderLayoutProps {
 	closeSider: boolean;
 	toggleSider: () => void;
@@ -14,8 +14,7 @@ export default class HeaderLayout extends React.Component<IHeaderLayoutProps> {
 	};
 	selectItemMenuDropdown = (item: any) => {
 		if(item.key == "/logout"){
-			logout();
-			window.location.href = "/login"
+			stores.authenticationStore.logout();
 		} else window.location.href = item.key
 	}
 	render() {

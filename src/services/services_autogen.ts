@@ -790,6 +790,62 @@ export class RoleService {
      * @param id (optional) 
      * @return OK
      */
+    isGranted(id: number | undefined, cancelToken?: CancelToken): Promise<GrantedPermissionsDto> {
+        let url_ = this.baseUrl + "/api/services/app/Role/IsGranted?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processIsGranted(_response);
+        });
+    }
+
+    protected processIsGranted(response: AxiosResponse): Promise<GrantedPermissionsDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = GrantedPermissionsDto.fromJS(resultData200.result);
+            return Promise.resolve<GrantedPermissionsDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GrantedPermissionsDto>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return OK
+     */
     getRoleForEdit(id: number | undefined, cancelToken?: CancelToken): Promise<GetRoleForEditOutput> {
         let url_ = this.baseUrl + "/api/services/app/Role/GetRoleForEdit?";
         if (id === null)
@@ -2352,6 +2408,7 @@ export class ClassDto implements IClassDto {
     id!: number;
     className!: string | undefined;
     level!: number;
+    teacherID!: number;
 
     constructor(data?: IClassDto) {
         if (data) {
@@ -2367,6 +2424,7 @@ export class ClassDto implements IClassDto {
             this.id = _data["id"];
             this.className = _data["className"];
             this.level = _data["level"];
+            this.teacherID = _data["teacherID"];
         }
     }
 
@@ -2382,6 +2440,7 @@ export class ClassDto implements IClassDto {
         data["id"] = this.id;
         data["className"] = this.className;
         data["level"] = this.level;
+        data["teacherID"] = this.teacherID;
         return data;
     }
 
@@ -2397,6 +2456,7 @@ export interface IClassDto {
     id: number;
     className: string | undefined;
     level: number;
+    teacherID: number;
 }
 
 export class ClassDtoPagedResultDto implements IClassDtoPagedResultDto {
@@ -2457,6 +2517,7 @@ export interface IClassDtoPagedResultDto {
 export class CreateClassDto implements ICreateClassDto {
     className!: string | undefined;
     level!: number;
+    teacherID!: number;
 
     constructor(data?: ICreateClassDto) {
         if (data) {
@@ -2471,6 +2532,7 @@ export class CreateClassDto implements ICreateClassDto {
         if (_data) {
             this.className = _data["className"];
             this.level = _data["level"];
+            this.teacherID = _data["teacherID"];
         }
     }
 
@@ -2485,6 +2547,7 @@ export class CreateClassDto implements ICreateClassDto {
         data = typeof data === 'object' ? data : {};
         data["className"] = this.className;
         data["level"] = this.level;
+        data["teacherID"] = this.teacherID;
         return data;
     }
 
@@ -2499,6 +2562,7 @@ export class CreateClassDto implements ICreateClassDto {
 export interface ICreateClassDto {
     className: string | undefined;
     level: number;
+    teacherID: number;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {
@@ -2877,6 +2941,61 @@ export interface IGetRoleForEditOutput {
     role: RoleEditDto;
     permissions: FlatPermissionDto[] | undefined;
     grantedPermissionNames: string[] | undefined;
+}
+
+export class GrantedPermissionsDto implements IGrantedPermissionsDto {
+    grantedPermissionNames!: { [key: string]: boolean; } | undefined;
+
+    constructor(data?: IGrantedPermissionsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (_data["grantedPermissionNames"]) {
+                this.grantedPermissionNames = {} as any;
+                for (let key in _data["grantedPermissionNames"]) {
+                    if (_data["grantedPermissionNames"].hasOwnProperty(key))
+                        (this.grantedPermissionNames as any)![key] = _data["grantedPermissionNames"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): GrantedPermissionsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GrantedPermissionsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.grantedPermissionNames) {
+            data["grantedPermissionNames"] = {};
+            for (let key in this.grantedPermissionNames) {
+                if (this.grantedPermissionNames.hasOwnProperty(key))
+                    (data["grantedPermissionNames"] as any)[key] = (this.grantedPermissionNames as any)[key];
+            }
+        }
+        return data;
+    }
+
+    clone(): GrantedPermissionsDto {
+        const json = this.toJSON();
+        let result = new GrantedPermissionsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGrantedPermissionsDto {
+    grantedPermissionNames: { [key: string]: boolean; } | undefined;
 }
 
 export class Int64EntityDto implements IInt64EntityDto {
