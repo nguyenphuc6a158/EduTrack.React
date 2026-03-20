@@ -10,9 +10,21 @@ const itemsMenuLayout: MenuItem[] = [
 		icon: <AreaChartOutlined />
 	},
 	{
-		key: "/classManagement",
-		label: <Link to="/classManagement">Quản lý lớp học</Link>,
-		icon: <ProductOutlined />
+		key: "classmanagerment",
+		label: "Quản lý lớp học",
+		icon: <SettingOutlined />,
+		children: [
+			{
+				key: "/levelManagement",
+				label: <Link to="/levelManagement">Quản khối</Link>,
+				icon: <ProductOutlined />
+			},
+			{
+				key: "/classManagement",
+				label: <Link to="/classManagement">Quản lý lớp học</Link>,
+				icon: <ProductOutlined />
+			},
+		]
 	},
 	{
 		key: "/assignAssignments",

@@ -10,8 +10,8 @@ export default class FormLogin extends React.Component {
 		try{
 
 			await stores.authenticationStore.login(input);
-			let greantedPermission = await stores.roleStore.grantedPermissons();
-			localStorage.setItem("greantedPermission",JSON.stringify(greantedPermission));
+			// let greantedPermission = await stores.roleStore.grantedPermissons();
+			// localStorage.setItem("greantedPermission",JSON.stringify(greantedPermission));
 			window.location.href = "/";
 		}
 		catch (error) {

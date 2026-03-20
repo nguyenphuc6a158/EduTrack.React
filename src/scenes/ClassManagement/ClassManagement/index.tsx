@@ -1,8 +1,8 @@
 import { Button, Card, Col, Row, Modal } from "antd";
 import React from "react";
 import TableClassManagement from "./table/tableClassManagement";
-import { stores } from "../../stores/store";
-import { ClassDto } from "../../services/services_autogen";
+import { stores } from "../../../stores/store";
+import { ClassDto } from "../../../services/services_autogen";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import FormCreatOrUpdateClass from "./formCreatOrUpdateClass";
 

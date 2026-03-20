@@ -2,7 +2,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from "@ant-design/
 import { Avatar, Button, Col, Dropdown, Space } from "antd";
 import { Header } from "antd/es/layout/layout";
 import React from "react";
-import itemsMenuProps from "../Router/itemsMenuProps"
+import itemsMenuProps from "../Router/itemsMenuDropdownAvata"
 import { stores } from "../../stores/store";
 interface IHeaderLayoutProps {
 	closeSider: boolean;

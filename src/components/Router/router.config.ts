@@ -1,5 +1,6 @@
 import React from "react";
 import userManagementRouter from "./userManagementRouter";
+import classManagermentRouter from "./classManagermentRouter";
 
 export const routerConfig = [
 	{
@@ -9,22 +10,10 @@ export const routerConfig = [
 		component: React.lazy(() => import("../../scenes/Dashboard")),
 	},
 	{
-		key: "classManagement",
-		path: "/classManagement",
-		permissions: 'teacher',
-		component: React.lazy(() => import("../../scenes/ClassManagement")),
-	},
-	{
 		key: "assignAssignments",
 		path: "/assignAssignments",
 		permissions: 'teacher',
 		component: React.lazy(() => import("../../scenes/Dashboard")),
-	},
-	{
-		key: "userManagement",
-		path: "/userManagement",
-		permissions: 'admin',
-		component: React.lazy(() => import("../../scenes/UserManagement")),
 	},
 	{
 		key: "role",
@@ -32,6 +21,8 @@ export const routerConfig = [
 		permissions: 'admin',
 		component: React.lazy(() => import("../../scenes/Role")),
 	},
-	...userManagementRouter
+	...classManagermentRouter,
+	...userManagementRouter,
+	
 ];
 export default routerConfig;

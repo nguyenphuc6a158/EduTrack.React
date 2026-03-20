@@ -1,6 +1,6 @@
 import { Table } from "antd";
 import React from "react";
-import type { ClassDto } from "../../../services/services_autogen";
+import type { ClassDto } from "../../../../services/services_autogen";
 interface ITableClassManagementProps {
 	listClass: ClassDto[];
 }

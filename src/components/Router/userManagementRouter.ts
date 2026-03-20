@@ -2,6 +2,12 @@ import React from "react";
 
 const userManagementRouter = [
 	{
+		key: "userManagement",
+		path: "/userManagement",
+		permissions: 'admin',
+		component: React.lazy(() => import("../../scenes/UserManagement")),
+	},
+	{
 		key: '/userInformation',
 		path: "/userInformation",
 		permissions: '',

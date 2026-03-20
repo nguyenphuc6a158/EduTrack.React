@@ -7,6 +7,7 @@ interface IFormCreateOrUpdate {
 	curGranted: GetRoleForEditOutput;
 	selectedRole?: RoleDto;
 	onCancel: () => void;
+	getAll: () => void;
 }
 
 export default class FormCreateOrUpdateRole extends React.Component<IFormCreateOrUpdate> {
@@ -61,6 +62,7 @@ export default class FormCreateOrUpdateRole extends React.Component<IFormCreateO
 		input.grantedPermissions = value.grantedPermissions;
 		stores.roleStore.createOrUpdateRole(input, this.props.selectedRole);
 		message.success(this.props.selectedRole? "Cập nhật thông tin vai trò thành công" : "Thêm mới vai trò thành công");
+		this.props.getAll()
 		this.props.onCancel();
 	}
 	render(): React.ReactNode {

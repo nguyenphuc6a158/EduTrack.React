@@ -10,11 +10,11 @@ export default class RoleManagement extends React.Component{
 	state={
 		isLoading: true,
 		visibleModalRole: false,
-		selectedRole: undefined
 	}
 	componentDidMount = async() => {
 		await this.getAll();
 	}
+	selectedRole: RoleDto| undefined
 	listRole: RoleDto [] = [];
 	listPermission: PermissionDto [] = [];
 	curGranted: GetRoleForEditOutput = new GetRoleForEditOutput();
@@ -22,14 +22,17 @@ export default class RoleManagement extends React.Component{
 		this.setState({isLoading: true});
 		this.listRole = await stores.roleStore.getAllRoleFromService(undefined, undefined, undefined, undefined);
 		this.listPermission = await stores.roleStore.getAllPermissions();
-		this.curGranted = await stores.roleStore.getRoleForEdit(Number(localStorage.getItem("userId")));
+		// if(this.selectedRole != undefined && this.selectedRole!.id != undefined){
+		// 	this.curGranted = await stores.roleStore.getRoleForEdit(this.selectedRole.id);
+		// }
 		this.setState({isLoading: true});
 	}
 	openFormCreateOrUpdateUser = async (selectedRole?: RoleDto) => {
-		this.setState({
-			visibleModalRole: true,
-			selectedRole: selectedRole
-		});
+		this.selectedRole = selectedRole;
+		if(this.selectedRole != undefined && this.selectedRole!.id != undefined){
+			this.curGranted = await stores.roleStore.getRoleForEdit(this.selectedRole.id);
+		}
+		this.setState({visibleModalRole: true,});
 	}
 	render(){
 		return(
@@ -58,8 +61,9 @@ export default class RoleManagement extends React.Component{
 					onCancel={() => this.setState({visibleModalRole: false})}
 				>
 					<FormCreateOrUpdateRole
+						getAll={this.getAll}
 						curGranted={this.curGranted}
-						selectedRole={this.state.selectedRole}
+						selectedRole={this.selectedRole}
 						onCancel={() => this.setState({visibleModalRole: false})}
 					/>
 				</Modal>
