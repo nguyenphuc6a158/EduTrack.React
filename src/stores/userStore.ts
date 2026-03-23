@@ -1,51 +1,70 @@
-import type { CancelToken } from "axios";
-import http from "../services/httpService";
-import { CreateUserDto, Int64EntityDto, UserDto, UserService } from "../services/services_autogen";
+import { create } from 'zustand';
+import http from 'src/services/httpService';
+import { CreateUserDto, Int64EntityDto, UserDto, UserService } from 'src/services/services_autogen';
 
-export default class UserStore {
-	private userService: UserService;
-	constructor() {
-		this.userService = new UserService("", http);
-	}
-	createOrUpdateUserFromService = async (value: any) => {
+const userService = new UserService("", http);
 
-		if (value.id) {
-			let input = new UserDto();
-			input.id = value.id;
-			input.userName = value.userName;
-			input.name = value.name;
-			input.surname = value.surname;
-			input.emailAddress = value.emailAddress;
-			input.phoneNumber = value.phoneNumber;
-			input.dateOfBirth = value.dateOfBirth;
-			input.roleNames = value.roleNames;
-			input.isActive = value.isActive;
-			await this.userService.update(input);
-		}else {
-			let createUserDto = new  CreateUserDto();
-			createUserDto.userName = value.userName;
-			createUserDto.password = value.password;
-			createUserDto.name = value.name;
-			createUserDto.surname = value.surname;
-			createUserDto.emailAddress = value.emailAddress || "";
-			createUserDto.phoneNumber = value.phoneNumber;
-			createUserDto.dateOfBirth = value.dateOfBirth.toDate();
-			createUserDto.roleNames = value.roleNames || [];
-			createUserDto.isActive = value.isActive || false;
-			await this.userService.create(createUserDto);
-		}
-	}
-	deActivateUser = async (body: Int64EntityDto | undefined, cancelToken?: CancelToken) => {
-		await this.userService.deActivate(body, cancelToken||undefined);
-	}
-	activeUser = async (body: Int64EntityDto | undefined, cancelToken?: CancelToken) => {
-		await this.userService.activate(body, cancelToken||undefined);
-	}
-	deleteUser = async (id: number | undefined, cancelToken?: CancelToken) => {
-		await this.userService.delete(id, cancelToken||undefined);
-	}
-	getAllUserFromService = async (keyword: string | undefined, isActive: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, cancelToken?: CancelToken) : Promise<UserDto[]> => {
-		let result = await this.userService.getAll(keyword, isActive, sorting, skipCount, maxResultCount, cancelToken||undefined);
-		return result.items || [];
-	}
+interface UserState {
+    listUsers: UserDto[];
+    totalCountUser: number;
+    loading: boolean;
+    actions: {
+        getAll: (keyword?: string, isActive?: boolean, sorting?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
+        create: (body: CreateUserDto) => Promise<void>;
+        update: (body: UserDto) => Promise<void>;
+        delete: (id: number) => Promise<void>;
+    };
 }
+
+const useUserStore = create<UserState>((set) => ({
+    listUsers: [],
+    totalCountUser: 0,
+    loading: false,
+    actions: {
+        getAll: async (keyword, isActive, sorting, skipCount, maxResultCount) => {
+            set({ loading: true });
+            try {
+                const result = await userService.getAll(keyword, isActive, sorting, skipCount, maxResultCount);
+                if (result) {
+                    set({
+                        listUsers: result.items || [],
+                        totalCountUser: result.totalCount || 0
+                    });
+                }
+            } finally {
+                set({ loading: false });
+            }
+        },
+        create: async (body) => {
+            const result = await userService.create(body);
+            if (result) {
+                set((state) => ({
+                    listUsers: [...state.listUsers, result],
+                    totalCountUser: state.totalCountUser + 1
+                }));
+            }
+        },
+        update: async (body) => {
+            const result = await userService.update(body);
+            if (result) {
+                set((state) => ({
+                    listUsers: state.listUsers.map((u) => u.id === result.id ? result : u)
+                }));
+            }
+        },
+        delete: async (id) => {
+            await userService.delete(id);
+            set((state) => ({
+                listUsers: state.listUsers.filter((u) => u.id !== id),
+                totalCountUser: state.totalCountUser - 1
+            }));
+        },
+    }
+}));
+
+export const useUsers = () => useUserStore((state) => state.listUsers);
+export const useUserTotal = () => useUserStore((state) => state.totalCountUser);
+export const useUserLoading = () => useUserStore((state) => state.loading);
+export const useUserActions = () => useUserStore((state) => state.actions);
+
+export default useUserStore;

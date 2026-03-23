@@ -11,11 +11,11 @@ export default class Login extends React.Component {
 				justify="center"
 				align="middle"
 				style={{
-				height: "100vh",
-				backgroundImage:
-					"url('/25549.jpg')",
-				backgroundSize: "cover",
-				backgroundPosition: "center",
+					height: "100vh",
+					backgroundImage:
+						"url('/25549.jpg')",
+					backgroundSize: "cover",
+					backgroundPosition: "center",
 				}}
 			>
 				<Col {...colResponsive(22, 16, 12, 8, 6, 6)}>
@@ -24,7 +24,8 @@ export default class Login extends React.Component {
 						background: "rgba(255,255,255,0.2)",
 						backdropFilter: "blur(12px)",
 						WebkitBackdropFilter: "blur(12px)",
-						boxShadow: "0 8px 32px rgba(0,0,0,0.3)",}}
+						boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+					}}
 					>
 						<Title level={3} style={{ textAlign: "center", color: "#fff" }}>
 							Đăng Nhập

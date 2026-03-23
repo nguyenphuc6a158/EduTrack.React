@@ -1,0 +1,71 @@
+import { BookOutlined, FormOutlined, HomeOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import React from "react";
+import { AppConsts } from "src/lib/appconst";
+
+type MenuItem = Required<MenuProps>['items'][number];
+export type IMenuItem = MenuItem & {
+	key: string;
+	icon: React.ReactNode;
+	label: React.ReactNode;
+	path?: string;
+	permissions: string[] | string;
+	showInMenu?: boolean;
+	component?: React.LazyExoticComponent<React.ComponentType<any>>;
+	children?: IMenuItem[];
+};
+
+export const routers: IMenuItem[] = [
+	{
+		key: "1",
+		label: "Trang chủ",
+		path: "/",
+		icon: <HomeOutlined />,
+		permissions: '',
+		component: React.lazy(() => import("src/scenes/Dashboard")),
+	},
+	{
+		key: "2",
+		label: "System Management",
+		path: "/system-management",
+		icon: <SettingOutlined />,
+		permissions: [AppConsts.Permission.Pages_Users, AppConsts.Permission.Pages_Roles, AppConsts.Permission.Pages_Tenants],
+		children: [
+			{
+				key: "2.1",
+				label: "User Management",
+				path: "/user-management",
+				icon: <UserOutlined />,
+				permissions: [AppConsts.Permission.Pages_Users],
+				component: React.lazy(() => import("src/scenes/SystemManagement/UserManagement")),
+			},
+			{
+				key: "2.2",
+				label: "Quản lý vai trò",
+				path: "/role-management",
+				icon: <FormOutlined />,
+				permissions: [AppConsts.Permission.Pages_Roles],
+				component: React.lazy(() => import("src/scenes/SystemManagement/RoleManagement")),
+			},
+			{
+				key: "2.3",
+				label: "Quản lý tenants",
+				path: "/tenant-management",
+				icon: <BookOutlined />,
+				permissions: [AppConsts.Permission.Pages_Tenants],
+				component: React.lazy(() => import("src/scenes/SystemManagement/TenantManagement")),
+			},
+
+		],
+	},
+	{
+		key: "3",
+		label: "Profile",
+		path: "/profile",
+		icon: <UserOutlined />,
+		permissions: '',
+		showInMenu: false,
+		component: React.lazy(() => import("src/scenes/Account/Profile")),
+	},
+];
+export default routers;

@@ -136,306 +136,6 @@ export class AccountService {
     }
 }
 
-export class ClassService {
-    protected instance: AxiosInstance;
-    protected baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
-
-        this.instance = instance || axios.create();
-
-        this.baseUrl = baseUrl ?? "";
-
-    }
-
-    /**
-     * @param id (optional) 
-     * @return OK
-     */
-    get(id: number | undefined, cancelToken?: CancelToken): Promise<ClassDto> {
-        let url_ = this.baseUrl + "/api/services/app/Class/Get?";
-        if (id === null)
-            throw new globalThis.Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processGet(_response);
-        });
-    }
-
-    protected processGet(response: AxiosResponse): Promise<ClassDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = ClassDto.fromJS(resultData200.result);
-            return Promise.resolve<ClassDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<ClassDto>(null as any);
-    }
-
-    /**
-     * @param keyword (optional) 
-     * @param skipCount (optional) 
-     * @param maxResultCount (optional) 
-     * @return OK
-     */
-    getAll(keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, cancelToken?: CancelToken): Promise<ClassDtoPagedResultDto> {
-        let url_ = this.baseUrl + "/api/services/app/Class/GetAll?";
-        if (keyword === null)
-            throw new globalThis.Error("The parameter 'keyword' cannot be null.");
-        else if (keyword !== undefined)
-            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
-        if (skipCount === null)
-            throw new globalThis.Error("The parameter 'skipCount' cannot be null.");
-        else if (skipCount !== undefined)
-            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
-        if (maxResultCount === null)
-            throw new globalThis.Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processGetAll(_response);
-        });
-    }
-
-    protected processGetAll(response: AxiosResponse): Promise<ClassDtoPagedResultDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = ClassDtoPagedResultDto.fromJS(resultData200.result);
-            return Promise.resolve<ClassDtoPagedResultDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<ClassDtoPagedResultDto>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return OK
-     */
-    create(body: CreateClassDto | undefined, cancelToken?: CancelToken): Promise<ClassDto> {
-        let url_ = this.baseUrl + "/api/services/app/Class/Create";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_: AxiosRequestConfig = {
-            data: content_,
-            method: "POST",
-            url: url_,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processCreate(_response);
-        });
-    }
-
-    protected processCreate(response: AxiosResponse): Promise<ClassDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = ClassDto.fromJS(resultData200.result);
-            return Promise.resolve<ClassDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<ClassDto>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return OK
-     */
-    update(body: ClassDto | undefined, cancelToken?: CancelToken): Promise<ClassDto> {
-        let url_ = this.baseUrl + "/api/services/app/Class/Update";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_: AxiosRequestConfig = {
-            data: content_,
-            method: "PUT",
-            url: url_,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processUpdate(_response);
-        });
-    }
-
-    protected processUpdate(response: AxiosResponse): Promise<ClassDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = ClassDto.fromJS(resultData200.result);
-            return Promise.resolve<ClassDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<ClassDto>(null as any);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return OK
-     */
-    delete(id: number | undefined, cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/services/app/Class/Delete?";
-        if (id === null)
-            throw new globalThis.Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "DELETE",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processDelete(_response);
-        });
-    }
-
-    protected processDelete(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(null as any);
-    }
-}
-
 export class ConfigurationService {
     protected instance: AxiosInstance;
     protected baseUrl: string;
@@ -499,6 +199,261 @@ export class ConfigurationService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<void>(null as any);
+    }
+}
+
+export class GradeLevelService {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "";
+
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    create(body: CreateGradeLevelInput | undefined, cancelToken?: CancelToken): Promise<GradeLevelDto> {
+        let url_ = this.baseUrl + "/api/services/app/GradeLevel/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreate(_response);
+        });
+    }
+
+    protected processCreate(response: AxiosResponse): Promise<GradeLevelDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = GradeLevelDto.fromJS(resultData200.result);
+            return Promise.resolve<GradeLevelDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GradeLevelDto>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getAll( cancelToken?: CancelToken): Promise<GradeLevelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/GradeLevel/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetAll(_response);
+        });
+    }
+
+    protected processGetAll(response: AxiosResponse): Promise<GradeLevelDto[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GradeLevelDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return Promise.resolve<GradeLevelDto[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GradeLevelDto[]>(null as any);
+    }
+}
+
+export class ApiService {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "";
+
+    }
+
+    /**
+     * @return OK
+     */
+    gradeLevelsGet( cancelToken?: CancelToken): Promise<GradeLevelDto[]> {
+        let url_ = this.baseUrl + "/api/grade-levels";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGradeLevelsGet(_response);
+        });
+    }
+
+    protected processGradeLevelsGet(response: AxiosResponse): Promise<GradeLevelDto[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GradeLevelDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return Promise.resolve<GradeLevelDto[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GradeLevelDto[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    gradeLevelsPost(name: string, cancelToken?: CancelToken): Promise<GradeLevelDto> {
+        let url_ = this.baseUrl + "/api/grade-levels?";
+        if (name === undefined || name === null)
+            throw new globalThis.Error("The parameter 'name' must be defined and cannot be null.");
+        else
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGradeLevelsPost(_response);
+        });
+    }
+
+    protected processGradeLevelsPost(response: AxiosResponse): Promise<GradeLevelDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = GradeLevelDto.fromJS(resultData200.result);
+            return Promise.resolve<GradeLevelDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GradeLevelDto>(null as any);
     }
 }
 
@@ -784,62 +739,6 @@ export class RoleService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<PermissionDtoListResultDto>(null as any);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return OK
-     */
-    isGranted(id: number | undefined, cancelToken?: CancelToken): Promise<GrantedPermissionsDto> {
-        let url_ = this.baseUrl + "/api/services/app/Role/IsGranted?";
-        if (id === null)
-            throw new globalThis.Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "POST",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processIsGranted(_response);
-        });
-    }
-
-    protected processIsGranted(response: AxiosResponse): Promise<GrantedPermissionsDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = GrantedPermissionsDto.fromJS(resultData200.result);
-            return Promise.resolve<GrantedPermissionsDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<GrantedPermissionsDto>(null as any);
     }
 
     /**
@@ -2404,13 +2303,10 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
-export class ClassDto implements IClassDto {
-    id!: number;
-    className!: string | undefined;
-    level!: number;
-    teacherID!: number;
+export class CreateGradeLevelInput implements ICreateGradeLevelInput {
+    name!: string;
 
-    constructor(data?: IClassDto) {
+    constructor(data?: ICreateGradeLevelInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2421,148 +2317,33 @@ export class ClassDto implements IClassDto {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
-            this.className = _data["className"];
-            this.level = _data["level"];
-            this.teacherID = _data["teacherID"];
+            this.name = _data["name"];
         }
     }
 
-    static fromJS(data: any): ClassDto {
+    static fromJS(data: any): CreateGradeLevelInput {
         data = typeof data === 'object' ? data : {};
-        let result = new ClassDto();
+        let result = new CreateGradeLevelInput();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["className"] = this.className;
-        data["level"] = this.level;
-        data["teacherID"] = this.teacherID;
+        data["name"] = this.name;
         return data;
     }
 
-    clone(): ClassDto {
+    clone(): CreateGradeLevelInput {
         const json = this.toJSON();
-        let result = new ClassDto();
+        let result = new CreateGradeLevelInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IClassDto {
-    id: number;
-    className: string | undefined;
-    level: number;
-    teacherID: number;
-}
-
-export class ClassDtoPagedResultDto implements IClassDtoPagedResultDto {
-    items!: ClassDto[] | undefined;
-    totalCount!: number;
-
-    constructor(data?: IClassDtoPagedResultDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(ClassDto.fromJS(item));
-            }
-            this.totalCount = _data["totalCount"];
-        }
-    }
-
-    static fromJS(data: any): ClassDtoPagedResultDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ClassDtoPagedResultDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item ? item.toJSON() : undefined as any);
-        }
-        data["totalCount"] = this.totalCount;
-        return data;
-    }
-
-    clone(): ClassDtoPagedResultDto {
-        const json = this.toJSON();
-        let result = new ClassDtoPagedResultDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IClassDtoPagedResultDto {
-    items: ClassDto[] | undefined;
-    totalCount: number;
-}
-
-export class CreateClassDto implements ICreateClassDto {
-    className!: string | undefined;
-    level!: number;
-    teacherID!: number;
-
-    constructor(data?: ICreateClassDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.className = _data["className"];
-            this.level = _data["level"];
-            this.teacherID = _data["teacherID"];
-        }
-    }
-
-    static fromJS(data: any): CreateClassDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateClassDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["className"] = this.className;
-        data["level"] = this.level;
-        data["teacherID"] = this.teacherID;
-        return data;
-    }
-
-    clone(): CreateClassDto {
-        const json = this.toJSON();
-        let result = new CreateClassDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ICreateClassDto {
-    className: string | undefined;
-    level: number;
-    teacherID: number;
+export interface ICreateGradeLevelInput {
+    name: string;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {
@@ -2699,8 +2480,6 @@ export class CreateUserDto implements ICreateUserDto {
     isActive!: boolean;
     roleNames!: string[] | undefined;
     password!: string;
-    dateOfBirth!: Date;
-    phoneNumber!: string | undefined;
 
     constructor(data?: ICreateUserDto) {
         if (data) {
@@ -2724,8 +2503,6 @@ export class CreateUserDto implements ICreateUserDto {
                     this.roleNames!.push(item);
             }
             this.password = _data["password"];
-            this.dateOfBirth = _data["dateOfBirth"] ? new Date(_data["dateOfBirth"].toString()) : undefined as any;
-            this.phoneNumber = _data["phoneNumber"];
         }
     }
 
@@ -2749,8 +2526,6 @@ export class CreateUserDto implements ICreateUserDto {
                 data["roleNames"].push(item);
         }
         data["password"] = this.password;
-        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : undefined as any;
-        data["phoneNumber"] = this.phoneNumber;
         return data;
     }
 
@@ -2770,8 +2545,6 @@ export interface ICreateUserDto {
     isActive: boolean;
     roleNames: string[] | undefined;
     password: string;
-    dateOfBirth: Date;
-    phoneNumber: string | undefined;
 }
 
 export class FlatPermissionDto implements IFlatPermissionDto {
@@ -2943,10 +2716,11 @@ export interface IGetRoleForEditOutput {
     grantedPermissionNames: string[] | undefined;
 }
 
-export class GrantedPermissionsDto implements IGrantedPermissionsDto {
-    grantedPermissionNames!: { [key: string]: boolean; } | undefined;
+export class GradeLevelDto implements IGradeLevelDto {
+    id!: number;
+    name!: string | undefined;
 
-    constructor(data?: IGrantedPermissionsDto) {
+    constructor(data?: IGradeLevelDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2957,45 +2731,36 @@ export class GrantedPermissionsDto implements IGrantedPermissionsDto {
 
     init(_data?: any) {
         if (_data) {
-            if (_data["grantedPermissionNames"]) {
-                this.grantedPermissionNames = {} as any;
-                for (let key in _data["grantedPermissionNames"]) {
-                    if (_data["grantedPermissionNames"].hasOwnProperty(key))
-                        (this.grantedPermissionNames as any)![key] = _data["grantedPermissionNames"][key];
-                }
-            }
+            this.id = _data["id"];
+            this.name = _data["name"];
         }
     }
 
-    static fromJS(data: any): GrantedPermissionsDto {
+    static fromJS(data: any): GradeLevelDto {
         data = typeof data === 'object' ? data : {};
-        let result = new GrantedPermissionsDto();
+        let result = new GradeLevelDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (this.grantedPermissionNames) {
-            data["grantedPermissionNames"] = {};
-            for (let key in this.grantedPermissionNames) {
-                if (this.grantedPermissionNames.hasOwnProperty(key))
-                    (data["grantedPermissionNames"] as any)[key] = (this.grantedPermissionNames as any)[key];
-            }
-        }
+        data["id"] = this.id;
+        data["name"] = this.name;
         return data;
     }
 
-    clone(): GrantedPermissionsDto {
+    clone(): GradeLevelDto {
         const json = this.toJSON();
-        let result = new GrantedPermissionsDto();
+        let result = new GradeLevelDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IGrantedPermissionsDto {
-    grantedPermissionNames: { [key: string]: boolean; } | undefined;
+export interface IGradeLevelDto {
+    id: number;
+    name: string | undefined;
 }
 
 export class Int64EntityDto implements IInt64EntityDto {
@@ -3916,9 +3681,7 @@ export class UserDto implements IUserDto {
     userName!: string;
     name!: string;
     surname!: string;
-    dateOfBirth!: string;
-    phoneNumber!: string | undefined;
-    emailAddress!: string | undefined;
+    emailAddress!: string;
     isActive!: boolean;
     fullName!: string | undefined;
     lastLoginTime!: Date | undefined;
@@ -3940,8 +3703,6 @@ export class UserDto implements IUserDto {
             this.userName = _data["userName"];
             this.name = _data["name"];
             this.surname = _data["surname"];
-            this.dateOfBirth = _data["dateOfBirth"];
-            this.phoneNumber = _data["phoneNumber"];
             this.emailAddress = _data["emailAddress"];
             this.isActive = _data["isActive"];
             this.fullName = _data["fullName"];
@@ -3968,8 +3729,6 @@ export class UserDto implements IUserDto {
         data["userName"] = this.userName;
         data["name"] = this.name;
         data["surname"] = this.surname;
-        data["dateOfBirth"] = this.dateOfBirth;
-        data["phoneNumber"] = this.phoneNumber;
         data["emailAddress"] = this.emailAddress;
         data["isActive"] = this.isActive;
         data["fullName"] = this.fullName;
@@ -3996,9 +3755,7 @@ export interface IUserDto {
     userName: string;
     name: string;
     surname: string;
-    dateOfBirth: string;
-    phoneNumber: string | undefined;
-    emailAddress: string | undefined;
+    emailAddress: string;
     isActive: boolean;
     fullName: string | undefined;
     lastLoginTime: Date | undefined;

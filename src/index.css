@@ -1,8 +1,45 @@
-body {
-	margin: 0;
-	font-family: 'Roboto', sans-serif;
+@import "tailwindcss";
+
+@theme {
+    --color-primary: var(--color-primary);
+    --color-layout: var(--color-layout);
+    --color-text-primary: var(--color-text-primary);
 }
-h2 {
-	font-family: 'Roboto', sans-serif;
-	font-weight: 500;
+
+:root {
+    /* Light mode colors */
+    --color-bg-light: #ffffffe6;
+    --color-text-primary-light: #1C252E;
+
+    /* Dark mode colors */
+    --color-bg-dark: #161c24;
+    --color-text-primary-dark: #FFFFFF;
+
+    /* Brand Primary Color */
+    --color-primary: #00a76f;
+}
+
+.dark {
+    --color-header: var(--color-bg-dark);
+    --color-layout: var(--color-bg-dark);
+    --color-text-primary: var(--color-text-primary-dark);
+}
+
+.light {
+    --color-header: var(--color-bg-light);
+    --color-layout: var(--color-bg-light);
+    --color-text-primary: var(--color-text-primary-light);
+}
+
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-layout);
+    color: var(--color-text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.ant-layout {
+    height: 100vh;
 }
