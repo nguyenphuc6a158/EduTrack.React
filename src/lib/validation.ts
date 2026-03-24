@@ -7,7 +7,7 @@ import type { Rule } from "antd/es/form";
  */
 export const requiredRule = (fieldName: string): Rule => ({
     required: true,
-    message: `Please enter ${fieldName.toLowerCase()}`,
+    message: `Vui lòng nhập ${fieldName.toLowerCase()}`,
 });
 
 /**

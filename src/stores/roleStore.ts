@@ -10,7 +10,7 @@ interface RoleState {
     totalCountRole: number;
     loading: boolean;
     actions: {
-        getAll: (permission?: string) => Promise<void>;
+        getAll: (keyword?: string, sorting?: string , skipCount?: number, maxResultCount?: number) => Promise<void>;
         getAllPermissions: () => Promise<void>;
         create: (body: CreateRoleDto) => Promise<void>;
         update: (body: RoleDto) => Promise<void>;
@@ -25,10 +25,10 @@ const useRoleStore = create<RoleState>((set) => ({
     totalCountRole: 0,
     loading: false,
     actions: {
-        getAll: async (permission) => {
+        getAll: async (keyword, sorting, skipCount, maxResultCount) => {
             set({ loading: true });
             try {
-                const result = await roleService.getRoles(permission);
+                const result = await roleService.getAll(keyword, sorting, skipCount, maxResultCount);
                 if (result) {
                     set({
                         listRoles: result.items || [],

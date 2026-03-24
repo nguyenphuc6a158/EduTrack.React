@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { Modal, Form, Input, Switch } from "antd";
-import { UserDto } from "src/services/services_autogen";
+import React, { useEffect, useState } from "react";
+import { Modal, Form, Input, Switch, Select } from "antd";
+import { RoleDto, UserDto } from "src/services/services_autogen";
 import { requiredRule, emailRule } from "src/lib/validation";
 
 interface UserModalProps {
@@ -8,12 +8,18 @@ interface UserModalProps {
     editingUser: UserDto | null;
     onOk: (values: any) => void;
     onCancel: () => void;
+    roles: RoleDto[];
 }
 
-const UserModal: React.FC<UserModalProps> = ({ open, editingUser, onOk, onCancel }) => {
+const UserModal: React.FC<UserModalProps> = ({ open, editingUser, onOk, onCancel, roles }) => {
     const [form] = Form.useForm();
-
+    const [optionRoles, setOptionRoles] = useState<{ label: string, value: string }[]>([]);
     useEffect(() => {
+        const optionRoles = roles.map((itemRole) => ({
+            label: itemRole.displayName,
+            value: itemRole.normalizedName ?? "",
+        }))
+        setOptionRoles(optionRoles);
         if (open) {
             if (editingUser) {
                 form.setFieldsValue({
@@ -36,65 +42,85 @@ const UserModal: React.FC<UserModalProps> = ({ open, editingUser, onOk, onCancel
 
     return (
         <Modal
-            title={editingUser ? "Edit User" : "Add New User"}
+            title={editingUser ? "Sửa thông tin người dùng" : "Thêm mới người dùng"}
             open={open}
             onOk={handleOk}
             onCancel={onCancel}
-            okText={editingUser ? "Update" : "Create"}
+            okText={editingUser ? "Sửa" : "Thêm"}
             width={600}
+            cancelText="Hủy"
         >
             <Form form={form} layout="vertical" initialValues={{ isActive: true }}>
                 <div className="grid grid-cols-2 gap-4">
                     <Form.Item
                         name="userName"
-                        label="User Name"
-                        rules={[requiredRule("User Name")]}
+                        label="Tên tài khoản"
+                        rules={[requiredRule("Tên tài khoản")]}
                     >
-                        <Input placeholder="e.g. johndoe" />
+                        <Input placeholder="Nhập tên tài khoản" />
                     </Form.Item>
                     <Form.Item
                         name="emailAddress"
-                        label="Email Address"
+                        label="Email"
                         rules={[requiredRule("Email"), emailRule]}
                     >
-                        <Input placeholder="e.g. john@example.com" />
+                        <Input placeholder="Nhập email" />
                     </Form.Item>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                     <Form.Item
                         name="name"
-                        label="First Name"
-                        rules={[requiredRule("First Name")]}
+                        label="Họ"
+                        rules={[requiredRule("Họ")]}
                     >
-                        <Input placeholder="e.g. John" />
+                        <Input placeholder="Nhập họ" />
                     </Form.Item>
                     <Form.Item
                         name="surname"
-                        label="Last Name"
-                        rules={[requiredRule("Last Name")]}
+                        label="Tên"
+                        rules={[requiredRule("Tên")]}
                     >
-                        <Input placeholder="e.g. Doe" />
+                        <Input placeholder="Nhập tên" />
                     </Form.Item>
                 </div>
-
-                {!editingUser && (
+                <div className="grid grid-cols-2 gap-4">
                     <Form.Item
-                        name="password"
-                        label="Password"
-                        rules={[requiredRule("Password")]}
+                        name="phoneNumber"
+                        label="Số điện thoại"
+                        rules={[requiredRule("Số điện thoại")]}
                     >
-                        <Input.Password placeholder="Enter password" />
+                        <Input placeholder="Nhập số điện thoại" />
                     </Form.Item>
-                )}
-
-                <Form.Item
-                    name="isActive"
-                    label="Active Status"
-                    valuePropName="checked"
-                >
-                    <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
-                </Form.Item>
+                    {!editingUser && (
+                        <Form.Item
+                            name="password"
+                            label="Mật khẩu"
+                            rules={[requiredRule("Mật khẩu")]}
+                        >
+                            <Input.Password placeholder="Nhập mật khẩu" />
+                        </Form.Item>
+                    )}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <Form.Item
+                        name="roleNames"
+                        label="Vai trò của tài khoản"
+                        rules={[requiredRule("Vai trò của tài khoản")]}
+                    >
+                        <Select 
+                            options={optionRoles}
+                            placeholder="Nhập tên tài khoản" 
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name="isActive"
+                        label="Kích hoạt"
+                        valuePropName="checked"
+                    >
+                        <Switch checkedChildren="Hoạt động" unCheckedChildren="Không hoạt động" />
+                    </Form.Item>
+                </div>
             </Form>
         </Modal>
     );
