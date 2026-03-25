@@ -1,7 +1,8 @@
 import React from "react";
 import { Table, Button, Space, Popconfirm, Tag } from "antd";
 import { UserDto } from "src/services/services_autogen";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, RedoOutlined } from "@ant-design/icons";
+import { formatPhoneNumber } from "src/lib/appconst";
 
 interface UserTableProps {
 	users: UserDto[];
@@ -9,15 +10,15 @@ interface UserTableProps {
 	total: number;
 	onEdit: (user: UserDto) => void;
 	onDelete: (id: number) => void;
+	onResetPassWord: (user: UserDto) => void;
 }
 
-const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, onDelete }) => {
+const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, onDelete, onResetPassWord }) => {
 	const columns = [
 		{
 			title: "Tên đăng nhập",
 			dataIndex: "userName",
 			key: "userName",
-			sorter: true,
 		},
 		{
 			title: "Họ và tên",
@@ -33,6 +34,37 @@ const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, on
 			title: "Số điện thoại",
 			dataIndex: "phoneNumber",
 			key: "phoneNumber",
+			filterSearch: true,
+			filters:  [...new Set(users?.flatMap(user => user.phoneNumber || []))].map(item=>({
+				text: item,
+				value: item,
+			})),
+			onFilter: (value: any, record: UserDto) => record.phoneNumber?.includes(value as string) || false,
+			render: (phoneNumber: string) => (
+				<>
+					{formatPhoneNumber(phoneNumber)}
+				</>
+			),
+		},
+		{
+			title: "Vai trò",
+			dataIndex: "roleNames",
+			key: "roleNames",
+			filters:  [...new Set(users?.flatMap(user => user.roleNames || []))].map(item=>({
+				text: item,
+				value: item,
+			})),
+			filterSearch: true,
+			onFilter: (value: any, record: UserDto) => record.roleNames?.includes(value as string) || false,
+			render: (roleNames: string[]) => (
+				<>
+					{roleNames?.map((role, index) => (
+					<Tag color="blue" key={index}>
+						{role}
+					</Tag>
+					))}
+				</>
+			),
 		},
 		{
 			title: "Hoạt động",
@@ -53,27 +85,38 @@ const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, on
 		{
 			title: "Hành động",
 			key: "action",
+			align: "center" as const,
 			render: (_: any, record: UserDto) => (
-				<Space size="middle">
-					<Button
-						type="text"
-						icon={<EditOutlined />}
-						onClick={() => onEdit(record)}
-					/>
-					<Popconfirm
-						title="Xóa người dùng?"
-						description="Bạn có chắc chắn muốn xóa người dùng này không?"
-						onConfirm={() => onDelete(record.id)}
-						okText="Xóa"
-						cancelText="Hủy"
-					>
+				record.userName === 'admin' ? null : (
+					<Space size="middle">
 						<Button
+							title="Chỉnh sửa"
 							type="text"
-							danger
-							icon={<DeleteOutlined />}
+							icon={<EditOutlined />}
+							onClick={() => onEdit(record)}
 						/>
-					</Popconfirm>
-				</Space>
+						<Button
+							title="Lấy lại mật khẩu"
+							type="text"
+							icon={<RedoOutlined />}
+							onClick={() => onResetPassWord(record)}
+						/>
+						<Popconfirm
+							title="Xóa người dùng?"
+							description="Bạn có chắc chắn muốn xóa người dùng này không?"
+							onConfirm={() => onDelete(record.id)}
+							okText="Xóa"
+							cancelText="Hủy"
+						>
+							<Button
+								title="Xóa người dùng"
+								type="text"
+								danger
+								icon={<DeleteOutlined />}
+							/>
+						</Popconfirm>
+					</Space>
+				)
 			),
 		},
 	];

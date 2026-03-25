@@ -2,6 +2,8 @@ import { BookOutlined, FormOutlined, HomeOutlined, SettingOutlined, UserOutlined
 import type { MenuProps } from "antd";
 import React from "react";
 import { AppConsts } from "src/lib/appconst";
+import { systemManagementRouter } from "./systemManagementRouter";
+import { learningContentManagement } from "./learningContentManagement";
 
 type MenuItem = Required<MenuProps>['items'][number];
 export type IMenuItem = MenuItem & {
@@ -24,40 +26,8 @@ export const routers: IMenuItem[] = [
 		permissions: '',
 		component: React.lazy(() => import("src/scenes/Dashboard")),
 	},
-	{
-		key: "2",
-		label: "System Management",
-		path: "/system-management",
-		icon: <SettingOutlined />,
-		permissions: [AppConsts.Permission.Pages_Users, AppConsts.Permission.Pages_Roles, AppConsts.Permission.Pages_Tenants],
-		children: [
-			{
-				key: "2.1",
-				label: "User Management",
-				path: "/user-management",
-				icon: <UserOutlined />,
-				permissions: [AppConsts.Permission.Pages_Users],
-				component: React.lazy(() => import("src/scenes/SystemManagement/UserManagement")),
-			},
-			{
-				key: "2.2",
-				label: "Quản lý vai trò",
-				path: "/role-management",
-				icon: <FormOutlined />,
-				permissions: [AppConsts.Permission.Pages_Roles],
-				component: React.lazy(() => import("src/scenes/SystemManagement/RoleManagement")),
-			},
-			{
-				key: "2.3",
-				label: "Quản lý tenants",
-				path: "/tenant-management",
-				icon: <BookOutlined />,
-				permissions: [AppConsts.Permission.Pages_Tenants],
-				component: React.lazy(() => import("src/scenes/SystemManagement/TenantManagement")),
-			},
-
-		],
-	},
+	...learningContentManagement,
+	...systemManagementRouter,
 	{
 		key: "3",
 		label: "Profile",

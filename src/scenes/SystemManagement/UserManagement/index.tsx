@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button, message } from "antd";
 import { useUsers, useUserActions, useUserTotal, useUserLoading, useRolesFromUser } from "src/stores/userStore";
-import { CreateUserDto, UserDto } from "src/services/services_autogen";
+import { CreateUserDto, ResetPasswordDto, UserDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
 import UserTable from "./components/UserTable";
-import UserModal from "./components/UserModal";
+import UserCreateUpdateModal from "./components/UserCreateUpdateModal";
+import UserResetPasswordModal from "./components/UserResetModal";
 
 const UserManagement = () => {
 	const users = useUsers();
@@ -12,14 +13,15 @@ const UserManagement = () => {
 	const total = useUserTotal();
 	const loading = useUserLoading();
 	const roles = useRolesFromUser()
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [editingUser, setEditingUser] = useState<UserDto | null>(null);
+	const [isCreateUpdateModalOpen, setIsCreateUpdateModalOpen] = useState(false);
+	const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false);
+	const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
 	const fetchUsers = async () => {
 		try {
 			await userActions.getAll(undefined, undefined, undefined, 0, 100);
 			await userActions.getRoles();
 		} catch (error) {
-			message.error("Failed to fetch users");
+			message.error("Lấy danh sách người dùng thất bại");
 			console.error(error);
 		}
 	};
@@ -29,13 +31,13 @@ const UserManagement = () => {
 	}, []);
 
 	const openAddModal = () => {
-		setEditingUser(null);
-		setIsModalOpen(true);
+		setSelectedUser(null);
+		setIsCreateUpdateModalOpen(true);
 	};
 
 	const openEditModal = (user: UserDto) => {
-		setEditingUser(user);
-		setIsModalOpen(true);
+		setSelectedUser(user);
+		setIsCreateUpdateModalOpen(true);
 	};
 
 	const handleDelete = async (id: number) => {
@@ -46,13 +48,27 @@ const UserManagement = () => {
 			message.error("Xóa người dùng thất bại");
 		}
 	};
-
+	const openResetPasswordModal = (user: UserDto) => {
+		setSelectedUser(user);
+		setIsResetPasswordModalOpen(true);
+	};
+	const handelResetPassword = async (value: any) => {
+		let item: ResetPasswordDto = new ResetPasswordDto();
+		if(selectedUser){
+			item.userId = selectedUser.id;
+			item.newPassword = value.newPassword;
+			item.adminPassword = value.adminPassword;
+		}
+		await userActions.resetPassword(item);
+		message.success("Lấy lại mật khẩu mới thành công")
+		setIsResetPasswordModalOpen(false);
+	} 
 	const handleOk = async (values: any) => {
 		try {
 			console.log(values.roleNames)
-			if (editingUser) {
+			if (selectedUser) {
 				const updateData = new UserDto({
-					...editingUser,
+					...selectedUser,
 					...values,
 					roleNames: values.roleNames
 				});
@@ -67,7 +83,7 @@ const UserManagement = () => {
 				await userActions.create(createData);
 				message.success("Tạo mới tài khoản thành công");
 			}
-			setIsModalOpen(false);
+			setIsCreateUpdateModalOpen(false);
 		} catch (error) {
 			console.error(error);
 		}
@@ -95,15 +111,21 @@ const UserManagement = () => {
 				loading={loading}
 				total={total}
 				onEdit={openEditModal}
+				onResetPassWord={openResetPasswordModal}
 				onDelete={handleDelete}
 			/>
 
-			<UserModal
+			<UserCreateUpdateModal
 				roles={roles}
-				open={isModalOpen}
-				editingUser={editingUser}
+				open={isCreateUpdateModalOpen}
+				editingUser={selectedUser}
 				onOk={handleOk}
-				onCancel={() => setIsModalOpen(false)}
+				onCancel={() => setIsCreateUpdateModalOpen(false)}
+			/>
+			<UserResetPasswordModal
+				onOk={handelResetPassword}
+				onCancel={()=>setIsResetPasswordModalOpen(false)}
+				open={isResetPasswordModalOpen}
 			/>
 		</div>
 	);

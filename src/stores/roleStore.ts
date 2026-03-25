@@ -47,21 +47,9 @@ const useRoleStore = create<RoleState>((set) => ({
         },
         create: async (body) => {
             await roleService.create(body);
-            // Refresh list after create
-            const result = await roleService.getRoles(undefined);
-            set({
-                listRoles: result.items || [],
-                totalCountRole: result.items?.length || 0
-            });
         },
         update: async (body) => {
             await roleService.update(body);
-            // Refresh list after update
-            const result = await roleService.getRoles(undefined);
-            set({
-                listRoles: result.items || [],
-                totalCountRole: result.items?.length || 0
-            });
         },
         delete: async (id) => {
             await roleService.delete(id);

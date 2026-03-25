@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import http from 'src/services/httpService';
-import { CreateUserDto, Int64EntityDto, RoleDto, UserDto, UserService } from 'src/services/services_autogen';
+import { CreateUserDto, Int64EntityDto, ResetPasswordDto, RoleDto, UserDto, UserService } from 'src/services/services_autogen';
 
 const userService = new UserService("", http);
 
@@ -15,6 +15,7 @@ interface UserState {
         create: (body: CreateUserDto) => Promise<void>;
         update: (body: UserDto) => Promise<void>;
         delete: (id: number) => Promise<void>;
+        resetPassword: (body?: ResetPasswordDto) => Promise<void>;
     };
 }
 
@@ -75,6 +76,9 @@ const useUserStore = create<UserState>((set) => ({
                 totalCountUser: state.totalCountUser - 1
             }));
         },
+        resetPassword: async (body) => {
+            await userService.resetPassword(body);
+        }
     }
 }));
 

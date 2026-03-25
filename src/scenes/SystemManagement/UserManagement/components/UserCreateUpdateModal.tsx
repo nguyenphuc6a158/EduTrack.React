@@ -3,7 +3,7 @@ import { Modal, Form, Input, Switch, Select } from "antd";
 import { RoleDto, UserDto } from "src/services/services_autogen";
 import { requiredRule, emailRule } from "src/lib/validation";
 
-interface UserModalProps {
+interface UserCreateUpdateModalProps {
     open: boolean;
     editingUser: UserDto | null;
     onOk: (values: any) => void;
@@ -11,7 +11,7 @@ interface UserModalProps {
     roles: RoleDto[];
 }
 
-const UserModal: React.FC<UserModalProps> = ({ open, editingUser, onOk, onCancel, roles }) => {
+const UserCreateUpdateModal: React.FC<UserCreateUpdateModalProps> = ({ open, editingUser, onOk, onCancel, roles }) => {
     const [form] = Form.useForm();
     const [optionRoles, setOptionRoles] = useState<{ label: string, value: string }[]>([]);
     useEffect(() => {
@@ -48,7 +48,6 @@ const UserModal: React.FC<UserModalProps> = ({ open, editingUser, onOk, onCancel
             onCancel={onCancel}
             okText={editingUser ? "Sửa" : "Thêm"}
             width={600}
-            cancelText="Hủy"
         >
             <Form form={form} layout="vertical" initialValues={{ isActive: true }}>
                 <div className="grid grid-cols-2 gap-4">
@@ -126,4 +125,4 @@ const UserModal: React.FC<UserModalProps> = ({ open, editingUser, onOk, onCancel
     );
 };
 
-export default UserModal;
+export default UserCreateUpdateModal;

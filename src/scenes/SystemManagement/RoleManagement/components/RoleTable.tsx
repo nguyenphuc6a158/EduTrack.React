@@ -12,23 +12,24 @@ interface RoleTableProps {
 const RoleTable: React.FC<RoleTableProps> = ({ roles, loading, onEdit, onDelete }) => {
     const columns = [
         {
-            title: "Role Name",
+            title: "Vai trò",
             dataIndex: "name",
             key: "name",
         },
         {
-            title: "Display Name",
+            title: "Tên hiển thị",
             dataIndex: "displayName",
             key: "displayName",
         },
         {
-            title: "Description",
+            title: "Mô tả",
             dataIndex: "description",
             key: "description",
         },
         {
-            title: "Action",
+            title: "Hành động",
             key: "action",
+            align: "center" as const,
             render: (_: any, record: any) => (
                 <Space size="middle">
                     <Button
