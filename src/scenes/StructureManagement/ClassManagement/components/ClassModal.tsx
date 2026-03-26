@@ -43,7 +43,6 @@ const ClassModal = ({ visible, editingItem, onOk, onCancel, confirmLoading, list
             onOk={handleOk}
             onCancel={onCancel}
             confirmLoading={confirmLoading}
-            destroyOnClose 
             width={600}
         >
             <Form form={form} layout="vertical">

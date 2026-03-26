@@ -42,7 +42,6 @@ const GradeModal: React.FC<GradeModalProps> = ({ visible, editingGrade, onOk, on
             onOk={handleOk}
             onCancel={onCancel}
             confirmLoading={confirmLoading}
-            destroyOnClose
         >
             <Form form={form} layout="vertical">
                 <Form.Item

@@ -4,14 +4,14 @@ import { AppConsts } from "src/lib/appconst";
 
 export const learningContentManagement = [
 	{
-		key: "2",
+		key: "3",
 		label: "Nội dung học",
 		path: "/learningContent-management",
 		icon: <BookOutlined />,
 		permissions: [AppConsts.Permission.Pages_Subjects, AppConsts.Permission.Pages_Chapters],
 		children: [
 			{
-				key: "2.1",
+				key: "3.1",
 				label: "Môn học",
 				path: "/subject",
 				icon: <ExperimentOutlined />,
@@ -19,7 +19,7 @@ export const learningContentManagement = [
 				component: React.lazy(() => import("src/scenes/LearningContentManagement/Subject")),
 			},
 			{
-				key: "2.2",
+				key: "3.2",
 				label: "Chương",
 				path: "/chapter",
 				icon: <BlockOutlined />,
