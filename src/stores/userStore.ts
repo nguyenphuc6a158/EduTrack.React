@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import http from 'src/services/httpService';
-import { CreateUserDto, Int64EntityDto, UserDto, UserService } from 'src/services/services_autogen';
+import { CreateUserDto, Int64EntityDto, ResetPasswordDto, RoleDto, UserDto, UserService } from 'src/services/services_autogen';
 
 const userService = new UserService("", http);
 
@@ -8,19 +8,36 @@ interface UserState {
     listUsers: UserDto[];
     totalCountUser: number;
     loading: boolean;
+    listRoles: RoleDto[];
     actions: {
+        getRoles: () => Promise<void>;
         getAll: (keyword?: string, isActive?: boolean, sorting?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
         create: (body: CreateUserDto) => Promise<void>;
         update: (body: UserDto) => Promise<void>;
         delete: (id: number) => Promise<void>;
+        resetPassword: (body?: ResetPasswordDto) => Promise<void>;
     };
 }
 
 const useUserStore = create<UserState>((set) => ({
     listUsers: [],
+    listRoles: [],
     totalCountUser: 0,
     loading: false,
     actions: {
+        getRoles : async () => { 
+            set({ loading: true });
+            try {
+                const result = await userService.getRoles();
+                if (result) {
+                    set({
+                        listRoles: result.items || [],
+                    });
+                } 
+            } finally {
+                set({ loading: false });
+            }
+        },
         getAll: async (keyword, isActive, sorting, skipCount, maxResultCount) => {
             set({ loading: true });
             try {
@@ -59,10 +76,14 @@ const useUserStore = create<UserState>((set) => ({
                 totalCountUser: state.totalCountUser - 1
             }));
         },
+        resetPassword: async (body) => {
+            await userService.resetPassword(body);
+        }
     }
 }));
 
 export const useUsers = () => useUserStore((state) => state.listUsers);
+export const useRolesFromUser = () => useUserStore((state) => state.listRoles);
 export const useUserTotal = () => useUserStore((state) => state.totalCountUser);
 export const useUserLoading = () => useUserStore((state) => state.loading);
 export const useUserActions = () => useUserStore((state) => state.actions);

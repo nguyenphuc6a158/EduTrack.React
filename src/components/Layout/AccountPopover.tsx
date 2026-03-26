@@ -80,7 +80,11 @@ const AccountPopover: React.FC = () => {
             trigger="click"
             placement="bottomRight"
             overlayClassName="account-popover"
-            overlayInnerStyle={{ padding: 0, borderRadius: 12, overflow: 'hidden' }}
+            styles={{ container: {
+                padding: 0, 
+                borderRadius: 12, 
+                overflow: 'hidden'
+            }}}
         >
             <div className="cursor-pointer transition-transform hover:scale-105 active:scale-95">
                 <Avatar

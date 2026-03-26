@@ -6,6 +6,8 @@ import 'src/lib/abp.js';
 import Utils from 'src/utils/utils';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './ThemeProvider';
+import { ConfigProvider } from 'antd';
+import viVN from 'antd/locale/vi_VN';
 
 abpUserConfigurationService.getAll().then(data => {
   Utils.extend(true, window.abp, data.data.result);
@@ -13,7 +15,9 @@ abpUserConfigurationService.getAll().then(data => {
   createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <ThemeProvider>
-        <App />
+        <ConfigProvider locale={viVN}>
+          <App />
+        </ConfigProvider>
       </ThemeProvider>
     </BrowserRouter>
   );

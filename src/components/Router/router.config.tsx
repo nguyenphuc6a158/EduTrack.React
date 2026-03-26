@@ -2,6 +2,8 @@ import { BookOutlined, FormOutlined, HomeOutlined, SettingOutlined, UserOutlined
 import type { MenuProps } from "antd";
 import React from "react";
 import { AppConsts } from "src/lib/appconst";
+import { systemManagementRouter } from "./systemManagementRouter";
+import { learningContentManagement } from "./learningContentManagement";
 
 export type IMenuItem = {
 	key: string;
@@ -23,6 +25,7 @@ export const routers: IMenuItem[] = [
 		permissions: '',
 		component: React.lazy(() => import("src/scenes/Dashboard")),
 	},
+<<<<<<< HEAD
 	{
  		key: "2",
   		label: "Quản lý lớp học",
@@ -82,6 +85,10 @@ export const routers: IMenuItem[] = [
 
 		],
 	},
+=======
+	...learningContentManagement,
+	...systemManagementRouter,
+>>>>>>> feb11b46a64e58e0b471f49f4f067cf603450e78
 	{
 		key: "3",
 		label: "Profile",
