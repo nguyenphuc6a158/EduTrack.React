@@ -23,11 +23,18 @@ export const AppConsts = {
 		Pages_Users: "Pages.Users",
 		Pages_Users_Activation: "Pages.Users.Activation",
 		Pages_Roles: "Pages.Roles",
+
+		Pages_ClassManagement: "Pages.ClassManagement",
+  		Pages_ClassManagement_Attendance: "Pages.ClassManagement.Attendance",
+ 		Pages_ClassManagement_Structure: "Pages.ClassManagement.Structure",
+  		Pages_ClassManagement_Student: "Pages.ClassManagement.Student",
+		Pages_ClassManagement_ClassList: "Pages.ClassManagement.ClassList",
 	},
 	Granted_Permissions_Const: {
 		Pages_Tenants: { name: "Pages.Tenants", display_name: "Pages.Tenants" },
 		Pages_Users: { name: "Pages.Users", display_name: "Pages.Users" },
 		Pages_Roles: { name: "Pages.Roles", display_name: "Pages.Roles" },
+		
 	},
 	fontFamily: {
 		primary: 'Open Sans Variable',

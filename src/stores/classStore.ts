@@ -25,6 +25,7 @@ const useClassStore = create<ClassState>((set) => ({
 			set({ loading: true });
 			try{
 				const result = await classService.getAll(keyword, skipCount, maxResultCount);
+				console.log("Fetched clsaaaaaaaaaaaaaaaaaasses:");
 				if(result){
 					set({
 						listClasses: result.items || [],

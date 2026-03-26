@@ -3,10 +3,9 @@ import type { MenuProps } from "antd";
 import React from "react";
 import { AppConsts } from "src/lib/appconst";
 
-type MenuItem = Required<MenuProps>['items'][number];
-export type IMenuItem = MenuItem & {
+export type IMenuItem = {
 	key: string;
-	icon: React.ReactNode;
+	icon?: React.ReactNode;
 	label: React.ReactNode;
 	path?: string;
 	permissions: string[] | string;
@@ -25,14 +24,39 @@ export const routers: IMenuItem[] = [
 		component: React.lazy(() => import("src/scenes/Dashboard")),
 	},
 	{
-		key: "2",
+ 		key: "2",
+  		label: "Quản lý lớp học",
+ 		path: "/class-management",
+  		icon: <BookOutlined />,
+ 		permissions: '',
+  		children: [
+    	
+		{
+      		key: "2.1",
+      		label: "Quản lý lớp học",
+      		path: "/class-management/class-list",
+      		permissions: '',
+      		component: React.lazy(() => import("src/scenes/StructureManagement/ClassManagement")),
+    	},
+    	{
+      		key: "2.2",
+      		label: "Quản lý khối học",
+      		path: "/class-management/structure-management",
+     		permissions: '',
+      		component: React.lazy(() => import("src/scenes/StructureManagement/GradeManagement")),
+   	 	},
+    	
+  		],
+	},
+	{
+		key: "4",
 		label: "System Management",
 		path: "/system-management",
 		icon: <SettingOutlined />,
 		permissions: [AppConsts.Permission.Pages_Users, AppConsts.Permission.Pages_Roles, AppConsts.Permission.Pages_Tenants],
 		children: [
 			{
-				key: "2.1",
+				key: "4.1",
 				label: "User Management",
 				path: "/user-management",
 				icon: <UserOutlined />,
@@ -40,7 +64,7 @@ export const routers: IMenuItem[] = [
 				component: React.lazy(() => import("src/scenes/SystemManagement/UserManagement")),
 			},
 			{
-				key: "2.2",
+				key: "4.2",
 				label: "Quản lý vai trò",
 				path: "/role-management",
 				icon: <FormOutlined />,
@@ -48,7 +72,7 @@ export const routers: IMenuItem[] = [
 				component: React.lazy(() => import("src/scenes/SystemManagement/RoleManagement")),
 			},
 			{
-				key: "2.3",
+				key: "4.3",
 				label: "Quản lý tenants",
 				path: "/tenant-management",
 				icon: <BookOutlined />,
@@ -67,5 +91,6 @@ export const routers: IMenuItem[] = [
 		showInMenu: false,
 		component: React.lazy(() => import("src/scenes/Account/Profile")),
 	},
+	
 ];
 export default routers;
