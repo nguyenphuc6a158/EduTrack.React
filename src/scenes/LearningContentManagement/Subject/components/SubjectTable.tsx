@@ -58,6 +58,7 @@ const SubjectTable: React.FC<ISubjectTableProps> = ({listSubject, loading, onEdi
 				showSizeChanger: true,
 				showTotal: (totalSubject) => `Tổng: ${totalSubject}`,
 			}}
+			rowKey="id"
 		/>
 	)
 }

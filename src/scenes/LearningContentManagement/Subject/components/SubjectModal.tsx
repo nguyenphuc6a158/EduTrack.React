@@ -1,5 +1,4 @@
 import { Form, Input, Modal } from "antd";
-import { useForm } from "antd/es/form/Form";
 import type React from "react";
 import { useEffect } from "react";
 import { requiredRule } from "src/lib/validation";
@@ -11,8 +10,9 @@ interface ISubjectModalProps {
 	onCancel: () => void;
 };
 const SubjectModal: React.FC<ISubjectModalProps> = ({open, onCancel, selectedSubject, handleOk}) => {
-	const [form] = useForm();
+	const [form] = Form.useForm();
 	useEffect(()=>{
+		if (!open) return;
 		if(selectedSubject==null){
 			form.resetFields()
 		} else{
@@ -33,6 +33,7 @@ const SubjectModal: React.FC<ISubjectModalProps> = ({open, onCancel, selectedSub
 			open={open}
 			onCancel={onCancel}
 			onOk={onOk}
+			forceRender
 		>
 			<Form form={form}>
 				<Form.Item name="subjectName" label="Tên môn học" rules={[requiredRule("Tên môn học")]}>
