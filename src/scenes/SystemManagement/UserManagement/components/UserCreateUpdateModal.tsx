@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Form, Input, Switch, Select } from "antd";
+import { Modal, Form, Input, Switch, Select, DatePicker } from "antd";
 import { RoleDto, UserDto } from "src/services/services_autogen";
 import { requiredRule, emailRule } from "src/lib/validation";
+import dayjs from "dayjs";
 
 interface UserCreateUpdateModalProps {
     open: boolean;
@@ -24,6 +25,7 @@ const UserCreateUpdateModal: React.FC<UserCreateUpdateModalProps> = ({ open, edi
             if (editingUser) {
                 form.setFieldsValue({
                     ...editingUser,
+                    dateOfBirth: dayjs(editingUser.dateOfBirth)
                 });
             } else {
                 form.resetFields();
@@ -91,15 +93,12 @@ const UserCreateUpdateModal: React.FC<UserCreateUpdateModalProps> = ({ open, edi
                     >
                         <Input placeholder="Nhập số điện thoại" />
                     </Form.Item>
-                    {!editingUser && (
-                        <Form.Item
-                            name="password"
-                            label="Mật khẩu"
-                            rules={[requiredRule("Mật khẩu")]}
-                        >
-                            <Input.Password placeholder="Nhập mật khẩu" />
-                        </Form.Item>
-                    )}
+                    <Form.Item
+                        name="dateOfBirth"
+                        label="Ngày sinh"
+                    >
+                        <DatePicker format={"DD/MM/YYYY"} className="w-full"/>
+                    </Form.Item>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <Form.Item
@@ -107,17 +106,27 @@ const UserCreateUpdateModal: React.FC<UserCreateUpdateModalProps> = ({ open, edi
                         label="Vai trò của tài khoản"
                         rules={[requiredRule("Vai trò của tài khoản")]}
                     >
-                        <Select 
+                        <Select
+                            mode="multiple" 
                             options={optionRoles}
                             placeholder="Nhập tên tài khoản" 
                         />
                     </Form.Item>
+                    {!editingUser && (<Form.Item
+                        name="password"
+                        label="Mật khẩu"
+                        rules={[requiredRule("Mật khẩu")]}
+                    >
+                        <Input.Password placeholder="Nhập mật khẩu" />
+                    </Form.Item>)}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
                     <Form.Item
                         name="isActive"
-                        label="Kích hoạt"
+                        label="Trạng thái"
                         valuePropName="checked"
                     >
-                        <Switch checkedChildren="Hoạt động" unCheckedChildren="Không hoạt động" />
+                        <Switch checkedChildren="Kích hoạt" unCheckedChildren="Không kích hoạt" />
                     </Form.Item>
                 </div>
             </Form>

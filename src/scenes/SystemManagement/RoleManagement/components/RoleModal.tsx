@@ -43,11 +43,11 @@ const RoleModal: React.FC<RoleModalProps> = ({ open, editingRole, onOk, onCancel
 
     return (
         <Modal
-            title={editingRole ? "Edit Role" : "Add New Role"}
+            title={editingRole ? "Sửa vai trò" : "Thêm mới vai trò"}
             open={open}
             onOk={handleOk}
             onCancel={onCancel}
-            okText={editingRole ? "Update" : "Create"}
+            okText={editingRole ? "Sửa" : "Thêm"}
             width={800}
         >
             <Form form={form} layout="vertical">
@@ -55,31 +55,31 @@ const RoleModal: React.FC<RoleModalProps> = ({ open, editingRole, onOk, onCancel
                     <Col span={12}>
                         <Form.Item
                             name="name"
-                            label="Role Name"
-                            rules={[requiredRule("Role Name")]}
+                            label="Tên vai trò"
+                            rules={[requiredRule("Tên vai trò")]}
                         >
-                            <Input placeholder="e.g. Admin" />
+                            <Input placeholder="Nhập tên vai trò" />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
                             name="displayName"
-                            label="Display Name"
-                            rules={[requiredRule("Display Name")]}
+                            label="Tên hiển thị"
+                            rules={[requiredRule("Tên hiển thị")]}
                         >
-                            <Input placeholder="e.g. Administrator" />
+                            <Input placeholder="Nhập tên hiển thị" />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Form.Item
                     name="description"
-                    label="Description"
+                    label="Miêu tả"
                 >
-                    <Input.TextArea rows={2} placeholder="Optional description..." />
+                    <Input.TextArea rows={2} placeholder="Nhập miêu tả" />
                 </Form.Item>
 
                 <div className="mt-4">
-                    <h4 className="font-semibold mb-2">Permissions</h4>
+                    <h4 className="font-semibold mb-2">Danh sách quyền</h4>
                     <Form.Item name="grantedPermissions">
                         <Checkbox.Group style={{ width: '100%' }}>
                             <Row>

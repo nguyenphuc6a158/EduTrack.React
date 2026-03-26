@@ -2,8 +2,9 @@ import { useEffect } from 'react';
 import { Router } from 'src/components/Router';
 import { useTheme } from './ThemeProvider';
 import { Button } from 'antd';
+import { App } from 'antd';
 
-function App() {
+function MyApp() {
 
   useEffect(() => {
     const checkToken = () => {
@@ -21,10 +22,12 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white">
-      <Router />
-    </div>
+    <App>
+      <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white">
+        <Router />
+      </div>
+    </App>
   );
 }
 
-export default App;
+export default MyApp;

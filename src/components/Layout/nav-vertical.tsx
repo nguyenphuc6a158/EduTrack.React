@@ -1,16 +1,14 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Layout, Menu } from "antd";
+import { Layout, Menu } from "antd";
 import React, { useMemo } from "react";
 const { Header, Content, Sider } = Layout;
 import menuItems, { type IMenuItem } from "../Router/router.config";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import utils from "../../utils/utils";
-import { Footer } from "antd/es/layout/layout";
-import { useTheme } from "src/ThemeProvider";
 import NavLogo from "./nav-logo";
 import { NAV_WIDTH } from "./config";
 import { useSettingActions, useSettings } from "src/stores/settingStore";
 import { ThemeLayout, ThemeMode } from "src/lib/enumconst";
+import { isGrantedByPrefix } from "src/lib/abpUtility";
 
 
 type Props = {
@@ -22,7 +20,7 @@ export default function NavVertical(props: Props) {
 
     const filterMenuItems = (items: IMenuItem[]): IMenuItem[] => {
         return items
-            .filter((item) => item.showInMenu !== false)
+            .filter((item) => item.showInMenu !== false  && (item.permissions =='' || isGrantedByPrefix(item.permissions)))
             .map((item) => {
                 if (item.children) {
                     return {
