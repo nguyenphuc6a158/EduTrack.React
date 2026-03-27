@@ -1,21 +1,26 @@
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Col, Select, Space } from "antd";
+import { App, Button, Col, message, Select, Space } from "antd";
 import type React from "react";
-import { useEffect, useState } from "react";
-import { useChapterActions, useChapters } from "src/stores/chapterStore";
+import { useEffect, useMemo, useState } from "react";
+import { useChapterActions, useChapters, usetotalCountChapter } from "src/stores/chapterStore";
 import { useSubjects, useSubjectsActions } from "src/stores/subjectStore";
+import ChapterTable from "./components/ChapterTable";
+import { CreateChapterDto, ChapterDto, UpdateChapterDto } from "src/services/services_autogen";
+import ChapterModal from "./components/ChapterModal";
 
 const ChapterManagement: React.FC = ()=>{
+	const { message } = App.useApp();
 	const listSubject = useSubjects();
 	const subjectActions = useSubjectsActions();
 	const listChapter = useChapters();
 	const chapterActions = useChapterActions();
-
-	const [optionSubject, setOptionSubject] = useState<{label: string, value: number}[] | []>([])
-	const [idSelectedSubject, setIdSelectedSubject] = useState<number | null>(null)
-	const openAddModal = () => {
-
-	}
+	const totalChapter = usetotalCountChapter();
+	const [idSelectedSubject, setIdSelectedSubject] = useState<number | null>(()=>{
+		const stored = localStorage.getItem("idSelectedSubject");
+    	return stored ? Number(stored) : null;
+	})
+	const [selectedChapter, setselectedChapter] = useState<ChapterDto | null>(null)
+	const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
 	const fetchSubject = async () => {
 		try{
@@ -29,7 +34,7 @@ const ChapterManagement: React.FC = ()=>{
 			if(selectedSubject != null){
 				await chapterActions.getChapterBySubject(selectedSubject);
 			} else{
-				await chapterActions.getAll(undefined,10);
+				await chapterActions.getAll();
 			}
 		} catch(error){	
 		}
@@ -37,22 +42,14 @@ const ChapterManagement: React.FC = ()=>{
 
 	useEffect(()=>{
 		fetchSubject();
-		let idSelectedSubject = localStorage.getItem("idSelectedSubject");
-		if(idSelectedSubject != undefined){
-			setIdSelectedSubject(Number(idSelectedSubject))
-			fetchChapter(Number(idSelectedSubject));
-		} else {
-			fetchChapter(null);
-		}
 	},[])
 
-	useEffect(()=>{
-		const options = listSubject.map(item => ({
+	const optionSubject = useMemo(() => {
+		return listSubject.map(item => ({
 			value: item.id,
 			label: item.subjectName || "",
 		}));
-		setOptionSubject(options)
-	},[listSubject])
+	}, [listSubject]);
 
 	useEffect(()=>{
 		fetchChapter(idSelectedSubject);
@@ -67,7 +64,46 @@ const ChapterManagement: React.FC = ()=>{
 		localStorage.setItem("idSelectedSubject", item.toString());
 		setIdSelectedSubject(item)
 	}
+	const onDelete = async (id: number) => {
+		try{
+			chapterActions.delete(id);
+			message.success("Xóa chương thành công");
+		} catch(error){
+			message.error("Xóa chương thất bại");
+		}
+	}
 
+	const openAddModal = () => {
+		setselectedChapter(null);
+		setIsOpenModal(true);
+	}
+
+	const openEditModal = (item: ChapterDto) => {
+		setselectedChapter(item);
+		setIsOpenModal(true);
+	}
+	
+	const handleOk = (item: any) => {
+		try {if(selectedChapter){
+			let input: UpdateChapterDto = new UpdateChapterDto ();
+			input.id = selectedChapter.id
+			input.subjectId = item.subjectId;
+			input.chapterName = item.chapterName;
+			chapterActions.update(input);
+			message.success("Chỉnh sửa chương thành công");
+		} else {
+			let input: CreateChapterDto = new CreateChapterDto ();
+			input.subjectId = item.subjectId;
+			input.chapterName = item.chapterName;
+			chapterActions.create(input);
+			message.success("Thêm mới chương thành công");
+		}} catch(error){
+			console.log(error)
+			message.error("Cập nhật thất bại vui lòng thử lại");
+		}
+		fetchChapter(idSelectedSubject);
+		setIsOpenModal(false)
+	}
 	return(
 		<div className="p-6">
 			<div className="flex justify-between items-center mb-6">
@@ -98,6 +134,19 @@ const ChapterManagement: React.FC = ()=>{
 					</Button>
 				</Col>
 			</div>
+			<ChapterTable 
+				listChapter={listChapter}
+				onDelete={onDelete}
+				onEdit={openEditModal}
+				totalChapter={totalChapter}
+			/>
+			<ChapterModal 
+				onCancel={()=>(setIsOpenModal(false))}
+				onOk={handleOk}
+				open={isOpenModal}
+				selectedChapter={selectedChapter}
+				listSubject={listSubject}
+			/>
 		</div>
 	)
 }

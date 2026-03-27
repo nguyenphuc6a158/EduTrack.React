@@ -27,7 +27,7 @@ const useChapterStore = create<ChapterState>((set) => ({
 			try{
 				let result = await chapterService.getChapterBySubject(subjectID)
 				set({
-					listChapters:  result || []
+					listChapters:  result.items || []
 				})
 			} finally{
 				set({loading: false})
@@ -74,6 +74,7 @@ const useChapterStore = create<ChapterState>((set) => ({
 
 export const useChapters = () => useChapterStore((state) => state.listChapters);
 export const useChapter = () => useChapterStore((state) => state.chapterItem);
+export const usetotalCountChapter = () => useChapterStore((state) => state.totalCountChapter);
 export const useChapterLoading = () => useChapterStore((state) => state.loading);
 export const useChapterActions = () => useChapterStore((state) => state.actions);
 export default useChapterStore;

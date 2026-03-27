@@ -74,8 +74,6 @@ const RoleManagement = () => {
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-800">Role Management</h2>
-                    <p className="text-gray-500">Manage system roles and their permissions.</p>
                     <h2 className="text-2xl font-bold text-gray-800">Quản lý vai trò</h2>
                     <p className="text-gray-500">Quản lý hệ thống vai trò và phân quyền cho các vai trò.</p>
                 </div>
@@ -85,7 +83,6 @@ const RoleManagement = () => {
                     onClick={openAddModal}
                     size="large"
                 >
-                    Add Role
                     Thêm vai trò
                 </Button>
             </div>

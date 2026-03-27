@@ -12,7 +12,7 @@ interface IClassModalProps {
     listGrades: GradeDto[];
 }
 
-const ClassModal = ({ visible, editingItem, onOk, onCancel, confirmLoading, listGrades }: IClassModalProps) => {
+const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, onCancel, confirmLoading, listGrades }) => {
     const [form] = Form.useForm();
 
     useEffect(() => {
