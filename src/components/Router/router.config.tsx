@@ -3,7 +3,8 @@ import type { MenuProps } from "antd";
 import React from "react";
 import { AppConsts } from "src/lib/appconst";
 import { systemManagementRouter } from "./systemManagementRouter";
-import { learningContentManagement } from "./learningContentManagement";
+import { learningContentManagementRouter } from "./learningContentManagementRouter";
+import classManagementRouter from "./classManagementRouter";
 
 export type IMenuItem = {
 	key: string;
@@ -25,32 +26,8 @@ export const routers: IMenuItem[] = [
 		permissions: '',
 		component: React.lazy(() => import("src/scenes/Dashboard")),
 	},
-	{
- 		key: "2",
-  		label: "Quản lý lớp học",
- 		path: "/class-management",
-  		icon: <BookOutlined />,
- 		permissions: '',
-  		children: [
-    	
-		{
-      		key: "2.1",
-      		label: "Quản lý lớp học",
-      		path: "/class-management/class-list",
-      		permissions: '',
-      		component: React.lazy(() => import("src/scenes/StructureManagement/ClassManagement")),
-    	},
-    	{
-      		key: "2.2",
-      		label: "Quản lý khối học",
-      		path: "/class-management/structure-management",
-     		permissions: '',
-      		component: React.lazy(() => import("src/scenes/StructureManagement/GradeManagement")),
-   	 	},
-    	
-  		],
-	},
-	...learningContentManagement,
+	...classManagementRouter,
+	...learningContentManagementRouter,
 	...systemManagementRouter,
 	{
 		key: "3",

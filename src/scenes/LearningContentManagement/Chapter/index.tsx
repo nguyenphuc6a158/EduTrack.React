@@ -118,8 +118,8 @@ const ChapterManagement: React.FC = ()=>{
 							value={idSelectedSubject}
 							onChange={(item) => onchangeSubject(item)}
 							options={optionSubject}
-							placeholder="Chọn môn học"
-							style={{ width: '80%' }}
+							placeholder="Tìm kiếm theo môn học..."
+							style={{ width: "200px" }}
 						/>
 						<Button type="primary" icon={<SearchOutlined />} />
 					</Space.Compact>

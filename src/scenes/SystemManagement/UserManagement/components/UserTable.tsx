@@ -92,6 +92,7 @@ const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, on
 		{
 			title: "Hành động",
 			key: "action",
+			width: 200,
 			align: "center" as const,
 			render: (_: any, record: UserDto) => (
 				record.userName === 'admin' ? null : (

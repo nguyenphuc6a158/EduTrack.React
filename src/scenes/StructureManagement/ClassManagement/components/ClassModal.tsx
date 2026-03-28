@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal, Form, Input, Select, Row, Col, Switch } from "antd";
 import { requiredRule } from "src/lib/validation";
-import type { ClassDto, GradeDto } from "src/services/services_autogen";
+import type { ClassDto, GradeDto, UserDto } from "src/services/services_autogen";
 
 interface IClassModalProps {
     visible: boolean;
@@ -10,11 +10,11 @@ interface IClassModalProps {
     onCancel: () => void;
     confirmLoading: boolean;
     listGrades: GradeDto[];
+    listTeachers: UserDto[];
 }
 
-const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, onCancel, confirmLoading, listGrades }) => {
+const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, onCancel, confirmLoading, listGrades, listTeachers }) => {
     const [form] = Form.useForm();
-
     useEffect(() => {
         if (visible) {
             if (editingItem) {
@@ -25,7 +25,25 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
                 form.resetFields();
             }
         }
-    }, [visible, editingItem, form]);
+    }, [editingItem]);
+
+    const optionTeachers = useMemo(()=>{
+        return listTeachers.map(item=>{
+            return({
+                label: item.fullName || "",
+                value: item.id,
+            })
+        });
+    },[listTeachers])
+
+    const opntionGrades = useMemo(()=>{
+        return listGrades.map(grade => {
+            return ({ 
+                label: grade.gradeName, 
+                value: grade.id 
+            })
+        })
+    },[listGrades])
 
     const handleOk = async () => {
         try {
@@ -61,8 +79,10 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
                             label="Khối lớp"
                             rules={[requiredRule("Vui lòng chọn khối lớp")]}
                         >
-                            <Select options={listGrades.map((grade) => ({ label: grade.gradeName, value: grade.id }))} placeholder="Chọn khối">
-                            </Select>
+                            <Select 
+                                options={opntionGrades} 
+                                placeholder="Chọn khối học" 
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -71,7 +91,10 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
                             label="Giáo viên"
                             rules={[requiredRule("Vui lòng chọn giáo viên")]}
                         >
-                            <Input placeholder="Nhập tên giáo viên" />
+                            <Select 
+                                options={optionTeachers}
+                                placeholder="Chọn giáo viên dạy lớp học này"
+                            />
                         </Form.Item>
                     </Col>
                 </Row>

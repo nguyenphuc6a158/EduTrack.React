@@ -13,6 +13,7 @@ interface ClassState {
 		update: (body: UpdateClassDto) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
+		getClassByGrade: (gradeId: number) => Promise<void>;
 	};
 }
 const useClassStore = create<ClassState>((set) => ({
@@ -21,6 +22,20 @@ const useClassStore = create<ClassState>((set) => ({
 	loading: false,
 	classItem: undefined,
 	actions: {
+		getClassByGrade: async (id) => {
+			set({ loading: true });
+			try{
+				const result = await classService.getClassByGrade(id);
+				if(result){
+					set({
+						listClasses: result.items || [],
+						totalCountClass: result.items?.length  || 0
+					})
+				}
+			} finally {
+                set({ loading: false });
+            }
+		},
 		getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
 			set({ loading: true });
 			try{
@@ -32,8 +47,8 @@ const useClassStore = create<ClassState>((set) => ({
 					})
 				}
 			} finally {
-                set({ loading: false });
-            }
+				set({ loading: false });
+			}
 		},
 		get : async (id) : Promise<void> => {
 			set({ loading: true });

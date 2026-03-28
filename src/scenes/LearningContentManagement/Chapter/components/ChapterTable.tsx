@@ -16,6 +16,8 @@ const ChapterTable : React.FC<IChapterProps> = ({listChapter, onDelete, onEdit, 
 		},
 		{
 			title:"Hành động",
+			width: 200,
+			align: "center" as const,
 			render: (record: ChapterDto) => {
 				return(
 					<Space size="middle">

@@ -17,6 +17,8 @@ const SubjectTable: React.FC<ISubjectTableProps> = ({listSubject, loading, onEdi
 			dataIndex:"subjectName",
 		},
 		{
+			width: 200,
+			align: "center" as const,
 			title: "Hành động",
 			render: (record: SubjectDto) => {
 				return(

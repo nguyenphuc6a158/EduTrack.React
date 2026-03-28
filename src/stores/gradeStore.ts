@@ -3,7 +3,7 @@ import { CreateGradeDto, GradeDto, GradeService, UpdateGradeDto } from "src/serv
 import { create } from 'zustand';
 const gradeService = new GradeService('',http);
 interface GradeState {
-	listGradees: any[];
+	listGradees: GradeDto[];
 	gradeItem?: GradeDto;
 	totalCountGrade: number;
 	loading: boolean;
@@ -61,6 +61,7 @@ const useGradeStore = create<GradeState>((set) => ({
 }));
 
 export const useGradees = () => useGradeStore((state) => state.listGradees);
+export const useTotalCountGrade = () => useGradeStore((state) => state.totalCountGrade);
 export const useGrade = () => useGradeStore((state) => state.gradeItem);
 export const useGradeLoading = () => useGradeStore((state) => state.loading);
 export const useGradeActions = () => useGradeStore((state) => state.actions);

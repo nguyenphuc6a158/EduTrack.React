@@ -2,7 +2,7 @@ import { BlockOutlined, BookOutlined, ExperimentOutlined } from "@ant-design/ico
 import React from "react";
 import { AppConsts } from "src/lib/appconst";
 
-export const learningContentManagement = [
+export const learningContentManagementRouter = [
 	{
 		key: "3",
 		label: "Nội dung học",
@@ -12,19 +12,19 @@ export const learningContentManagement = [
 		children: [
 			{
 				key: "3.1",
-				label: "Môn học",
-				path: "/subject",
-				icon: <ExperimentOutlined />,
-				permissions: [AppConsts.Permission.Pages_Subjects],
-				component: React.lazy(() => import("src/scenes/LearningContentManagement/Subject")),
-			},
-			{
-				key: "3.2",
 				label: "Chương",
 				path: "/chapter",
 				icon: <BlockOutlined />,
 				permissions: [AppConsts.Permission.Pages_Chapters],
 				component: React.lazy(() => import("src/scenes/LearningContentManagement/Chapter")),
+			},			
+			{
+				key: "3.2",
+				label: "Môn học",
+				path: "/subject",
+				icon: <ExperimentOutlined />,
+				permissions: [AppConsts.Permission.Pages_Subjects],
+				component: React.lazy(() => import("src/scenes/LearningContentManagement/Subject")),
 			},
 		],
 	}

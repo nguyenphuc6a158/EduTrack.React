@@ -9,6 +9,7 @@ interface UserState {
     totalCountUser: number;
     loading: boolean;
     listRoles: RoleDto[];
+    listTeachers: UserDto[];
     actions: {
         getRoles: () => Promise<void>;
         getAll: (keyword?: string, isActive?: boolean, sorting?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
@@ -16,6 +17,7 @@ interface UserState {
         update: (body: UserDto) => Promise<void>;
         delete: (id: number) => Promise<void>;
         resetPassword: (body?: ResetPasswordDto) => Promise<void>;
+        getAllTeacher: () => Promise<void>
     };
 }
 
@@ -24,7 +26,21 @@ const useUserStore = create<UserState>((set) => ({
     listRoles: [],
     totalCountUser: 0,
     loading: false,
+    listTeachers: [],
     actions: {
+        getAllTeacher: async () => {
+            set({ loading: true });
+             try {
+                const result = await userService.getAllTeacher();
+                if (result) {
+                    set({
+                        listTeachers: result.items || [],
+                    });
+                } 
+            } finally {
+                set({ loading: false });
+            }
+        },
         getRoles : async () => { 
             set({ loading: true });
             try {
@@ -83,6 +99,7 @@ const useUserStore = create<UserState>((set) => ({
 }));
 
 export const useUsers = () => useUserStore((state) => state.listUsers);
+export const useTeachers = () => useUserStore((state) => state.listTeachers);
 export const useRolesFromUser = () => useUserStore((state) => state.listRoles);
 export const useUserTotal = () => useUserStore((state) => state.totalCountUser);
 export const useUserLoading = () => useUserStore((state) => state.loading);

@@ -1218,6 +1218,62 @@ export class ClassService {
     }
 
     /**
+     * @param gradeId (optional) 
+     * @return OK
+     */
+    getClassByGrade(gradeId: number | undefined, cancelToken?: CancelToken): Promise<ClassDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Class/GetClassByGrade?";
+        if (gradeId === null)
+            throw new globalThis.Error("The parameter 'gradeId' cannot be null.");
+        else if (gradeId !== undefined)
+            url_ += "gradeId=" + encodeURIComponent("" + gradeId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetClassByGrade(_response);
+        });
+    }
+
+    protected processGetClassByGrade(response: AxiosResponse): Promise<ClassDtoPagedResultDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = ClassDtoPagedResultDto.fromJS(resultData200.result);
+            return Promise.resolve<ClassDtoPagedResultDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ClassDtoPagedResultDto>(null as any);
+    }
+
+    /**
      * @param keyword (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
@@ -5628,7 +5684,7 @@ export class UserService {
     /**
      * @return OK
      */
-    getAllTeacher( cancelToken?: CancelToken): Promise<UserDto[]> {
+    getAllTeacher( cancelToken?: CancelToken): Promise<UserDtoListResultDto> {
         let url_ = this.baseUrl + "/api/services/app/User/GetAllTeacher";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -5652,7 +5708,7 @@ export class UserService {
         });
     }
 
-    protected processGetAllTeacher(response: AxiosResponse): Promise<UserDto[]> {
+    protected processGetAllTeacher(response: AxiosResponse): Promise<UserDtoListResultDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -5666,21 +5722,14 @@ export class UserService {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(UserDto.fromJS(item));
-            }
-            else {
-                result200 = null as any;
-            }
-            return Promise.resolve<UserDto[]>(result200);
+            result200 = UserDtoListResultDto.fromJS(resultData200.result);
+            return Promise.resolve<UserDtoListResultDto>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<UserDto[]>(null as any);
+        return Promise.resolve<UserDtoListResultDto>(null as any);
     }
 
     /**
@@ -12024,6 +12073,57 @@ export interface IUserDto {
     lastLoginTime: Date | undefined;
     creationTime: Date;
     roleNames: string[] | undefined;
+}
+
+export class UserDtoListResultDto implements IUserDtoListResultDto {
+    items!: UserDto[] | undefined;
+
+    constructor(data?: IUserDtoListResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(UserDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UserDtoListResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDtoListResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+
+    clone(): UserDtoListResultDto {
+        const json = this.toJSON();
+        let result = new UserDtoListResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserDtoListResultDto {
+    items: UserDto[] | undefined;
 }
 
 export class UserDtoPagedResultDto implements IUserDtoPagedResultDto {
