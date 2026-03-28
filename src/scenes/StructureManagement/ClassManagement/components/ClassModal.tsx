@@ -98,14 +98,6 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
                         </Form.Item>
                     </Col>
                 </Row>
-
-                <Form.Item 
-                    name="isActive" 
-                    label="Trạng thái" 
-                    valuePropName="checked"
-                >
-                    <Switch checkedChildren="Bật" unCheckedChildren="Tắt" />
-                </Form.Item>
             </Form>
         </Modal>
     );
