@@ -3,7 +3,7 @@ import { ChapterDto, ChapterService, CreateChapterDto, UpdateChapterDto } from "
 import { create } from 'zustand';
 const chapterService = new ChapterService('',http);
 interface ChapterState {
-	listChapters: any[];
+	listChapters: ChapterDto[];
 	chapterItem?: ChapterDto;
 	totalCountChapter: number;
 	loading: boolean;

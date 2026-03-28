@@ -3,7 +3,7 @@ import { ClassDto, ClassService, CreateClassDto, UpdateClassDto } from "src/serv
 import { create } from 'zustand';
 const classService = new ClassService('',http);
 interface ClassState {
-	listClasses: any[];
+	listClasses: ClassDto[];
 	classItem?: ClassDto;
 	totalCountClass: number;
 	loading: boolean;
