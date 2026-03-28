@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button, message, Card, Col, Space, Select } from "antd";
+import { Button, message, Card, Col, Space, Select, App } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ClassTable from "./components/ClassTable"; 
 import ClassModal from "./components/ClassModal";
@@ -9,6 +9,7 @@ import { ClassDto, CreateClassDto, GradeDto, UpdateClassDto } from "src/services
 import { useTeachers, useUserActions } from "src/stores/userStore";
 
 const ClassManagement = () => {
+	const { message } = App.useApp();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<ClassDto | null>(null);
 	const [idSelectedGrade, setidSelectedGrade] = useState<number | null>(()=>{
@@ -83,6 +84,11 @@ const ClassManagement = () => {
 		localStorage.setItem("idSelectedGrade", value.toString());
 		setidSelectedGrade(value);
 	}
+	const onDeleteClass = async (id: number) => {
+		await classActions.delete(id); 
+		await classActions.getAll(undefined, 0, 100);
+		message.success("Xóa lớp học thành công")
+	}
 	return (
 		<div className="p-6">
 			<div className="flex justify-between items-center mb-6">
@@ -113,7 +119,7 @@ const ClassManagement = () => {
 				dataSource={listClasses} 
 				loading={loading} 
 				onEdit={(item: any) => { setEditingItem(item); setIsModalOpen(true); }} 
-				onDelete={async (id: number) => { await classActions.delete(id); await classActions.getAll(undefined, 0, 100); }} 
+				onDelete={(id)=>onDeleteClass(id)} 
 				totalClass={totalClass}
 			/>
 			<ClassModal 

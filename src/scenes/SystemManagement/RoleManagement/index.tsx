@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, message } from "antd";
+import { App, Button, message } from "antd";
 import { useRoles, useRoleActions, useRoleLoading } from "src/stores/roleStore";
 import { CreateRoleDto, RoleDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
@@ -7,6 +7,7 @@ import RoleTable from "./components/RoleTable";
 import RoleModal from "./components/RoleModal";
 
 const RoleManagement = () => {
+    const { message } = App.useApp();
     const roles = useRoles();
     const actions = useRoleActions();
     const loading = useRoleLoading();
