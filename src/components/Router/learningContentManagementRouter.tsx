@@ -1,4 +1,4 @@
-import { BlockOutlined, BookOutlined, ExperimentOutlined } from "@ant-design/icons";
+import { BlockOutlined, BookOutlined, ExperimentOutlined, QuestionCircleOutlined, ReadOutlined } from "@ant-design/icons";
 import React from "react";
 import { AppConsts } from "src/lib/appconst";
 
@@ -10,6 +10,22 @@ export const learningContentManagementRouter = [
 		icon: <BookOutlined />,
 		permissions: [AppConsts.Permission.Pages_Subjects, AppConsts.Permission.Pages_Chapters],
 		children: [
+			{
+				key: "3.4",
+				label: "Ngân hàng câu hỏi",
+				path: "/questions",
+				icon: <QuestionCircleOutlined />,
+				permissions: [AppConsts.Permission.Pages_QuestionOptions],
+				component: React.lazy(() => import("src/scenes/LearningContentManagement/Question")),
+			},
+			{
+				key: "3.3",
+				label: "Bài tập",
+				path: "/assignment",
+				icon: <ReadOutlined />,
+				permissions: [AppConsts.Permission.Pages_Assignments],
+				component: React.lazy(() => import("src/scenes/LearningContentManagement/Assignment")),
+			},
 			{
 				key: "3.1",
 				label: "Chương",

@@ -12,7 +12,6 @@ interface IChapterModalProps {
 };
 const ChapterModal: React.FC<IChapterModalProps> = ({open, selectedChapter, onCancel, onOk, listSubject}) => {
 	const [form] = Form.useForm();
-	const [optionSubject, setOptionSubject] = useState<{value: number, label: string}[]>([])
 	useEffect(()=>{
 		if(selectedChapter != null && selectedChapter.id != undefined){
 			form.setFieldsValue({
@@ -23,14 +22,13 @@ const ChapterModal: React.FC<IChapterModalProps> = ({open, selectedChapter, onCa
 		}
 	},[selectedChapter]);
 
-	useMemo(()=>{
-		let option = listSubject.map(item=>{
+	const optionSubject =  useMemo(()=>{
+		return listSubject.map(item=>{
 			return{
 				label: item.subjectName || "",
 				value: item.id,
 			}
 		})
-		setOptionSubject(option)
 	},[listSubject]);
 
 	const handleOk = async () => {
@@ -54,8 +52,6 @@ const ChapterModal: React.FC<IChapterModalProps> = ({open, selectedChapter, onCa
 				<Form.Item name="chapterName" label="Tên chương" rules={[requiredRule("Tên chương")]}>
 					<Input placeholder="Nhập tển chương"/>
 				</Form.Item>
-			</Form>
-			<Form form={form}>
 				<Form.Item name="subjectId" label="Thuộc môn" rules={[requiredRule("Môn học")]}>
 					<Select options={optionSubject}/>
 				</Form.Item>

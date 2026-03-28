@@ -2128,62 +2128,6 @@ export class QuestionService {
     }
 
     /**
-     * @param id (optional) 
-     * @return OK
-     */
-    get(id: number | undefined, cancelToken?: CancelToken): Promise<QuestionDto> {
-        let url_ = this.baseUrl + "/api/services/app/Question/Get?";
-        if (id === null)
-            throw new globalThis.Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processGet(_response);
-        });
-    }
-
-    protected processGet(response: AxiosResponse): Promise<QuestionDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = QuestionDto.fromJS(resultData200.result);
-            return Promise.resolve<QuestionDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<QuestionDto>(null as any);
-    }
-
-    /**
      * @param keyword (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
@@ -2247,6 +2191,62 @@ export class QuestionService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<QuestionDtoPagedResultDto>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return OK
+     */
+    get(id: number | undefined, cancelToken?: CancelToken): Promise<QuestionDto> {
+        let url_ = this.baseUrl + "/api/services/app/Question/Get?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGet(_response);
+        });
+    }
+
+    protected processGet(response: AxiosResponse): Promise<QuestionDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = QuestionDto.fromJS(resultData200.result);
+            return Promise.resolve<QuestionDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<QuestionDto>(null as any);
     }
 
     /**
@@ -8879,6 +8879,7 @@ export class QuestionDto implements IQuestionDto {
     content!: string | undefined;
     explanation!: string | undefined;
     chapterId!: number;
+    chapterName!: string | undefined;
     difficultyLevel!: number;
 
     constructor(data?: IQuestionDto) {
@@ -8896,6 +8897,7 @@ export class QuestionDto implements IQuestionDto {
             this.content = _data["content"];
             this.explanation = _data["explanation"];
             this.chapterId = _data["chapterId"];
+            this.chapterName = _data["chapterName"];
             this.difficultyLevel = _data["difficultyLevel"];
         }
     }
@@ -8913,6 +8915,7 @@ export class QuestionDto implements IQuestionDto {
         data["content"] = this.content;
         data["explanation"] = this.explanation;
         data["chapterId"] = this.chapterId;
+        data["chapterName"] = this.chapterName;
         data["difficultyLevel"] = this.difficultyLevel;
         return data;
     }
@@ -8930,6 +8933,7 @@ export interface IQuestionDto {
     content: string | undefined;
     explanation: string | undefined;
     chapterId: number;
+    chapterName: string | undefined;
     difficultyLevel: number;
 }
 
