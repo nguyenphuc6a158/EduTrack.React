@@ -37,14 +37,6 @@ export const AppConsts = {
 		Pages_Users_Delete: "Pages.Users.Delete",
 
 		Pages_Roles: "Pages.Roles",
-<<<<<<< HEAD
-
-		Pages_ClassManagement: "Pages.ClassManagement",
-  		Pages_ClassManagement_Attendance: "Pages.ClassManagement.Attendance",
- 		Pages_ClassManagement_Structure: "Pages.ClassManagement.Structure",
-  		Pages_ClassManagement_Student: "Pages.ClassManagement.Student",
-		Pages_ClassManagement_ClassList: "Pages.ClassManagement.ClassList",
-=======
 		Pages_Roles_Create: "Pages.Roles.Create",
 		Pages_Roles_Update: "Pages.Roles.Update",
 		Pages_Roles_Delete: "Pages.Roles.Delete",
@@ -113,7 +105,6 @@ export const AppConsts = {
 		Pages_Subjects_Create: "Pages.Subjects.Create",
 		Pages_Subjects_Update: "Pages.Subjects.Update",
 		Pages_Subjects_Delete: "Pages.Subjects.Delete",
->>>>>>> feb11b46a64e58e0b471f49f4f067cf603450e78
 	},
 	Granted_Permissions_Const: {
 		Pages_Tenants: { name: "Pages.Tenants", display_name: "Pages.Tenants" },

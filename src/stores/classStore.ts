@@ -3,7 +3,7 @@ import { ClassDto, ClassService, CreateClassDto, UpdateClassDto } from "src/serv
 import { create } from 'zustand';
 const classService = new ClassService('',http);
 interface ClassState {
-	listClasses: any[];
+	listClasses: ClassDto[];
 	classItem?: ClassDto;
 	totalCountClass: number;
 	loading: boolean;
@@ -13,6 +13,7 @@ interface ClassState {
 		update: (body: UpdateClassDto) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
+		getClassByGrade: (gradeId: number) => Promise<void>;
 	};
 }
 const useClassStore = create<ClassState>((set) => ({
@@ -21,11 +22,10 @@ const useClassStore = create<ClassState>((set) => ({
 	loading: false,
 	classItem: undefined,
 	actions: {
-		getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
+		getClassByGrade: async (id) => {
 			set({ loading: true });
 			try{
-				const result = await classService.getAll(keyword, skipCount, maxResultCount);
-				console.log("Fetched clsaaaaaaaaaaaaaaaaaasses:");
+				const result = await classService.getClassByGrade(id);
 				if(result){
 					set({
 						listClasses: result.items || [],
@@ -35,6 +35,20 @@ const useClassStore = create<ClassState>((set) => ({
 			} finally {
                 set({ loading: false });
             }
+		},
+		getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
+			set({ loading: true });
+			try{
+				const result = await classService.getAll(keyword, skipCount, maxResultCount);
+				if(result){
+					set({
+						listClasses: result.items || [],
+						totalCountClass: result.items?.length  || 0
+					})
+				}
+			} finally {
+				set({ loading: false });
+			}
 		},
 		get : async (id) : Promise<void> => {
 			set({ loading: true });
@@ -63,6 +77,7 @@ const useClassStore = create<ClassState>((set) => ({
 
 export const useClasses = () => useClassStore((state) => state.listClasses);
 export const useClass = () => useClassStore((state) => state.classItem);
+export const useTotalCountClass = () => useClassStore((state) => state.totalCountClass);
 export const useClassLoading = () => useClassStore((state) => state.loading);
 export const useClassActions = () => useClassStore((state) => state.actions);
 export default useClassStore;

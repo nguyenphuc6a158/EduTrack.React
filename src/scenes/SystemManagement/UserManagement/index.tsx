@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, message } from "antd";
+import { Button, App } from "antd";
 import { useUsers, useUserActions, useUserTotal, useUserLoading, useRolesFromUser } from "src/stores/userStore";
 import { CreateUserDto, ResetPasswordDto, UserDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
@@ -16,6 +16,7 @@ const UserManagement = () => {
 	const [isCreateUpdateModalOpen, setIsCreateUpdateModalOpen] = useState(false);
 	const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false);
 	const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
+	const { message } = App.useApp();
 	const fetchUsers = async () => {
 		try {
 			await userActions.getAll(undefined, undefined, undefined, 0, 100);

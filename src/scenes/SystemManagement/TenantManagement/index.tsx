@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, message } from "antd";
+import { App, Button, message } from "antd";
 import { useTenants, useTenantActions, useTenantTotal, useTenantLoading } from "src/stores/tenantStore";
 import { CreateTenantDto, TenantDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
@@ -7,6 +7,7 @@ import TenantTable from "./components/TenantTable";
 import TenantModal from "./components/TenantModal";
 
 const TenantManagement = () => {
+    const { message } = App.useApp();
     const tenants = useTenants();
     const actions = useTenantActions();
     const total = useTenantTotal();

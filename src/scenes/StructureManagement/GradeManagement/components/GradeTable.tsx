@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Table, Button, Space, Popconfirm, Tag } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { GradeDto } from "src/services/services_autogen";
@@ -8,29 +8,47 @@ interface GradeTableProps {
     loading: boolean;
     onEdit: (grade: GradeDto) => void;
     onDelete: (id: number) => void;
+    totalGrade: number;
 }
 
-const GradeTable: React.FC<GradeTableProps> = ({ dataSource, loading, onEdit, onDelete }) => {
+const GradeTable: React.FC<GradeTableProps> = ({ dataSource, loading, onEdit, onDelete, totalGrade }) => {
+    const filters = useMemo(()=>{
+        return [...new Set(dataSource?.flatMap(dataSource => dataSource.gradeName || []))].map(item=>{
+            return({
+                value: item,
+                text: item || "",
+            })
+        })
+    },[dataSource]);
+
     const columns = [
         {
             title: "Tên khối lớp",
             dataIndex: "gradeName",
             key: "gradeName",
-            sorter: (a: any, b: any) => a.gradeName.localeCompare(b.gradeName),
-        },    
+            sorter: (a: GradeDto, b: GradeDto) => {
+                const nameA = a.gradeName || "";
+                const nameB = b.gradeName || "";
+                return nameA.localeCompare(nameB);
+            },
+            filters: filters,
+            filterSearch: true,
+            onFilter: (value: any, record: GradeDto) => (record.gradeName || "").includes(String(value)),
+        },
         {
             title: "Hành động",
             key: "action",
-            width: 150,
+            width: 200,
+			align: "center" as const,
             render: (_: any, record: GradeDto) => (
                 <Space size="middle">
-                    <Button type="link" icon={<EditOutlined />} onClick={() => onEdit(record)}>Sửa</Button>
+                    <Button type="link" icon={<EditOutlined />} onClick={() => onEdit(record)}></Button>
                     <Popconfirm 
                         title="Xóa khối lớp này?" 
-                        onConfirm={() => onDelete(record.id as any)}
+                        onConfirm={() => onDelete(record.id)}
                         okText="Xóa" cancelText="Hủy"
                     >
-                        <Button type="link" danger icon={<DeleteOutlined />}>Xóa</Button>
+                        <Button type="link" danger icon={<DeleteOutlined />}></Button>
                     </Popconfirm>
                 </Space>
             ),
@@ -43,7 +61,13 @@ const GradeTable: React.FC<GradeTableProps> = ({ dataSource, loading, onEdit, on
             dataSource={dataSource}
             rowKey="id"
             loading={loading}
-            pagination={{ pageSize: 10 }}
+            pagination={{ 
+                placement: ["topEnd"],
+                pageSize: 10,
+                showSizeChanger: true,
+                total: totalGrade,
+                showTotal: (totalGrade) => `Tổng: ${totalGrade}`,
+            }}
         />
     );
 };

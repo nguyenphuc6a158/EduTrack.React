@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, message } from "antd";
+import { App, Button, message } from "antd";
 import type React from "react";
 import { useEffect, useState } from "react";
 import SubjectTable from "./components/SubjectTable";
@@ -8,6 +8,7 @@ import SubjectModal from "./components/SubjectModal";
 import { CreateSubjectDto, SubjectDto, UpdateSubjectDto } from "src/services/services_autogen";
 
 const SubjectManagement: React.FC = ()=>{
+	const { message } = App.useApp();
 	const listSubject = useSubjects();
 	const actionSubjects = useSubjectsActions();
 	const loading = useSubjectLoading();

@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './ThemeProvider';
 import { ConfigProvider } from 'antd';
 import viVN from 'antd/locale/vi_VN';
+import MyApp from './App.tsx';
 
 abpUserConfigurationService.getAll().then(data => {
   Utils.extend(true, window.abp, data.data.result);
@@ -16,7 +17,7 @@ abpUserConfigurationService.getAll().then(data => {
     <BrowserRouter>
       <ThemeProvider>
         <ConfigProvider locale={viVN}>
-          <App />
+          <MyApp />
         </ConfigProvider>
       </ThemeProvider>
     </BrowserRouter>

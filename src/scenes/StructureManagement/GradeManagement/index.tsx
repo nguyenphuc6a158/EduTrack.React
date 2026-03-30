@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Button, message, Card } from "antd";
+import { Button, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import GradeTable from "./components/GradeTable";
 import GradeModal from "./components/GradeModal";
 import { 
     useGradees, 
     useGradeLoading, 
-    useGradeActions 
+    useGradeActions, 
+    useTotalCountGrade
 } from "src/stores/gradeStore"; 
+import { CreateGradeDto, GradeDto, UpdateGradeDto } from "src/services/services_autogen";
 
 const GradeManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingGrade, setEditingGrade] = useState<any>(null);
-
+    const [editingGrade, setEditingGrade] = useState<GradeDto | null>(null);
+    const totalGrade = useTotalCountGrade()
     const listGrades = useGradees();
     const loading = useGradeLoading();
-    const { getAll, create, update, delete: deleteGrade } = useGradeActions();
+    const gradeActions = useGradeActions();
 
-    const fetchData = () => getAll("", 0, 100);
+    const fetchData = async () => {
+        gradeActions.getAll(undefined, 0, 100);
+    }
 
     useEffect(() => {
         fetchData();
@@ -26,13 +30,15 @@ const GradeManagement = () => {
     const handleOk = async (values: any) => {
     try {
         if (editingGrade) {
-            await update({ 
-                ...editingGrade, 
-                ...values 
-            });
+            let item: UpdateGradeDto = new UpdateGradeDto();
+            item.id = editingGrade.id;
+            item.gradeName = values.gradeName;
+            await gradeActions.update(item);
             message.success("Cập nhật thành công");
         } else {
-            await create(values);
+            let item: CreateGradeDto = new CreateGradeDto();
+            item.gradeName = values.gradeName;
+            await gradeActions.create(item);
             message.success("Thêm mới thành công");
         }
         setIsModalOpen(false);
@@ -43,7 +49,7 @@ const GradeManagement = () => {
     };
     const handleDelete = async (id: number) => {
         try {
-            await deleteGrade(id);
+            await gradeActions.delete(id);
             message.success("Xóa khối lớp thành công");
             fetchData();
         } catch (error) {
@@ -52,19 +58,22 @@ const GradeManagement = () => {
     };
 
     return (
-        <Card title={
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '18px', fontWeight: 'bold' }}>Quản lý Khối lớp</span>
+        <div className="p-6">
+			<div className="flex justify-between items-center mb-6">
+				<div>
+					<h2 className="text-2xl font-bold text-gray-800">Quản lý khối học</h2>
+					<p className="text-gray-500">Thêm sửa xóa khối học</p>
+				</div>
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => { setEditingGrade(null); setIsModalOpen(true); }}>
                     Thêm khối lớp
                 </Button>
             </div>
-        }>
             <GradeTable 
                 dataSource={listGrades} 
                 loading={loading}
                 onEdit={(record) => { setEditingGrade(record); setIsModalOpen(true); }} 
                 onDelete={handleDelete} 
+                totalGrade={totalGrade}
             />
             <GradeModal 
                 visible={isModalOpen} 
@@ -73,7 +82,7 @@ const GradeManagement = () => {
                 onCancel={() => setIsModalOpen(false)} 
                 confirmLoading={loading}
             />
-        </Card>
+        </div>
     );
 };
 

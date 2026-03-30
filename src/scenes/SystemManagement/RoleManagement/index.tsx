@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, message } from "antd";
+import { App, Button, message } from "antd";
 import { useRoles, useRoleActions, useRoleLoading } from "src/stores/roleStore";
 import { CreateRoleDto, RoleDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
@@ -7,6 +7,7 @@ import RoleTable from "./components/RoleTable";
 import RoleModal from "./components/RoleModal";
 
 const RoleManagement = () => {
+    const { message } = App.useApp();
     const roles = useRoles();
     const actions = useRoleActions();
     const loading = useRoleLoading();
@@ -40,9 +41,9 @@ const RoleManagement = () => {
     const handleDelete = async (id: number) => {
         try {
             await actions.delete(id);
-            message.success("Role deleted successfully");
+            message.success("Xóa vai trò thành công");
         } catch (error) {
-            message.error("Failed to delete role");
+            message.error("Xóa vai trò thất bại");
         }
     };
 
@@ -54,14 +55,14 @@ const RoleManagement = () => {
                     ...values,
                 });
                 await actions.update(updateData);
-                message.success("Role updated successfully");
+                message.success("Cập nhật thành công vai trò");
             } else {
                 const createData = new CreateRoleDto({
                     ...values,
                     grantedPermissions: values.grantedPermissions || [],
                 });
                 await actions.create(createData);
-                message.success("Role created successfully");
+                message.success("Thêm mới thành công vai trò");
             }
             await actions.getAll();
             setIsModalOpen(false);

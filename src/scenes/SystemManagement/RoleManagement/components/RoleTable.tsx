@@ -29,7 +29,8 @@ const RoleTable: React.FC<RoleTableProps> = ({ roles, loading, onEdit, onDelete 
         {
             title: "Hành động",
             key: "action",
-            align: "center" as const,
+            width: 200,
+			align: "center" as const,
             render: (_: any, record: any) => (
                 <Space size="middle">
                     <Button

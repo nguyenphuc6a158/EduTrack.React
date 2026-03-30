@@ -3,7 +3,7 @@ import { CreateStudentClassDto, StudentClassDto, StudentClassService, UpdateStud
 import { create } from 'zustand';
 const studentClassService = new StudentClassService('',http);
 interface StudentClassState {
-	listStudentClasses: any[];
+	listStudentClasses: StudentClassDto[];
 	studentClassItem?: StudentClassDto;
 	totalCountStudentClass: number;
 	loading: boolean;

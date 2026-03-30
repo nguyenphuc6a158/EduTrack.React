@@ -1,26 +1,39 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table } from "antd";
 import type React from "react";
-import type { SubjectDto } from "src/services/services_autogen";
-interface ISubjectTableProps {
-	listSubject: SubjectDto[];
-	loading: boolean;
-	onEdit: (value: SubjectDto) => void;
+import type { QuestionDto } from "src/services/services_autogen";
+interface IQuestionTableProps{
+	listQuestions: QuestionDto[];
 	onDelete: (id: number) => void;
-	totalSubject: number;
+	onEdit: (selectedQuestion: QuestionDto) => void;
 }
-const SubjectTable: React.FC<ISubjectTableProps> = ({listSubject, loading, onEdit, onDelete, totalSubject}) => {
-	const colums = [
+const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, onEdit}) => {
+	const columns = [
 		{
-			title: "Tên môn học",
-			key:"subjectName",
-			dataIndex:"subjectName",
+			title:'Tiêu đề',
+			dataIndex:'content',
+			key:'content',
 		},
 		{
+			title:'Lời giải',
+			dataIndex:'explanation',
+			key:'explanation',
+		},
+		{
+			title:'Độ khó',
+			dataIndex:'difficultyLevel',
+			key:'difficultyLevel',
+		},
+		{
+			title:'Chương',
+			dataIndex:'chapterName',
+			key:'chapterName',
+		},
+		{
+			title:'Hành động',
 			width: 200,
 			align: "center" as const,
-			title: "Hành động",
-			render: (record: SubjectDto) => {
+			render: (record: QuestionDto) => {
 				return(
 					<Space size="middle">
 						<Button
@@ -44,24 +57,15 @@ const SubjectTable: React.FC<ISubjectTableProps> = ({listSubject, loading, onEdi
 							/>
 						</Popconfirm>
 					</Space>
-				) 
+				)
 			}
-		}
+		},
 	]
 	return(
 		<Table
-			columns={colums}
-			dataSource={listSubject}
-			loading={loading}
-			pagination={{
-				placement: ["topEnd"],
-				total: totalSubject,
-				pageSize: 10,
-				showSizeChanger: true,
-				showTotal: (totalSubject) => `Tổng: ${totalSubject}`,
-			}}
-			rowKey="id"
+			columns={columns}
+			dataSource={listQuestions}
 		/>
 	)
 }
-export default SubjectTable
+export default QuestionTable

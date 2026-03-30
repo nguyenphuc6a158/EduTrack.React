@@ -3,6 +3,7 @@ import { Table, Button, Space, Popconfirm, Tag } from "antd";
 import { UserDto } from "src/services/services_autogen";
 import { EditOutlined, DeleteOutlined, RedoOutlined } from "@ant-design/icons";
 import { formatPhoneNumber } from "src/lib/appconst";
+import dayjs from "dayjs";
 
 interface UserTableProps {
 	users: UserDto[];
@@ -24,6 +25,12 @@ const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, on
 			title: "Họ và tên",
 			dataIndex: "fullName",
 			key: "fullName",
+		},
+		{
+			title: "Ngày sinh",
+			dataIndex: "dateOfBirth",
+			key: "dateOfBirth",
+			render: (dateOfBirth: Date) => (dateOfBirth ? dayjs(dateOfBirth).format("DD/MM/YYYY") : undefined),
 		},
 		{
 			title: "Email",
@@ -67,12 +74,12 @@ const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, on
 			),
 		},
 		{
-			title: "Hoạt động",
+			title: "Trạng thái",
 			dataIndex: "isActive",
 			key: "isActive",
 			render: (isActive: boolean) => (
 				<Tag color={isActive ? "green" : "red"}>
-					{isActive ? "Cho phép" : "Không cho phép"}
+					{isActive ? "Hoạt động" : "Không hoạt động"}
 				</Tag>
 			),
 		},
@@ -85,6 +92,7 @@ const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, on
 		{
 			title: "Hành động",
 			key: "action",
+			width: 200,
 			align: "center" as const,
 			render: (_: any, record: UserDto) => (
 				record.userName === 'admin' ? null : (
