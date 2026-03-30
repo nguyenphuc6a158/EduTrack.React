@@ -3917,62 +3917,6 @@ export class StudentClassService {
     }
 
     /**
-     * @param id (optional) 
-     * @return OK
-     */
-    get(id: number | undefined, cancelToken?: CancelToken): Promise<StudentClassDto> {
-        let url_ = this.baseUrl + "/api/services/app/StudentClass/Get?";
-        if (id === null)
-            throw new globalThis.Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processGet(_response);
-        });
-    }
-
-    protected processGet(response: AxiosResponse): Promise<StudentClassDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = StudentClassDto.fromJS(resultData200.result);
-            return Promise.resolve<StudentClassDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<StudentClassDto>(null as any);
-    }
-
-    /**
      * @param keyword (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
@@ -4036,6 +3980,133 @@ export class StudentClassService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<StudentClassDtoPagedResultDto>(null as any);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @param classId (optional) 
+     * @return OK
+     */
+    getStudentByClass(keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, classId: number | undefined, cancelToken?: CancelToken): Promise<StudentClassDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentClass/GetStudentByClass?";
+        if (keyword === null)
+            throw new globalThis.Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (skipCount === null)
+            throw new globalThis.Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new globalThis.Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (classId === null)
+            throw new globalThis.Error("The parameter 'classId' cannot be null.");
+        else if (classId !== undefined)
+            url_ += "classId=" + encodeURIComponent("" + classId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetStudentByClass(_response);
+        });
+    }
+
+    protected processGetStudentByClass(response: AxiosResponse): Promise<StudentClassDtoPagedResultDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = StudentClassDtoPagedResultDto.fromJS(resultData200.result);
+            return Promise.resolve<StudentClassDtoPagedResultDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<StudentClassDtoPagedResultDto>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return OK
+     */
+    get(id: number | undefined, cancelToken?: CancelToken): Promise<StudentClassDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentClass/Get?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGet(_response);
+        });
+    }
+
+    protected processGet(response: AxiosResponse): Promise<StudentClassDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = StudentClassDto.fromJS(resultData200.result);
+            return Promise.resolve<StudentClassDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<StudentClassDto>(null as any);
     }
 
     /**
@@ -10287,7 +10358,9 @@ export interface IStudentClass {
 export class StudentClassDto implements IStudentClassDto {
     id!: number;
     classId!: number;
+    className!: string | undefined;
     studentId!: number;
+    studentName!: string | undefined;
 
     constructor(data?: IStudentClassDto) {
         if (data) {
@@ -10302,7 +10375,9 @@ export class StudentClassDto implements IStudentClassDto {
         if (_data) {
             this.id = _data["id"];
             this.classId = _data["classId"];
+            this.className = _data["className"];
             this.studentId = _data["studentId"];
+            this.studentName = _data["studentName"];
         }
     }
 
@@ -10317,7 +10392,9 @@ export class StudentClassDto implements IStudentClassDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["classId"] = this.classId;
+        data["className"] = this.className;
         data["studentId"] = this.studentId;
+        data["studentName"] = this.studentName;
         return data;
     }
 
@@ -10332,7 +10409,9 @@ export class StudentClassDto implements IStudentClassDto {
 export interface IStudentClassDto {
     id: number;
     classId: number;
+    className: string | undefined;
     studentId: number;
+    studentName: string | undefined;
 }
 
 export class StudentClassDtoPagedResultDto implements IStudentClassDtoPagedResultDto {
