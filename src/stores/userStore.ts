@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import http from 'src/services/httpService';
-import { CreateUserDto, Int64EntityDto, ResetPasswordDto, RoleDto, UserDto, UserService } from 'src/services/services_autogen';
+import { CreateUserDto, ResetPasswordDto, RoleDto, UserDto, UserService } from 'src/services/services_autogen';
 
 const userService = new UserService("", http);
 
@@ -10,6 +10,7 @@ interface UserState {
     loading: boolean;
     listRoles: RoleDto[];
     listTeachers: UserDto[];
+    listStudents: UserDto[];
     actions: {
         getRoles: () => Promise<void>;
         getAll: (keyword?: string, isActive?: boolean, sorting?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
@@ -18,12 +19,14 @@ interface UserState {
         delete: (id: number) => Promise<void>;
         resetPassword: (body?: ResetPasswordDto) => Promise<void>;
         getAllTeacher: () => Promise<void>
+        getAllStudent: () => Promise<void>
     };
 }
 
 const useUserStore = create<UserState>((set) => ({
     listUsers: [],
     listRoles: [],
+    listStudents: [],
     totalCountUser: 0,
     loading: false,
     listTeachers: [],
@@ -35,6 +38,20 @@ const useUserStore = create<UserState>((set) => ({
                 if (result) {
                     set({
                         listTeachers: result.items || [],
+                    });
+                } 
+            } finally {
+                set({ loading: false });
+            }
+        },
+
+         getAllStudent: async () => {
+            set({ loading: true });
+             try {
+                const result = await userService.getAllStudent();
+                if (result) {
+                    set({
+                        listStudents: result.items || [],
                     });
                 } 
             } finally {
@@ -104,5 +121,6 @@ export const useRolesFromUser = () => useUserStore((state) => state.listRoles);
 export const useUserTotal = () => useUserStore((state) => state.totalCountUser);
 export const useUserLoading = () => useUserStore((state) => state.loading);
 export const useUserActions = () => useUserStore((state) => state.actions);
+export const useStudents = () => useUserStore((state) => state.listStudents);
 
 export default useUserStore;

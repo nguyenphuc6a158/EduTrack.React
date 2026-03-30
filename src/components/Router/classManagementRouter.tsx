@@ -1,4 +1,4 @@
-import { ApartmentOutlined, BookOutlined, BuildOutlined } from "@ant-design/icons";
+import { ApartmentOutlined, BookOutlined, BuildOutlined, UserOutlined } from "@ant-design/icons";
 import { icons } from "antd/es/image/PreviewGroup";
 import React from "react";
 
@@ -26,6 +26,14 @@ const classManagementRouter = [
      		permissions: '',
 			icon: <BuildOutlined />,
       		component: React.lazy(() => import("src/scenes/StructureManagement/GradeManagement")),
+   	 	},
+    	{
+      		key: "2.3",
+      		label: "Quản lý học sinh",
+      		path: "/class-management/student-management",
+     		permissions: '',
+			icon: <UserOutlined />,
+      		component: React.lazy(() => import("src/scenes/StructureManagement/StudentManagement")),
    	 	},
     	
   		],
