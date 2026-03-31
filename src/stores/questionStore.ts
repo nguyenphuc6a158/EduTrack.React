@@ -13,6 +13,7 @@ interface QuestionState {
 		update: (body: UpdateQuestionDto) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
+		getQuestionByChapter: (chapterId: number) => Promise<void>;
 	};
 }
 const useQuestionStore = create<QuestionState>((set) => ({
@@ -21,6 +22,20 @@ const useQuestionStore = create<QuestionState>((set) => ({
 	loading: false,
 	questionItem: undefined,
 	actions: {
+		getQuestionByChapter : async (chapterId: number) : Promise<void> => {
+			set({ loading: true });
+			try{
+				const result = await questionService.getQuestionByChapter(chapterId);
+				if(result){
+					set({
+						listQuestiones: result.items || [],
+						totalCountQuestion: result.items?.length  || 0
+					})
+				}
+			} finally {
+				set({ loading: false });
+			}
+		},
 		getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
 			set({ loading: true });
 			try{

@@ -1,23 +1,28 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table } from "antd";
 import type React from "react";
+import { AppConsts } from "src/lib/appconst";
 import type { QuestionDto } from "src/services/services_autogen";
 interface IQuestionTableProps{
 	listQuestions: QuestionDto[];
-	onDelete: (id: number) => void;
+	onDelete: (item: QuestionDto) => void;
 	onEdit: (selectedQuestion: QuestionDto) => void;
+	openInforQuestionModal: (selectedQuestion: QuestionDto) => void;
+	loading: boolean;
 }
-const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, onEdit}) => {
+const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, onEdit, openInforQuestionModal, loading}) => {
 	const columns = [
 		{
-			title:'Tiêu đề',
+			title:'Đề bài',
 			dataIndex:'content',
 			key:'content',
+			width: 500,
 		},
 		{
 			title:'Lời giải',
 			dataIndex:'explanation',
 			key:'explanation',
+			width: 500,
 		},
 		{
 			title:'Độ khó',
@@ -42,10 +47,16 @@ const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, 
 							icon={<EditOutlined />}
 							onClick={() => onEdit(record)}
 						/>
+						<Button
+							title="Xem chi tiết"
+							type="text"
+							icon={<InfoCircleOutlined />}
+							onClick={() => openInforQuestionModal(record)}
+						/>
 						<Popconfirm
 							title="Xóa môn học?"
 							description="Bạn có chắc chắn muốn xóa môn học này không?"
-							onConfirm={() => onDelete(record.id)}
+							onConfirm={() => onDelete(record)}
 							okText="Xóa"
 							cancelText="Hủy"
 						>
@@ -65,6 +76,8 @@ const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, 
 		<Table
 			columns={columns}
 			dataSource={listQuestions}
+			rowKey={"id"}
+			loading={loading}
 		/>
 	)
 }

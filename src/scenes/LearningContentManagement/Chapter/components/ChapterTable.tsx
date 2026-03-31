@@ -15,6 +15,10 @@ const ChapterTable : React.FC<IChapterProps> = ({listChapter, onDelete, onEdit, 
 			dataIndex:"chapterName"
 		},
 		{
+			title:"Môn học",
+			dataIndex:"subjectName"
+		},
+		{
 			title:"Hành động",
 			width: 200,
 			align: "center" as const,

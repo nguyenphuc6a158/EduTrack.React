@@ -17,7 +17,7 @@ const ChapterManagement: React.FC = ()=>{
 	const totalChapter = usetotalCountChapter();
 	const [idSelectedSubject, setIdSelectedSubject] = useState<number | null>(()=>{
 		const stored = localStorage.getItem("idSelectedSubject");
-    	return stored ? Number(stored) : null;
+		return stored ? Number(stored) : null;
 	})
 	const [selectedChapter, setselectedChapter] = useState<ChapterDto | null>(null)
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
@@ -83,25 +83,25 @@ const ChapterManagement: React.FC = ()=>{
 		setIsOpenModal(true);
 	}
 	
-	const handleOk = (item: any) => {
+	const handleOk = async (item: any) => {
 		try {if(selectedChapter){
 			let input: UpdateChapterDto = new UpdateChapterDto ();
 			input.id = selectedChapter.id
 			input.subjectId = item.subjectId;
 			input.chapterName = item.chapterName;
-			chapterActions.update(input);
+			await chapterActions.update(input);
 			message.success("Chỉnh sửa chương thành công");
 		} else {
 			let input: CreateChapterDto = new CreateChapterDto ();
 			input.subjectId = item.subjectId;
 			input.chapterName = item.chapterName;
-			chapterActions.create(input);
+			await chapterActions.create(input);
 			message.success("Thêm mới chương thành công");
 		}} catch(error){
 			console.log(error)
 			message.error("Cập nhật thất bại vui lòng thử lại");
 		}
-		fetchChapter(idSelectedSubject);
+		await fetchChapter(idSelectedSubject);
 		setIsOpenModal(false)
 	}
 	return(
