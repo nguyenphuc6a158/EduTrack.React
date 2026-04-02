@@ -13,12 +13,13 @@ const SubjectModal: React.FC<ISubjectModalProps> = ({open, onCancel, selectedSub
 	const [form] = Form.useForm();
 	useEffect(()=>{
 		if (!open) return;
-		if(selectedSubject==null){
-			form.resetFields()
+		if(!selectedSubject){
+			form.resetFields();
+			console.log("reset form")
 		} else{
 			form.setFieldValue('subjectName', selectedSubject.subjectName)
 		}
-	},[selectedSubject])
+	},[open])
 	const onOk = async () => {
 		try {
 			const values = await form.validateFields();
