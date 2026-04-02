@@ -1,42 +1,99 @@
-import { Button, Col, message, Space } from "antd";
+import { App, Button, Col, message, Select, Space } from "antd";
 import type React from "react";
 import QuestionTable from "./components/QuestionTable";
-import { useQuestionActions, useQuestiones } from "src/stores/questionStore";
-import type { QuestionDto } from "src/services/services_autogen";
-import { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { useQuestionActions, useQuestiones, useQuestionLoading } from "src/stores/questionStore";
+import { CreateQuestionDto, QuestionDto, UpdateQuestionDto } from "src/services/services_autogen";
+import { useEffect, useMemo, useState } from "react";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import QuestionModal from "./components/QuestionModal";
 import { useChapterActions, useChapters } from "src/stores/chapterStore";
+import { useFileActions } from "src/stores/fileStore";
+import InformationModal from "./components/InformationModal";
 
 const QuestionManagement: React.FC = () => {
+	const {message} = App.useApp();
 	const listQuestions = useQuestiones();
 	const listChapters = useChapters();
 	const actionChapters = useChapterActions();
 	const questionActios = useQuestionActions();
+	const fileActions = useFileActions();
+	const questionLoading = useQuestionLoading();
+
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+	const [isOpenInforModal, setIsOpenInforModal] = useState<boolean>(false);
 	const [selectedQuestion, setSelectedQuestion] = useState<QuestionDto|null>(null);
-	const fetchQuestions = async () => {
+	const [idSelectedChapter, setIdSelectedChapter] = useState<number | null>(()=>{
+		const stored = localStorage.getItem("idSelectedChapter");
+    	return stored ? Number(stored) : null;
+	});
+	const fetchQuestions = async (idSelectedChapter: number | null) => {
 		try{
-			await questionActios.getAll();
+			if (idSelectedChapter != null){
+				await questionActios.getQuestionByChapter(idSelectedChapter);
+			} else {
+				await questionActios.getAll();
+			}
+		}catch(error){
+
+		}
+	}
+	const fetchChapter = async () => {
+		try{
+			await actionChapters.getAll();
 		}catch(error){
 
 		}
 	}
 
-	useEffect(()=>{
-		fetchQuestions();
-	},[])
+	const optionChapter = useMemo(() => {
+		return listChapters.map(item => ({
+			value: item.id,
+			label: item.chapterName || "",
+		}));
+	}, [listChapters]);
 
-	const onDelete = async (id: number) =>{
+	useEffect(()=>{
+		fetchQuestions(idSelectedChapter);
+	},[idSelectedChapter]);
+	useEffect(()=>{
+		fetchChapter();
+	},[]);
+
+	const onDelete = async (item: QuestionDto) =>{
 		try {
-			await questionActios.delete(id);
+			await questionActios.delete(item.id);
+			await fileActions.delete(item.content||"");
+			await fileActions.delete(item.explanation||"");
+			await fetchQuestions(idSelectedChapter);
 			message.success("Xóa câu hỏi thành công");
 		}catch(error){
 			message.error("Xóa câu hỏi thất bại");
 		}
 	}
-	const handleSubmit =  (value: any) => {
-
+	const handleSubmit =  async (value: any) => {
+		try{
+			if(selectedQuestion){
+				let item: UpdateQuestionDto = new UpdateQuestionDto();
+				item.id = selectedQuestion.id;
+				item.chapterId = value.chapterId;
+				item.content = value.content;
+				item.difficultyLevel = value.difficultyLevel;
+				item.explanation = value.explanation;
+				await questionActios.update(item);
+			} else {
+				let item: CreateQuestionDto = new CreateQuestionDto();
+				item.chapterId = value.chapterId;
+				item.content = value.content;
+				item.difficultyLevel = value.difficultyLevel;
+				item.explanation = value.explanation;
+				await questionActios.create(item);
+			}
+		await fetchQuestions(idSelectedChapter);
+		message.success('Cập nhật thông tin thành công')
+		setIsOpenModal(false);
+		}catch(error){
+			message.error('Cập nhật thông tin thất bại')
+		}
 	}
 	const openAddModal = () => {
 		setIsOpenModal(true);
@@ -45,6 +102,19 @@ const QuestionManagement: React.FC = () => {
 	const openEditModal = (item: QuestionDto) => {
 		setIsOpenModal(true);
 		setSelectedQuestion(item)
+	}
+	const openInforQuestionModal = (item: QuestionDto) => {
+		setSelectedQuestion(item);
+		setIsOpenInforModal(true);
+	}
+	const onchangeIdChapterSelected = (item: number | undefined) =>{
+		if (item === undefined){
+			localStorage.removeItem("idSelectedChapter");
+			setIdSelectedChapter(null);
+			return
+		};
+		localStorage.setItem("idSelectedChapter", item.toString());
+		setIdSelectedChapter(item)
 	}
 	return (
 		<div className="p-6">
@@ -55,7 +125,18 @@ const QuestionManagement: React.FC = () => {
 				</Col>
 				<Col >
 					<Space.Compact>
-						<Button
+						<Select 
+							allowClear
+							value={idSelectedChapter} 
+							style={{ width: "200px" }}
+							options={optionChapter}
+							placeholder="Tìm kiếm theo chương..."
+							onChange={onchangeIdChapterSelected}
+						/>
+						<Button type="primary" icon={<SearchOutlined />} />
+					</Space.Compact>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<Button
 							type="primary"
 							icon={<PlusOutlined />}
 							onClick={openAddModal}
@@ -63,10 +144,11 @@ const QuestionManagement: React.FC = () => {
 						>
 							Thêm chương
 						</Button>
-					</Space.Compact>
 				</Col>
 			</div>
 			<QuestionTable 
+				loading={questionLoading}
+				openInforQuestionModal={openInforQuestionModal}
 				listQuestions={listQuestions}
 				onDelete={onDelete}
 				onEdit={openEditModal}
@@ -77,6 +159,11 @@ const QuestionManagement: React.FC = () => {
 				selectedQuestion={selectedQuestion}
 				onCancel={()=>{setIsOpenModal(false)}}
 				listChapter={listChapters}
+			/>
+			<InformationModal 
+				open={isOpenInforModal}
+				selectedQuestion={selectedQuestion}
+				onCancel={()=>{setIsOpenInforModal(false)}}
 			/>
 		</div>
 	)

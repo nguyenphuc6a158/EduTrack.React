@@ -1814,6 +1814,131 @@ export class ConfigurationService {
     }
 }
 
+export class FileService {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "";
+
+    }
+
+    /**
+     * @param fileUrl (optional) 
+     * @return OK
+     */
+    deleteFile(fileUrl: string | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/File/DeleteFile?";
+        if (fileUrl === null)
+            throw new globalThis.Error("The parameter 'fileUrl' cannot be null.");
+        else if (fileUrl !== undefined)
+            url_ += "fileUrl=" + encodeURIComponent("" + fileUrl) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processDeleteFile(_response);
+        });
+    }
+
+    protected processDeleteFile(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param file (optional) 
+     * @return OK
+     */
+    uploadFile(file: FileParameter | undefined, cancelToken?: CancelToken): Promise<UploadFileOutput> {
+        let url_ = this.baseUrl + "/api/services/app/File/UploadFile";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (file === null || file === undefined)
+            throw new globalThis.Error("The parameter 'file' cannot be null.");
+        else
+            content_.append("file", file.data, file.fileName ? file.fileName : "file");
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUploadFile(_response);
+        });
+    }
+
+    protected processUploadFile(response: AxiosResponse): Promise<UploadFileOutput> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = UploadFileOutput.fromJS(resultData200.result);
+            return Promise.resolve<UploadFileOutput>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<UploadFileOutput>(null as any);
+    }
+}
+
 export class GradeService {
     protected instance: AxiosInstance;
     protected baseUrl: string;
@@ -2170,6 +2295,62 @@ export class QuestionService {
     }
 
     protected processGetAll(response: AxiosResponse): Promise<QuestionDtoPagedResultDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = QuestionDtoPagedResultDto.fromJS(resultData200.result);
+            return Promise.resolve<QuestionDtoPagedResultDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<QuestionDtoPagedResultDto>(null as any);
+    }
+
+    /**
+     * @param chapterId (optional) 
+     * @return OK
+     */
+    getQuestionByChapter(chapterId: number | undefined, cancelToken?: CancelToken): Promise<QuestionDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Question/GetQuestionByChapter?";
+        if (chapterId === null)
+            throw new globalThis.Error("The parameter 'chapterId' cannot be null.");
+        else if (chapterId !== undefined)
+            url_ += "chapterId=" + encodeURIComponent("" + chapterId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetQuestionByChapter(_response);
+        });
+    }
+
+    protected processGetQuestionByChapter(response: AxiosResponse): Promise<QuestionDtoPagedResultDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -11800,6 +11981,49 @@ export interface IUpdateSubjectDto {
     subjectName: string | undefined;
 }
 
+export class UploadFileOutput implements IUploadFileOutput {
+    url!: string | undefined;
+
+    constructor(data?: IUploadFileOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.url = _data["url"];
+        }
+    }
+
+    static fromJS(data: any): UploadFileOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new UploadFileOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["url"] = this.url;
+        return data;
+    }
+
+    clone(): UploadFileOutput {
+        const json = this.toJSON();
+        let result = new UploadFileOutput();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUploadFileOutput {
+    url: string | undefined;
+}
+
 export class User implements IUser {
     id!: number;
     creationTime!: Date;
@@ -12628,6 +12852,11 @@ export interface IUserToken {
     name: string | undefined;
     value: string | undefined;
     expireDate: Date | undefined;
+}
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
 }
 
 export class ApiException extends Error {
