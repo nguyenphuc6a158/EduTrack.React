@@ -6,15 +6,15 @@ const inlineImage = (mammoth as any).images.inline;
 
 // Style mapping để giữ format Word
 const mammothOptions = {
-  styleMap: [
-    "p[style-name='Heading 1'] => h1:fresh",
-    "p[style-name='Heading 2'] => h2:fresh",
-    "p[style-name='Heading 3'] => h3:fresh",
-    "b => strong",
-    "i => em",
-    "u => u",
-    "s => s",
-  ],
+	styleMap: [
+		"p[style-name='Heading 1'] => h1:fresh",
+		"p[style-name='Heading 2'] => h2:fresh",
+		"p[style-name='Heading 3'] => h3:fresh",
+		"b => strong",
+		"i => em",
+		"u => u",
+		"s => s",
+	],
 };
 
 // CSS chỉ apply cho content từ Word (table, format trong document)
@@ -61,43 +61,84 @@ const documentStyles = `
 `;
 
 export const extractDocxWithImages = async (url: string): Promise<string> => {
-  const response = await fetch(AppConsts.remoteServiceBaseUrl + url);
-  const arrayBuffer = await response.arrayBuffer();
+	const response = await fetch(AppConsts.remoteServiceBaseUrl + url);
+	const arrayBuffer = await response.arrayBuffer();
 
-  const result = await mammoth.convertToHtml(
-    { arrayBuffer },
-    {
-      ...mammothOptions,
-      convertImage: inlineImage(async (image: any) => {
-        const base64 = await image.read("base64");
-        return {
-          src: `data:${image.contentType};base64,${base64}`,
-        };
-      }),
-    }
-  );
+	const result = await mammoth.convertToHtml(
+		{ arrayBuffer },
+		{
+			...mammothOptions,
+			convertImage: inlineImage(async (image: any) => {
+				const base64 = await image.read("base64");
+				return {
+					src: `data:${image.contentType};base64,${base64}`,
+				};
+			}),
+		}
+	);
 
-  const cleanHtml = DOMPurify.sanitize(result.value);
-  // Wrap content với class .word-document
-  return documentStyles + `<div class="word-document">${cleanHtml}</div>`;
+	const cleanHtml = DOMPurify.sanitize(result.value);
+	return documentStyles + `<div class="word-document">${cleanHtml}</div>`;
 };
 
 export const extractDocxFromFile = async (file: File): Promise<string> => {
-  const arrayBuffer = await file.arrayBuffer();
+	const arrayBuffer = await file.arrayBuffer();
 
-  const result = await mammoth.convertToHtml(
-    { arrayBuffer },
-    {
-      ...mammothOptions,
-      convertImage: inlineImage(async (image: any) => {
-        const base64 = await image.read("base64");
-        return {
-          src: `data:${image.contentType};base64,${base64}`,
-        };
-      }),
-    }
-  );
+	const result = await mammoth.convertToHtml(
+		{ arrayBuffer },
+		{
+			...mammothOptions,
+			convertImage: inlineImage(async (image: any) => {
+				const base64 = await image.read("base64");
+				return {
+					src: `data:${image.contentType};base64,${base64}`,
+				};
+			}),
+		}
+	);
 
-  const cleanHtml = DOMPurify.sanitize(result.value);
-  return documentStyles + `<div class="word-document">${cleanHtml}</div>`;
+	const cleanHtml = DOMPurify.sanitize(result.value);
+	return documentStyles + `<div class="word-document">${cleanHtml}</div>`;
+};
+
+export const extractRawTextFromFile = async (file: File): Promise<string> => {
+	const arrayBuffer = await file.arrayBuffer();
+	const result = await mammoth.extractRawText({ arrayBuffer });
+	return result.value;
+};
+
+export const parseContentQuestion = (text: string) => {
+	const cleanText = text.replace(/\r/g, "");
+
+	const tileMatch = cleanText.match(/Đề bài:\s*([\s\S]*?)Đáp án:/i);
+	const answerMatch = cleanText.match(/Đáp án:\s*([\s\S]*?)Giải thích:/i);
+	const explanationMatch = cleanText.match(/Giải thích:\s*([\s\S]*)/i);
+
+	const tille = tileMatch?.[1]?.trim() || "";
+	const answerRaw = answerMatch?.[1]?.trim() || "";
+	const explanation = explanationMatch?.[1]?.trim() || "";
+
+	const answers = answerRaw
+		.split("\n")
+		.map(line => line.trim())
+		.filter(line => /^\((Đúng|Sai)\)\s*[A-Z]\./i.test(line))
+		.map(line => {
+			const match = line.match(/^\((Đúng|Sai)\)\s*([A-Z])\.\s*(.*)$/i);
+
+			if (!match) {
+				return null;
+			}
+
+			return {
+				content: match[3].trim(),
+				isCorrect: match[1].toLowerCase() === "đúng"
+			};
+		})
+		.filter(Boolean);
+
+	return {
+		tille,
+		answers,
+		explanation
+	};
 };

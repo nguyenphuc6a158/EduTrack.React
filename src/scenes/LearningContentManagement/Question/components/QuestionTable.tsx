@@ -9,20 +9,33 @@ interface IQuestionTableProps{
 	onEdit: (selectedQuestion: QuestionDto) => void;
 	openInforQuestionModal: (selectedQuestion: QuestionDto) => void;
 	loading: boolean;
+	totalCountQuestion: number;
 }
-const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, onEdit, openInforQuestionModal, loading}) => {
+const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, onEdit, openInforQuestionModal, loading, totalCountQuestion}) => {
+	const formatFileName = (fileName: string) => {
+		const parts = fileName.split("_");
+		if (parts.length > 1) {
+			const lastPart = parts[parts.length - 1];
+			if (lastPart.includes("-")) {
+				return parts.slice(0, -1).join("_") + "." + lastPart.split(".").pop();
+			}
+		}
+		return fileName;
+	};
 	const columns = [
 		{
-			title:'Đề bài',
-			dataIndex:'content',
-			key:'content',
+			title:'Nội dung câu hỏi',
+			dataIndex:'fileUrl',
+			key:'fileUrl',
 			width: 500,
-		},
-		{
-			title:'Lời giải',
-			dataIndex:'explanation',
-			key:'explanation',
-			width: 500,
+			render: (text: string) =>{
+				let splitContent = text.split("/");
+				return(
+					<a href={AppConsts.remoteServiceBaseUrl + text} target="_blank" rel="noopener noreferrer">
+						{formatFileName(splitContent[splitContent.length - 1])}
+					</a>
+				)
+			}
 		},
 		{
 			title:'Độ khó',
@@ -78,6 +91,13 @@ const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, 
 			dataSource={listQuestions}
 			rowKey={"id"}
 			loading={loading}
+			pagination={{
+				placement: ["topEnd"],
+				total: totalCountQuestion,
+				pageSize: 10,
+				showSizeChanger: true,
+				showTotal: (totalCountQuestion) => `Tổng: ${totalCountQuestion}`,
+			}}
 		/>
 	)
 }

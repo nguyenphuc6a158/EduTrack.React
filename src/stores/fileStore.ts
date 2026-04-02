@@ -16,7 +16,6 @@ const useFileStore = create<FileState>((set) => ({
 			return res.url || "";
 		},
 		delete: async (fileUrl: string) => {
-			// const url = AppConsts.remoteServiceBaseUrl + fileUrl;
 			await fileService.deleteFile(fileUrl);
 		}
 	}

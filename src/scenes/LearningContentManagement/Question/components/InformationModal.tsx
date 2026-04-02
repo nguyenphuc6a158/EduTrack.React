@@ -1,5 +1,4 @@
 import { Card, Divider, Modal, Row } from "antd";
-import Title from "antd/es/skeleton/Title";
 import { useEffect, useState } from "react";
 import { extractDocxWithImages } from "src/lib/convertToHtml";
 import type { QuestionDto } from "src/services/services_autogen";
@@ -16,8 +15,7 @@ const InformationModal: React.FC<IInformationModalProps> = ({ open, selectedQues
 	useEffect(() => {
 		const load = async () => {
 			if (!selectedQuestion) return;
-			const htmlContent = await extractDocxWithImages(selectedQuestion?.content || "");
-			const htmlExplanation = await extractDocxWithImages(selectedQuestion?.explanation || "");
+			const htmlContent = await extractDocxWithImages(selectedQuestion?.fileUrl || "");
 			setHtmlContent(htmlContent);
 			setHtmlExplanation(htmlExplanation);
 		};
@@ -34,22 +32,13 @@ const InformationModal: React.FC<IInformationModalProps> = ({ open, selectedQues
 			{selectedQuestion && (
 				<div style={{ maxHeight: "70vh", overflowY: "auto", paddingRight: 8 }}>
 					<Card style={{ marginBottom: 16 }}>
-						<h5><b>Đề bài:</b></h5>
+						<h5><b>Nội dung câu hỏi:</b></h5>
 						<Divider style={{ margin: "8px 0" }} />
 						<div
 							style={{ lineHeight: 1.6 }}
 							dangerouslySetInnerHTML={{ __html: htmlContent }}
 						/>
 					</Card>
-					<Card>
-						<h5><b>Đáp án:</b></h5>
-						<Divider style={{ margin: "8px 0" }} />
-						<div
-							style={{ lineHeight: 1.6 }}
-							dangerouslySetInnerHTML={{ __html: htmlExplanation }}
-						/>
-					</Card>
-
 				</div>
 			)}
 		</Modal>

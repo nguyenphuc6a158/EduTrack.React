@@ -1,6 +1,7 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Select, Upload } from "antd";
+import { DownloadOutlined, UploadOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, message, Modal, Row, Select, Upload } from "antd";
 import { useEffect, useMemo, useState } from "react";
+import { extractRawTextFromFile, parseContentQuestion } from "src/lib/convertToHtml";
 import { requiredRule } from "src/lib/validation";
 import { ChapterDto, QuestionDto, type FileParameter } from "src/services/services_autogen";
 import { useFileActions } from "src/stores/fileStore";
@@ -12,21 +13,28 @@ interface IQuestionModalProps {
 	onCancel: () => void;
 	listChapter: ChapterDto[];
 };
-const QuestionModal: React.FC<IQuestionModalProps> = ({onOk, open, selectedQuestion, onCancel, listChapter}) => {
+const QuestionModal: React.FC<IQuestionModalProps> = ({ onOk, open, selectedQuestion, onCancel, listChapter }) => {
 	const [form] = Form.useForm();
 	const fileActions = useFileActions();
-	useEffect(()=>{
-		
-	},[]);
-	
-	const optionChapters =  useMemo(()=>{
-		return listChapter.map(item=>{
-			return{
+	useEffect(() => {
+		if (selectedQuestion) {
+			form.setFieldsValue({
+				chapterId: selectedQuestion.chapterId,
+				difficultyLevel: selectedQuestion.difficultyLevel,
+			})
+		} else {
+			form.resetFields();
+		}
+	}, [selectedQuestion]);
+
+	const optionChapters = useMemo(() => {
+		return listChapter.map(item => {
+			return {
 				label: item.chapterName || "",
 				value: item.id,
 			}
 		})
-	},[listChapter]);
+	}, [listChapter]);
 	const optionDifficultyLevel = [
 		{
 			label: "1 - Nhận biết",
@@ -46,80 +54,94 @@ const QuestionModal: React.FC<IQuestionModalProps> = ({onOk, open, selectedQuest
 		},
 	]
 	const handleOk = async () => {
-		try{
+		try {
 			const value = await form.validateFields();
-			const fileExplanation = value.explanation?.[0]?.originFileObj;
-			const fileContent = value.content?.[0]?.originFileObj;
-			if (!fileExplanation || !fileContent) {
-				throw new Error("Không có file");
+			console.log("value: ", value);
+			const fileContent = value.contentQuestion?.[0]?.originFileObj;
+			if (!fileContent) {
+				message.error("Vui lòng chọn file đề bài");
+				return;
 			}
-			const fileParamExplanation: FileParameter = {
-					data: fileExplanation,
-					fileName: fileExplanation.name,
-				}
-			const fileUrlExplanation = await fileActions.upload(fileParamExplanation);
-			 const fileParamContent: FileParameter = 
-				{
-					data: fileContent,
-					fileName: fileContent.name,
-				}
+			const fileParamContent: FileParameter =
+			{
+				data: fileContent,
+				fileName: fileContent.name,
+			}
+			let textInFile = await extractRawTextFromFile(fileContent);
+			let paseTextInFile = parseContentQuestion(textInFile);
 			const fileUrlContent = await fileActions.upload(fileParamContent);
 			onOk(
 				{
 					...value,
-					explanation: fileUrlExplanation,
-					content: fileUrlContent,
+					fileUrl: fileUrlContent,
+					answers: paseTextInFile.answers
 				}
 			);
-		} catch (error){
+		} catch (error) {
 			console.log(error)
 		}
 	}
 
-	return(
+	return (
 		<Modal
-			title={selectedQuestion? "Sửa tên chương" : "Tạo mới chương"}
 			open={open}
+			closable={false}
 			onCancel={onCancel}
 			onOk={handleOk}
 			forceRender
 		>
-			<Form form={form}>
-				<Form.Item name="chapterId" label="Thuộc chương" rules={[requiredRule("Chương")]}>
-					<Select placeholder="Câu hỏi thuộc chương" options={optionChapters}/>
-				</Form.Item>
-				<Form.Item name="difficultyLevel" label="Độ khó" rules={[requiredRule("Chương")]}>
-					<Select placeholder="Độ khó của câu hỏi" options={optionDifficultyLevel}/>
-				</Form.Item>
-				<Form.Item 
-					name="content" 
-					label="Đề bài" 
-					valuePropName="fileList"
-					getValueFromEvent={(e: any) => {
-						if (Array.isArray(e)) return e;
-						return e?.fileList;
-					}}
-					rules={[requiredRule("Đề bài")]}
-				>
-					<Upload beforeUpload={() => false} maxCount={1}>
-						<Button icon={<UploadOutlined />}>Chọn file</Button>
-					</Upload>
-				</Form.Item>
-				<Form.Item
-					name="explanation"
-					label="Đáp án"
-					valuePropName="fileList"
-					getValueFromEvent={(e: any) => {
-						if (Array.isArray(e)) return e;
-						return e?.fileList;
-					}}
-					rules={[requiredRule("Đáp án")]}
-				>
-					<Upload beforeUpload={() => false} maxCount={1}>
-						<Button icon={<UploadOutlined />}>Chọn file</Button>
-					</Upload>
-				</Form.Item>
-			</Form>
+			<Row justify="space-between" align="middle" gutter={16} style={{ marginBottom: 16 }}>
+				<Col>
+					{selectedQuestion ? <h2><b>Chỉnh sửa câu hỏi</b></h2> : <h2><b>Tạo mới câu hỏi</b></h2>}
+				</Col>
+
+				<Col>
+					<Button href="/form-cau-hoi-mau.docx" download type="primary" icon={<DownloadOutlined />}>
+						Tải file mẫu
+					</Button>
+				</Col>
+			</Row>
+			<Row gutter={16}>
+				<Col span={24}>
+					<Form form={form} layout="vertical">
+
+						<Form.Item
+							name="chapterId"
+							label="Thuộc chương"
+							rules={[requiredRule("Chương")]}
+						>
+							<Select
+								placeholder="Câu hỏi thuộc chương"
+								options={optionChapters}
+							/>
+						</Form.Item>
+
+						<Form.Item
+							name="difficultyLevel"
+							label="Độ khó"
+							rules={[requiredRule("Độ khó")]}
+						>
+							<Select
+								placeholder="Độ khó của câu hỏi"
+								options={optionDifficultyLevel}
+							/>
+						</Form.Item>
+
+						<Form.Item
+							name="contentQuestion"
+							label="Upload câu hỏi"
+							valuePropName="fileList"
+							getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
+							rules={[requiredRule("File câu hỏi")]}
+						>
+							<Upload beforeUpload={() => false} maxCount={1}>
+								<Button icon={<UploadOutlined />}>Chọn file</Button>
+							</Upload>
+						</Form.Item>
+
+					</Form>
+				</Col>
+			</Row>
 		</Modal>
 	)
 }

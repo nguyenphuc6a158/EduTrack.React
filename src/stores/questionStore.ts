@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { CreateQuestionDto, QuestionDto, QuestionService, UpdateQuestionDto } from "src/services/services_autogen";
+import { CreateQuestionDto, CreateQuestionWithOptionsDto, QuestionDto, QuestionService, UpdateQuestionDto, UpdateQuestionWithOptionsDto } from "src/services/services_autogen";
 import { create } from 'zustand';
 const questionService = new QuestionService('',http);
 interface QuestionState {
@@ -9,11 +9,13 @@ interface QuestionState {
 	loading: boolean;
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-		create: (body: CreateQuestionDto) => Promise<void>;
+		create: (body: CreateQuestionDto) => Promise<QuestionDto>;
 		update: (body: UpdateQuestionDto) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
 		getQuestionByChapter: (chapterId: number) => Promise<void>;
+		createWithOptions: (body?: CreateQuestionWithOptionsDto) => Promise<void>;
+		updateWithOptions: (body?: UpdateQuestionWithOptionsDto) => Promise<void>;
 	};
 }
 const useQuestionStore = create<QuestionState>((set) => ({
@@ -22,6 +24,22 @@ const useQuestionStore = create<QuestionState>((set) => ({
 	loading: false,
 	questionItem: undefined,
 	actions: {
+		updateWithOptions: async (body) => {
+			set({ loading: true });
+			try{
+				await questionService.updateWithOptions(body);
+			}finally {
+				set({ loading: false });
+			}
+		},
+		createWithOptions: async (body) => {
+			set({ loading: true });
+			try{
+				await questionService.createWithOptions(body);
+			}finally {
+				set({ loading: false });
+			}
+		},
 		getQuestionByChapter : async (chapterId: number) : Promise<void> => {
 			set({ loading: true });
 			try{
@@ -63,8 +81,8 @@ const useQuestionStore = create<QuestionState>((set) => ({
 				set({ loading: false });
 			}
 		},
-		create : async (body) : Promise<void> => {
-			await questionService.create(body);
+		create : async (body) : Promise<QuestionDto> => {
+			return await questionService.create(body);
 		},
 		update: async (body) : Promise<void> => {
 			await questionService.update(body);

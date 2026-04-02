@@ -2,11 +2,11 @@ import { App, Button, Col, message, Select, Space } from "antd";
 import type React from "react";
 import QuestionTable from "./components/QuestionTable";
 import { useQuestionActions, useQuestiones, useQuestionLoading } from "src/stores/questionStore";
-import { CreateQuestionDto, QuestionDto, UpdateQuestionDto } from "src/services/services_autogen";
+import { CreateQuestionDto, CreateQuestionOptionDto, CreateQuestionWithOptionsDto, QuestionDto, UpdateQuestionDto } from "src/services/services_autogen";
 import { useEffect, useMemo, useState } from "react";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import QuestionModal from "./components/QuestionModal";
-import { useChapterActions, useChapters } from "src/stores/chapterStore";
+import { useChapterActions, useChapters, usetotalCountChapter } from "src/stores/chapterStore";
 import { useFileActions } from "src/stores/fileStore";
 import InformationModal from "./components/InformationModal";
 
@@ -18,6 +18,7 @@ const QuestionManagement: React.FC = () => {
 	const questionActios = useQuestionActions();
 	const fileActions = useFileActions();
 	const questionLoading = useQuestionLoading();
+	const totalCountQuestion = usetotalCountChapter();
 
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 	const [isOpenInforModal, setIsOpenInforModal] = useState<boolean>(false);
@@ -62,8 +63,7 @@ const QuestionManagement: React.FC = () => {
 	const onDelete = async (item: QuestionDto) =>{
 		try {
 			await questionActios.delete(item.id);
-			await fileActions.delete(item.content||"");
-			await fileActions.delete(item.explanation||"");
+			await fileActions.delete(item.fileUrl||"");
 			await fetchQuestions(idSelectedChapter);
 			message.success("Xóa câu hỏi thành công");
 		}catch(error){
@@ -76,17 +76,22 @@ const QuestionManagement: React.FC = () => {
 				let item: UpdateQuestionDto = new UpdateQuestionDto();
 				item.id = selectedQuestion.id;
 				item.chapterId = value.chapterId;
-				item.content = value.content;
+				item.fileUrl = value.fileUrl;
 				item.difficultyLevel = value.difficultyLevel;
-				item.explanation = value.explanation;
 				await questionActios.update(item);
 			} else {
-				let item: CreateQuestionDto = new CreateQuestionDto();
+				let item: CreateQuestionWithOptionsDto = new CreateQuestionWithOptionsDto();
+				
 				item.chapterId = value.chapterId;
-				item.content = value.content;
+				item.fileUrl = value.fileUrl;
 				item.difficultyLevel = value.difficultyLevel;
-				item.explanation = value.explanation;
-				await questionActios.create(item);
+				item.answers = value.answers.map((answer: any) => {
+					let answerItem: CreateQuestionOptionDto = new CreateQuestionOptionDto();
+					answerItem.content = answer.content;
+					answerItem.isCorrect = answer.isCorrect;
+					return answerItem;
+				});
+				await questionActios.createWithOptions(item);
 			}
 		await fetchQuestions(idSelectedChapter);
 		message.success('Cập nhật thông tin thành công')
@@ -152,6 +157,7 @@ const QuestionManagement: React.FC = () => {
 				listQuestions={listQuestions}
 				onDelete={onDelete}
 				onEdit={openEditModal}
+				totalCountQuestion={totalCountQuestion}
 			/>
 			<QuestionModal
 				onOk={handleSubmit}

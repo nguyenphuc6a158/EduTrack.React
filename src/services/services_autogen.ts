@@ -2375,6 +2375,110 @@ export class QuestionService {
     }
 
     /**
+     * @param body (optional) 
+     * @return OK
+     */
+    createWithOptions(body: CreateQuestionWithOptionsDto | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/Question/CreateWithOptions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreateWithOptions(_response);
+        });
+    }
+
+    protected processCreateWithOptions(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    updateWithOptions(body: UpdateQuestionWithOptionsDto | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/Question/UpdateWithOptions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUpdateWithOptions(_response);
+        });
+    }
+
+    protected processUpdateWithOptions(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return OK
      */
@@ -7833,8 +7937,7 @@ export interface ICreateGradeDto {
 }
 
 export class CreateQuestionDto implements ICreateQuestionDto {
-    content!: string | undefined;
-    explanation!: string | undefined;
+    fileUrl!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
 
@@ -7849,8 +7952,7 @@ export class CreateQuestionDto implements ICreateQuestionDto {
 
     init(_data?: any) {
         if (_data) {
-            this.content = _data["content"];
-            this.explanation = _data["explanation"];
+            this.fileUrl = _data["fileUrl"];
             this.chapterId = _data["chapterId"];
             this.difficultyLevel = _data["difficultyLevel"];
         }
@@ -7865,8 +7967,7 @@ export class CreateQuestionDto implements ICreateQuestionDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["content"] = this.content;
-        data["explanation"] = this.explanation;
+        data["fileUrl"] = this.fileUrl;
         data["chapterId"] = this.chapterId;
         data["difficultyLevel"] = this.difficultyLevel;
         return data;
@@ -7881,13 +7982,13 @@ export class CreateQuestionDto implements ICreateQuestionDto {
 }
 
 export interface ICreateQuestionDto {
-    content: string | undefined;
-    explanation: string | undefined;
+    fileUrl: string | undefined;
     chapterId: number;
     difficultyLevel: number;
 }
 
 export class CreateQuestionOptionDto implements ICreateQuestionOptionDto {
+    id!: number | undefined;
     content!: string | undefined;
     questionId!: number;
     isCorrect!: boolean;
@@ -7903,6 +8004,7 @@ export class CreateQuestionOptionDto implements ICreateQuestionOptionDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.content = _data["content"];
             this.questionId = _data["questionId"];
             this.isCorrect = _data["isCorrect"];
@@ -7918,6 +8020,7 @@ export class CreateQuestionOptionDto implements ICreateQuestionOptionDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["content"] = this.content;
         data["questionId"] = this.questionId;
         data["isCorrect"] = this.isCorrect;
@@ -7933,9 +8036,73 @@ export class CreateQuestionOptionDto implements ICreateQuestionOptionDto {
 }
 
 export interface ICreateQuestionOptionDto {
+    id: number | undefined;
     content: string | undefined;
     questionId: number;
     isCorrect: boolean;
+}
+
+export class CreateQuestionWithOptionsDto implements ICreateQuestionWithOptionsDto {
+    fileUrl!: string | undefined;
+    chapterId!: number;
+    difficultyLevel!: number;
+    answers!: CreateQuestionOptionDto[] | undefined;
+
+    constructor(data?: ICreateQuestionWithOptionsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fileUrl = _data["fileUrl"];
+            this.chapterId = _data["chapterId"];
+            this.difficultyLevel = _data["difficultyLevel"];
+            if (Array.isArray(_data["answers"])) {
+                this.answers = [] as any;
+                for (let item of _data["answers"])
+                    this.answers!.push(CreateQuestionOptionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateQuestionWithOptionsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateQuestionWithOptionsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fileUrl"] = this.fileUrl;
+        data["chapterId"] = this.chapterId;
+        data["difficultyLevel"] = this.difficultyLevel;
+        if (Array.isArray(this.answers)) {
+            data["answers"] = [];
+            for (let item of this.answers)
+                data["answers"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+
+    clone(): CreateQuestionWithOptionsDto {
+        const json = this.toJSON();
+        let result = new CreateQuestionWithOptionsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateQuestionWithOptionsDto {
+    fileUrl: string | undefined;
+    chapterId: number;
+    difficultyLevel: number;
+    answers: CreateQuestionOptionDto[] | undefined;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {
@@ -9068,8 +9235,7 @@ export class Question implements IQuestion {
     creatorUserId!: number | undefined;
     lastModificationTime!: Date | undefined;
     lastModifierUserId!: number | undefined;
-    content!: string;
-    explanation!: string;
+    fileUrl!: string;
     chapterId!: number;
     difficultyLevel!: number;
     chapter!: Chapter;
@@ -9093,8 +9259,7 @@ export class Question implements IQuestion {
             this.creatorUserId = _data["creatorUserId"];
             this.lastModificationTime = _data["lastModificationTime"] ? new Date(_data["lastModificationTime"].toString()) : undefined as any;
             this.lastModifierUserId = _data["lastModifierUserId"];
-            this.content = _data["content"];
-            this.explanation = _data["explanation"];
+            this.fileUrl = _data["fileUrl"];
             this.chapterId = _data["chapterId"];
             this.difficultyLevel = _data["difficultyLevel"];
             this.chapter = _data["chapter"] ? Chapter.fromJS(_data["chapter"]) : undefined as any;
@@ -9130,8 +9295,7 @@ export class Question implements IQuestion {
         data["creatorUserId"] = this.creatorUserId;
         data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : undefined as any;
         data["lastModifierUserId"] = this.lastModifierUserId;
-        data["content"] = this.content;
-        data["explanation"] = this.explanation;
+        data["fileUrl"] = this.fileUrl;
         data["chapterId"] = this.chapterId;
         data["difficultyLevel"] = this.difficultyLevel;
         data["chapter"] = this.chapter ? this.chapter.toJSON() : undefined as any;
@@ -9167,8 +9331,7 @@ export interface IQuestion {
     creatorUserId: number | undefined;
     lastModificationTime: Date | undefined;
     lastModifierUserId: number | undefined;
-    content: string;
-    explanation: string;
+    fileUrl: string;
     chapterId: number;
     difficultyLevel: number;
     chapter: Chapter;
@@ -9179,8 +9342,7 @@ export interface IQuestion {
 
 export class QuestionDto implements IQuestionDto {
     id!: number;
-    content!: string | undefined;
-    explanation!: string | undefined;
+    fileUrl!: string | undefined;
     chapterId!: number;
     chapterName!: string | undefined;
     difficultyLevel!: number;
@@ -9197,8 +9359,7 @@ export class QuestionDto implements IQuestionDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.content = _data["content"];
-            this.explanation = _data["explanation"];
+            this.fileUrl = _data["fileUrl"];
             this.chapterId = _data["chapterId"];
             this.chapterName = _data["chapterName"];
             this.difficultyLevel = _data["difficultyLevel"];
@@ -9215,8 +9376,7 @@ export class QuestionDto implements IQuestionDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["content"] = this.content;
-        data["explanation"] = this.explanation;
+        data["fileUrl"] = this.fileUrl;
         data["chapterId"] = this.chapterId;
         data["chapterName"] = this.chapterName;
         data["difficultyLevel"] = this.difficultyLevel;
@@ -9233,8 +9393,7 @@ export class QuestionDto implements IQuestionDto {
 
 export interface IQuestionDto {
     id: number;
-    content: string | undefined;
-    explanation: string | undefined;
+    fileUrl: string | undefined;
     chapterId: number;
     chapterName: string | undefined;
     difficultyLevel: number;
@@ -11574,8 +11733,7 @@ export interface IUpdateGradeDto {
 
 export class UpdateQuestionDto implements IUpdateQuestionDto {
     id!: number;
-    content!: string;
-    explanation!: string | undefined;
+    fileUrl!: string;
     chapterId!: number;
     difficultyLevel!: number;
 
@@ -11591,8 +11749,7 @@ export class UpdateQuestionDto implements IUpdateQuestionDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.content = _data["content"];
-            this.explanation = _data["explanation"];
+            this.fileUrl = _data["fileUrl"];
             this.chapterId = _data["chapterId"];
             this.difficultyLevel = _data["difficultyLevel"];
         }
@@ -11608,8 +11765,7 @@ export class UpdateQuestionDto implements IUpdateQuestionDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["content"] = this.content;
-        data["explanation"] = this.explanation;
+        data["fileUrl"] = this.fileUrl;
         data["chapterId"] = this.chapterId;
         data["difficultyLevel"] = this.difficultyLevel;
         return data;
@@ -11625,8 +11781,7 @@ export class UpdateQuestionDto implements IUpdateQuestionDto {
 
 export interface IUpdateQuestionDto {
     id: number;
-    content: string;
-    explanation: string | undefined;
+    fileUrl: string;
     chapterId: number;
     difficultyLevel: number;
 }
@@ -11684,6 +11839,73 @@ export interface IUpdateQuestionOptionDto {
     content: string | undefined;
     questionId: number;
     isCorrect: boolean;
+}
+
+export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsDto {
+    id!: number;
+    fileUrl!: string | undefined;
+    chapterId!: number;
+    difficultyLevel!: number;
+    answers!: CreateQuestionOptionDto[] | undefined;
+
+    constructor(data?: IUpdateQuestionWithOptionsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.fileUrl = _data["fileUrl"];
+            this.chapterId = _data["chapterId"];
+            this.difficultyLevel = _data["difficultyLevel"];
+            if (Array.isArray(_data["answers"])) {
+                this.answers = [] as any;
+                for (let item of _data["answers"])
+                    this.answers!.push(CreateQuestionOptionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UpdateQuestionWithOptionsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateQuestionWithOptionsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["fileUrl"] = this.fileUrl;
+        data["chapterId"] = this.chapterId;
+        data["difficultyLevel"] = this.difficultyLevel;
+        if (Array.isArray(this.answers)) {
+            data["answers"] = [];
+            for (let item of this.answers)
+                data["answers"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+
+    clone(): UpdateQuestionWithOptionsDto {
+        const json = this.toJSON();
+        let result = new UpdateQuestionWithOptionsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateQuestionWithOptionsDto {
+    id: number;
+    fileUrl: string | undefined;
+    chapterId: number;
+    difficultyLevel: number;
+    answers: CreateQuestionOptionDto[] | undefined;
 }
 
 export class UpdateStudentAnswerDto implements IUpdateStudentAnswerDto {
