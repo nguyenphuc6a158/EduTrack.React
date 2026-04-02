@@ -13,6 +13,7 @@ interface StudentClassState {
 		update: (body: UpdateStudentClassDto) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
+		getStudentClassByClass: (classId: number) => Promise<void>;
 	};
 }
 const useStudentClassStore = create<StudentClassState>((set) => ({
@@ -21,6 +22,20 @@ const useStudentClassStore = create<StudentClassState>((set) => ({
 	loading: false,
 	studentClassItem: undefined,
 	actions: {
+		getStudentClassByClass:async (id) => {
+			set({ loading: true });
+			try{
+				const result = await studentClassService.getStudentByClass(undefined, undefined, undefined, id);
+				if(result){
+					set({
+						listStudentClasses: result.items || [],
+						totalCountStudentClass: result.items?.length  || 0
+					})
+				}
+			} finally {
+				set({ loading: false });
+			}
+		},
 		getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
 			set({ loading: true });
 			try{
@@ -64,4 +79,5 @@ export const useStudentClasses = () => useStudentClassStore((state) => state.lis
 export const useStudentClass = () => useStudentClassStore((state) => state.studentClassItem);
 export const useStudentClassLoading = () => useStudentClassStore((state) => state.loading);
 export const useStudentClassActions = () => useStudentClassStore((state) => state.actions);
+export const useTotalCountStudentClass = () => useStudentClassStore((state) => state.totalCountStudentClass);
 export default useStudentClassStore;

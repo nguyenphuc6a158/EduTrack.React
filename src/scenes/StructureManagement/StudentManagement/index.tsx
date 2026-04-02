@@ -1,120 +1,137 @@
-import { useEffect, useState, useCallback } from "react";
-import { Button, Card, Col, Space, App } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { useEffect, useMemo, useState } from "react";
+import { Button, Col, Space, Select, App } from "antd";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import StudentTable from "./components/StudentTable";
 import StudentModal from "./components/StudentModal";
-import { useStudentClasses, useStudentClassLoading, useStudentClassActions } from "src/stores/studentClassStore";
+import { useStudentClasses, useStudentClassLoading, useStudentClassActions, useTotalCountStudentClass } from "src/stores/studentClassStore";
 import { useClasses, useClassActions } from "src/stores/classStore";
-import { useTeachers, useUsers, useUserActions, useStudents } from "src/stores/userStore";
+import { useUserActions, useStudents } from "src/stores/userStore";
 import { CreateStudentClassDto, UpdateStudentClassDto, StudentClassDto } from "src/services/services_autogen";
 
 const StudentManagement = () => {
 	const { message } = App.useApp();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<StudentClassDto | null>(null);
+	const [idSelectedClass, setIdSelectedClass] = useState<number | null>(()=>{
+		let idSelectedClassInLocalStorage = localStorage.getItem("idSelectedClass");
+    	return idSelectedClassInLocalStorage ? Number(idSelectedClassInLocalStorage	) : null;
+	})
 
 	const listStudentClasses = useStudentClasses();
-	const loading = useStudentClassLoading();
+	const loading = useStudentClassLoading();	
 	const studentClassActions = useStudentClassActions();
-	
 	const listClasses = useClasses();
 	const classActions = useClassActions();
-	
-	const listTeachers = useTeachers();
 	const listStudents = useStudents();
 	const userActions = useUserActions();
+	const totalStudentClass = useTotalCountStudentClass();
 
-	const fetchAllData = useCallback(async () => {
+	const fetchStudentsByClass = async (idSelectedClass: number | null) => {
+		if(idSelectedClass){ 
+			await studentClassActions.getStudentClassByClass(idSelectedClass)
+		}
+		else await studentClassActions.getAll(undefined, 0, 100);
+	}
+	const fetchClass = async () => {
 		await classActions.getAll(undefined, 0, 100);
-		await userActions.getRoles();
 		await userActions.getAllStudent();
-		await userActions.getAllTeacher();
-		await studentClassActions.getAll(undefined, 0, 100);
-	}, [studentClassActions, classActions, userActions]);
+	}
+	useEffect ( () => {
+		fetchClass();
+	}, []);
 
-	useEffect(() => {
-		fetchAllData();
-	}, [fetchAllData]);
+	useEffect(()=>{
+		fetchStudentsByClass(idSelectedClass);
+	},[idSelectedClass])
 
-	const handleOk = async (values: Record<string, unknown>) => {
+	
+	const optionClass = useMemo(()=>{
+		return(listClasses.map(item => ({
+				value: item.id,
+				label: item.className
+		})))
+	},[listClasses])
+	
+	const handleOk = async (values: any) => {
 		try {
 			if (editingItem) {
-				const item: UpdateStudentClassDto = new UpdateStudentClassDto();
-				item.id = editingItem.id;
-				item.classId = values.classId as number;
-				item.studentId = values.studentId as number;
+				let item: UpdateStudentClassDto = new UpdateStudentClassDto();
+				item.id = editingItem.id
+				item.classId = values.classId;
+				item.studentId = values.studentId;
 				await studentClassActions.update(item);
 				message.success("Cập nhật thành công");
 			} else {
-				const item: CreateStudentClassDto = new CreateStudentClassDto();
-				item.classId = values.classId as number;
-				item.studentId = values.studentId as number;
+				let item: CreateStudentClassDto = new CreateStudentClassDto();
+				item.classId = values.classId;
+				item.studentId = values.studentId;
 				await studentClassActions.create(item);
 				message.success("Thêm mới thành công");
 			}
 			setIsModalOpen(false);
-			await fetchAllData();
-		} catch {
+			await fetchStudentsByClass(idSelectedClass);
+		} catch (error) {
 			message.error("Lỗi khi lưu");
 		}
 	};
-
-	const onDeleteStudentClass = async (id: number) => {
-		try {
-			await studentClassActions.delete(id);
-			await fetchAllData();
-			message.success("Xóa thành công");
-		} catch {
-			message.error("Lỗi khi xóa");
+	const onChangeSelectClass = (value: number | undefined) => {
+		console.log(value)
+		if (value == undefined) {
+			localStorage.removeItem("idSelectedClass");
+			setIdSelectedClass(null);
+			return;
 		}
-	};
-
-	const handleAddNew = () => {
-		setEditingItem(null);
-		setIsModalOpen(true);
-	};
-
-	const handleEdit = (record: StudentClassDto) => {
-		setEditingItem(record);
-		setIsModalOpen(true);
-	};
+		localStorage.setItem("idSelectedClass", value.toString());
+		setIdSelectedClass(value);
+	}
+	const onDeleteStudentClass = async (id: number) => {
+		await studentClassActions.delete(id); 
+		await fetchStudentsByClass(idSelectedClass);
+		message.success("Xóa học sinh khỏi lớp thành công")
+	}
 
 	return (
 		<div className="p-6">
 			<div className="flex justify-between items-center mb-6">
-				<Col span={8}>
+				<Col span={5}>
 					<h2 className="text-2xl font-bold text-gray-800">Quản lý học sinh lớp học</h2>
-					<p className="text-gray-500">Quản lý danh sách học sinh trong các lớp</p>
+					<p className="text-gray-500">Quản lý danh sách học sinh trong các lớp học</p>
 				</Col>
 				<Col>
 					<Space.Compact>
-						<Button type="primary" icon={<PlusOutlined />} onClick={handleAddNew}>
-							Thêm mới
-						</Button>
+						<Select 
+							allowClear
+							options={optionClass}
+							placeholder="Tìm kiếm theo lớp học..."
+							style={{width: '200px'}}
+							value={idSelectedClass}
+							onChange={(value)=>onChangeSelectClass(value)}
+						/>
+						<Button type="primary" icon={<SearchOutlined />} />
 					</Space.Compact>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<Button type="primary" icon={<PlusOutlined />} onClick={() => { setEditingItem(null); setIsModalOpen(true); }}>
+						Thêm học sinh
+					</Button>
 				</Col>
+				
 			</div>
-
-			<Card>
-				<StudentTable
-					dataSource={listStudentClasses}
-					loading={loading}
-					onEdit={handleEdit}
-					onDelete={onDeleteStudentClass}
-					totalStudent={listStudentClasses.length}
-					listClasses={listClasses}
-					listTeachers={listTeachers}
-					listStudents={listStudents}
-				/>
-			</Card>
-
-			<StudentModal
-				visible={isModalOpen}
-				editingItem={editingItem}
-				onOk={handleOk}
-				onCancel={() => setIsModalOpen(false)}
-				confirmLoading={loading}
+			<StudentTable 
+				dataSource={listStudentClasses} 
+				loading={loading} 
+				onEdit={(item: any) => { setEditingItem(item); setIsModalOpen(true); }} 
+				onDelete={(id)=>onDeleteStudentClass(id)} 
+				totalStudent={totalStudentClass}
 				listClasses={listClasses}
+				listStudents={listStudents}
+			/>
+			<StudentModal 
+				listClasses={listClasses}
+				visible={isModalOpen} 
+				editingItem={editingItem} 
+				onOk={handleOk} 
+				onCancel={() => setIsModalOpen(false)} 
+				confirmLoading={loading} 
 				listStudents={listStudents}
 			/>
 		</div>

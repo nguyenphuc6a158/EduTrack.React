@@ -13,12 +13,12 @@ const ClassManagement = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<ClassDto | null>(null);
 	const [idSelectedGrade, setidSelectedGrade] = useState<number | null>(()=>{
-		let stored = localStorage.getItem("idSelectedGrade");
-    	return stored ? Number(stored) : null;
+		let idSelectedGradeInLocalStorage = localStorage.getItem("idSelectedGrade");
+    	return idSelectedGradeInLocalStorage ? Number(idSelectedGradeInLocalStorage	) : null;
 	})
 
 	const listClasses = useClasses();
-	const loading = useClassLoading();
+	const loading = useClassLoading();	
 	const classActions = useClassActions();
 	const listGrades = useGradees();
 	const gradeActions =  useGradeActions();
@@ -50,6 +50,7 @@ const ClassManagement = () => {
 				label: item.gradeName
 		})))
 	},[listGrades])
+	
 	const handleOk = async (values: any) => {
 		try {
 			if (editingItem) {
