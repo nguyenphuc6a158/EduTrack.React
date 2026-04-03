@@ -46,7 +46,7 @@ const StudentModal: React.FC<IStudentModalProps> = ({
 
 	const studentOptions = useMemo(() => {
         return listStudents.map(item => ({
-            label: item.id || `Học sinh #${item.id}`,
+            label: `${item.fullName || 'Học sinh'}_${item.id}`,
             value: item.id
         }));
     }, [listStudents]);
@@ -83,11 +83,11 @@ const StudentModal: React.FC<IStudentModalProps> = ({
 
 				<Form.Item
 					name="studentId"
-					label="ID học sinh"
+					label="Tên học sinh_ID"
 					rules={[requiredRule("Vui lòng chọn học sinh")]}
 				>
 					<Select 
-						placeholder="Nhập ID học sinh để tìm kiếm"
+						placeholder="Nhập tên học sinh để tìm kiếm"
 						options={studentOptions}
 						showSearch
 						filterOption={(input, option) =>

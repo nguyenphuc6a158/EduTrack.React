@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button, message, Card, Col, Space, Select, App } from "antd";
+import { Button, Col, Space, Select, App } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ClassTable from "./components/ClassTable"; 
 import ClassModal from "./components/ClassModal";
 import { useGradeActions, useGradees } from "src/stores/gradeStore";
 import { useClassActions, useClasses, useClassLoading, useTotalCountClass } from "src/stores/classStore";
-import { ClassDto, CreateClassDto, GradeDto, UpdateClassDto } from "src/services/services_autogen";
+import { ClassDto, CreateClassDto, UpdateClassDto } from "src/services/services_autogen";
 import { useTeachers, useUserActions } from "src/stores/userStore";
 
 const ClassManagement = () => {
