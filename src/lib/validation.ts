@@ -37,7 +37,7 @@ export const duplicateNameValidator = (
         
         const keysToCheck = fieldKey 
             ? [fieldKey]
-            : ['gradeName', 'className', 'name', 'userName', 'displayName', 'emailAddress'];
+            : ['gradeName', 'className', 'name', 'userName', 'displayName', 'emailAddress', 'phoneNumber']; 
         
         const isDuplicate = existingItems.some(item => 
             keysToCheck.some(key => item[key]?.toLowerCase() === value.toLowerCase())
