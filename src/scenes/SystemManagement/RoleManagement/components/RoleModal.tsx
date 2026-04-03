@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Modal, Form, Input, Checkbox, Row, Col } from "antd";
-import { useRolePermissions, useRoleActions } from "src/stores/roleStore";
-import { requiredRule } from "src/lib/validation";
+import { useRolePermissions, useRoleActions, useRoles } from "src/stores/roleStore";
+import { duplicateNameValidator, requiredRule } from "src/lib/validation";
 
 interface RoleModalProps {
     open: boolean;
@@ -13,13 +13,13 @@ interface RoleModalProps {
 const RoleModal: React.FC<RoleModalProps> = ({ open, editingRole, onOk, onCancel }) => {
     const [form] = Form.useForm();
     const permissions = useRolePermissions();
+    const listRoles = useRoles();
     const { getAllPermissions, getRoleForEdit } = useRoleActions();
 
     useEffect(() => {
         if (open) {
             getAllPermissions();
             if (editingRole) {
-                // Fetch full role details for editing (including permissions)
                 getRoleForEdit(editingRole.id).then((result) => {
                     form.setFieldsValue({
                         ...result.role,
@@ -56,7 +56,10 @@ const RoleModal: React.FC<RoleModalProps> = ({ open, editingRole, onOk, onCancel
                         <Form.Item
                             name="name"
                             label="Tên vai trò"
-                            rules={[requiredRule("Tên vai trò")]}
+                            rules={[
+                                requiredRule("Tên vai trò"),
+                                duplicateNameValidator(listRoles, "Tên vai trò", editingRole?.id, "name")
+                            ]}
                         >
                             <Input placeholder="Nhập tên vai trò" />
                         </Form.Item>
@@ -65,7 +68,9 @@ const RoleModal: React.FC<RoleModalProps> = ({ open, editingRole, onOk, onCancel
                         <Form.Item
                             name="displayName"
                             label="Tên hiển thị"
-                            rules={[requiredRule("Tên hiển thị")]}
+                            rules={[
+                                requiredRule("Tên hiển thị")
+                            ]}
                         >
                             <Input placeholder="Nhập tên hiển thị" />
                         </Form.Item>

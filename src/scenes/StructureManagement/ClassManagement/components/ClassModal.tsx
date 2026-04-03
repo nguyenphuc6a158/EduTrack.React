@@ -70,7 +70,7 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
                     label="Tên lớp học"
                     rules={[
                         requiredRule("tên lớp học"),
-                        duplicateNameValidator(listClasses, "Tên lớp học", editingItem?.id)
+                        duplicateNameValidator(listClasses, "Tên lớp học", editingItem?.id, "className")
                     ]}
                 >
                     <Input placeholder="Ví dụ: 10A1" />

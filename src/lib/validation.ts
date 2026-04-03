@@ -23,29 +23,31 @@ export const emailRule: Rule = {
  * @param existingItems Array of items to check for duplicates
  * @param fieldName The display name of the field (e.g., "tên khối lớp")
  * @param currentId Optional ID of the current item being edited (to exclude from comparison)
+ * @param fieldKey The key to check for duplicates (e.g., "gradeName", "className", "name", "userName", "emailAddress")
  * @returns Ant Design Rule object
  */
 export const duplicateNameValidator = (
     existingItems: Array<{ id?: number; [key: string]: any }>,
     fieldName: string,
-    currentId?: number
+    currentId?: number,
+    fieldKey?: string
 ): Rule => ({
     validator: (_, value) => {
         if (!value) return Promise.resolve();
         
+        const keysToCheck = fieldKey 
+            ? [fieldKey]
+            : ['gradeName', 'className', 'name', 'userName', 'displayName', 'emailAddress'];
+        
         const isDuplicate = existingItems.some(item => 
-            item.gradeName?.toLowerCase() === value.toLowerCase() ||
-            item.className?.toLowerCase() === value.toLowerCase() ||
-            item.name?.toLowerCase() === value.toLowerCase()
+            keysToCheck.some(key => item[key]?.toLowerCase() === value.toLowerCase())
         );
 
         if (isDuplicate) {
             if (currentId) {
                 const isCurrentItem = existingItems.find(item => item.id === currentId);
                 if (isCurrentItem && 
-                    (isCurrentItem.gradeName?.toLowerCase() === value.toLowerCase() ||
-                     isCurrentItem.className?.toLowerCase() === value.toLowerCase() ||
-                     isCurrentItem.name?.toLowerCase() === value.toLowerCase())) {
+                    keysToCheck.some(key => isCurrentItem[key]?.toLowerCase() === value.toLowerCase())) {
                     return Promise.resolve();
                 }
             }

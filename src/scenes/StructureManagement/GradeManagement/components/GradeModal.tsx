@@ -50,7 +50,7 @@ const GradeModal: React.FC<GradeModalProps> = ({ visible, editingGrade, onOk, on
                     label="Tên khối lớp"
                     rules={[
                         requiredRule("tên khối lớp"),
-                        duplicateNameValidator(listGrades, "Tên khối lớp", editingGrade?.id)
+                        duplicateNameValidator(listGrades, "Tên khối lớp", editingGrade?.id, "gradeName")
                     ]}
                 >
                     <Input placeholder="Ví dụ: Khối 10" />

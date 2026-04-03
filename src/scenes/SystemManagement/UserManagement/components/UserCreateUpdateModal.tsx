@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Form, Input, Switch, Select, DatePicker } from "antd";
 import { RoleDto, UserDto } from "src/services/services_autogen";
-import { requiredRule, emailRule } from "src/lib/validation";
+import { requiredRule, emailRule, duplicateNameValidator } from "src/lib/validation";
 import dayjs from "dayjs";
+import { useUsers } from "src/stores/userStore";
+
 
 interface UserCreateUpdateModalProps {
     open: boolean;
@@ -14,6 +16,7 @@ interface UserCreateUpdateModalProps {
 
 const UserCreateUpdateModal: React.FC<UserCreateUpdateModalProps> = ({ open, editingUser, onOk, onCancel, roles }) => {
     const [form] = Form.useForm();
+    const listUsers = useUsers();
     const [optionRoles, setOptionRoles] = useState<{ label: string, value: string }[]>([]);
     useEffect(() => {
         const optionRoles = roles.map((itemRole) => ({
@@ -56,14 +59,21 @@ const UserCreateUpdateModal: React.FC<UserCreateUpdateModalProps> = ({ open, edi
                     <Form.Item
                         name="userName"
                         label="Tên tài khoản"
-                        rules={[requiredRule("Tên tài khoản")]}
+                        rules={[
+                            requiredRule("Tên tài khoản"), 
+                            duplicateNameValidator(listUsers, "Tên tài khoản", editingUser?.id, "userName")
+                        ]}
                     >
                         <Input placeholder="Nhập tên tài khoản" />
                     </Form.Item>
                     <Form.Item
                         name="emailAddress"
                         label="Email"
-                        rules={[requiredRule("Email"), emailRule]}
+                        rules={[
+                            requiredRule("Email"), 
+                            emailRule,
+                            duplicateNameValidator(listUsers, "Email", editingUser?.id, "emailAddress")
+                        ]}
                     >
                         <Input placeholder="Nhập email" />
                     </Form.Item>
@@ -89,7 +99,10 @@ const UserCreateUpdateModal: React.FC<UserCreateUpdateModalProps> = ({ open, edi
                     <Form.Item
                         name="phoneNumber"
                         label="Số điện thoại"
-                        rules={[requiredRule("Số điện thoại")]}
+                        rules={[
+                            requiredRule("Số điện thoại"),
+                            duplicateNameValidator(listUsers, "Số điện thoại", editingUser?.id, "phoneNumber")
+                        ]}
                     >
                         <Input placeholder="Nhập số điện thoại" />
                     </Form.Item>
