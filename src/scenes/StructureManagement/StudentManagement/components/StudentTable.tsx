@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Table, Button, Space, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { StudentClassDto, ClassDto, UserDto } from "src/services/services_autogen";
@@ -27,21 +27,52 @@ const StudentTable: React.FC<IStudentTableProps> = ({
 		return listStudents.find(s => s.id === studentId);
 	};
 
+	const filterStudentNames = useMemo(()=>{
+			 return [...new Set(dataSource?.flatMap(item => {
+				const student = listStudents.find(s => s.id === item.studentId);
+				return student?.fullName || `Học sinh #${item.studentId}`;
+			}))].map(name=>{
+				return({
+					value: name,
+					text: name || "",
+				})
+			})
+		},[dataSource, listStudents]);
+
+	const filterClassNames = useMemo(()=>{
+		 return [...new Set(dataSource?.flatMap(item => item.className || []))].map(name=>{
+			return({
+				value: name,
+				text: name || "",
+			})
+		})
+	},[dataSource]);
+
 	const columns = [
 		{
 			title: "Tên học sinh",
 			key: "studentName",
 			width: 150,
+			filters: filterStudentNames,
+			filterSearch: true,
+			onFilter: (value: any, record: StudentClassDto) => {
+				const student = getStudentInfo(record.studentId);
+				const displayName = student?.fullName || `Học sinh #${record.studentId}`;
+				return displayName.includes(String(value));
+			},
 			render: (_: unknown, record: StudentClassDto) => {
 				const student = getStudentInfo(record.studentId);
 				return student?.fullName || `Học sinh #${record.studentId}`;
-			}
+			},
 		},
 		{
 			title: "Tên lớp học",
 			key: "className",
 			dataIndex: "className",
 			width: 120,
+			filters: filterClassNames,
+			filterSearch: true,
+			onFilter: (value: any, record: StudentClassDto) => (record.className || "").includes(String(value)),
 		},
 		{
 			title: "Thao tác",

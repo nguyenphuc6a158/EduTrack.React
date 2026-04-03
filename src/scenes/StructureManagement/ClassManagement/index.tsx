@@ -131,6 +131,7 @@ const ClassManagement = () => {
 				onCancel={() => setIsModalOpen(false)} 
 				confirmLoading={loading} 
 				listTeachers={listTeachers}
+				listClasses={listClasses}
 			/>
 		</div>
 	);

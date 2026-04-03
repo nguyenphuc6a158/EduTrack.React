@@ -33,7 +33,7 @@ const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, o
 			key: "className",
 			filters: filterClassNames,
 			filterSearch: true,
-			onFilter: (value: any, record: ClassDto) => (record.teacherName || "").includes(String(value)),
+			onFilter: (value: any, record: ClassDto) => (record.className || "").includes(String(value)),
 		},
 		{
 			title: "Giáo viên", 

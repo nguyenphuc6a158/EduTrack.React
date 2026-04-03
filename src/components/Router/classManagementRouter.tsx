@@ -11,6 +11,16 @@ const classManagementRouter = [
  		permissions: '',
   		children: [
     	
+
+		{
+      		key: "2.3",
+      		label: "Quản lý học sinh",
+      		path: "/class-management/student-management",
+     		permissions: '',
+			icon: <UserOutlined />,
+      		component: React.lazy(() => import("src/scenes/StructureManagement/StudentManagement")),
+   	 	},
+		
 		{
       		key: "2.1",
       		label: "Quản lý lớp học",
@@ -27,14 +37,7 @@ const classManagementRouter = [
 			icon: <BuildOutlined />,
       		component: React.lazy(() => import("src/scenes/StructureManagement/GradeManagement")),
    	 	},
-    	{
-      		key: "2.3",
-      		label: "Quản lý học sinh",
-      		path: "/class-management/student-management",
-     		permissions: '',
-			icon: <UserOutlined />,
-      		component: React.lazy(() => import("src/scenes/StructureManagement/StudentManagement")),
-   	 	},
+    	
     	
   		],
 	},

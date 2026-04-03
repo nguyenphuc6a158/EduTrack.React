@@ -46,7 +46,7 @@ const StudentModal: React.FC<IStudentModalProps> = ({
 
 	const studentOptions = useMemo(() => {
         return listStudents.map(item => ({
-            label: item.fullName || `Học sinh #${item.id}`,
+            label: item.id || `Học sinh #${item.id}`,
             value: item.id
         }));
     }, [listStudents]);
@@ -78,19 +78,17 @@ const StudentModal: React.FC<IStudentModalProps> = ({
 					<Select 
 						placeholder="Chọn lớp học" 
 						options={classOptions}
-						disabled={!!editingItem}
 					/>
 				</Form.Item>
 
 				<Form.Item
 					name="studentId"
-					label="Tên học sinh"
+					label="ID học sinh"
 					rules={[requiredRule("Vui lòng chọn học sinh")]}
 				>
 					<Select 
-						placeholder="Gõ tên học sinh để tìm kiếm"
+						placeholder="Nhập ID học sinh để tìm kiếm"
 						options={studentOptions}
-						disabled={!!editingItem}
 						showSearch
 						filterOption={(input, option) =>
 							(option?.label as string)?.toLowerCase().includes(input.toLowerCase())

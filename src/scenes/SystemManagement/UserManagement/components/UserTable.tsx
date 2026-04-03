@@ -17,6 +17,11 @@ interface UserTableProps {
 const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, onDelete, onResetPassWord }) => {
 	const columns = [
 		{
+			title: "ID",
+			dataIndex: "id",
+			key: "id",
+		},
+		{
 			title: "Tên đăng nhập",
 			dataIndex: "userName",
 			key: "userName",

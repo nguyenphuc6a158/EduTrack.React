@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Col, Space, Select, App } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { PlusOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons";
 import StudentTable from "./components/StudentTable";
 import StudentModal from "./components/StudentModal";
 import { useStudentClasses, useStudentClassLoading, useStudentClassActions, useTotalCountStudentClass } from "src/stores/studentClassStore";
@@ -71,7 +71,7 @@ const StudentManagement = () => {
 			setIsModalOpen(false);
 			await fetchStudentsByClass(idSelectedClass);
 		} catch (error) {
-			message.error("Lỗi khi lưu");
+			message.error("Học sinh này đã có trong lớp");
 		}
 	};
 	const onChangeSelectClass = (value: number | undefined) => {
@@ -109,6 +109,10 @@ const StudentManagement = () => {
 						/>
 						<Button type="primary" icon={<SearchOutlined />} />
 					</Space.Compact>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<Button type="primary" icon={<UploadOutlined />} onClick={() => {  }}>
+						Tải lên tệp 
+					</Button>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<Button type="primary" icon={<PlusOutlined />} onClick={() => { setEditingItem(null); setIsModalOpen(true); }}>
 						Thêm học sinh

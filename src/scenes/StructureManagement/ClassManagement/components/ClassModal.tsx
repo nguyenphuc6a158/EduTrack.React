@@ -11,9 +11,10 @@ interface IClassModalProps {
     confirmLoading: boolean;
     listGrades: GradeDto[];
     listTeachers: UserDto[];
+    listClasses?: ClassDto[];
 }
 
-const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, onCancel, confirmLoading, listGrades, listTeachers }) => {
+const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, onCancel, confirmLoading, listGrades, listTeachers, listClasses = [] }) => {
     const [form] = Form.useForm();
     useEffect(() => {
         if (visible) {
@@ -67,7 +68,28 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
                 <Form.Item
                     name="className" 
                     label="Tên lớp học"
-                    rules={[requiredRule("Vui lòng nhập tên lớp học")]}
+                    rules={[
+                        requiredRule("Vui lòng nhập tên lớp học"),
+                        {
+                            validator: (_, value) => {
+                                if (!value) return Promise.resolve();
+                                if (!editingItem) {
+                                    const isDuplicate = listClasses.some(c => c.className?.toLowerCase() === value.toLowerCase());
+                                    if (isDuplicate) {
+                                        return Promise.reject(new Error("Tên lớp học này đã tồn tại"));
+                                    }
+                                } else {
+                                    const isDuplicate = listClasses.some(c => 
+                                        c.className?.toLowerCase() === value.toLowerCase() && c.id !== editingItem.id
+                                    );
+                                    if (isDuplicate) {
+                                        return Promise.reject(new Error("Tên lớp học này đã tồn tại"));
+                                    }
+                                }
+                                return Promise.resolve();
+                            }
+                        }
+                    ]}
                 >
                     <Input placeholder="Ví dụ: 10A1" />
                 </Form.Item>

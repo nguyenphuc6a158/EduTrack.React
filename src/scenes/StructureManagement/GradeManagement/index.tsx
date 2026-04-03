@@ -81,6 +81,7 @@ const GradeManagement = () => {
                 onOk={handleOk} 
                 onCancel={() => setIsModalOpen(false)} 
                 confirmLoading={loading}
+                listGrades={listGrades}
             />
         </div>
     );

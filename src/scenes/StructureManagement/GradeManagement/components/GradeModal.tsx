@@ -9,9 +9,10 @@ interface GradeModalProps {
     onOk: (values: any) => void;
     onCancel: () => void;
     confirmLoading: boolean;
+    listGrades?: GradeDto[];
 }
 
-const GradeModal: React.FC<GradeModalProps> = ({ visible, editingGrade, onOk, onCancel, confirmLoading }) => {
+const GradeModal: React.FC<GradeModalProps> = ({ visible, editingGrade, onOk, onCancel, confirmLoading, listGrades = [] }) => {
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -47,7 +48,28 @@ const GradeModal: React.FC<GradeModalProps> = ({ visible, editingGrade, onOk, on
                 <Form.Item
                     name="gradeName"
                     label="Tên khối lớp"
-                    rules={[requiredRule("Vui lòng nhập tên khối lớp")]}
+                    rules={[
+                        requiredRule("Vui lòng nhập tên khối lớp"),
+                        {
+                            validator: (_, value) => {
+                                if (!value) return Promise.resolve();
+                                if (!editingGrade) {
+                                    const isDuplicate = listGrades.some(g => g.gradeName?.toLowerCase() === value.toLowerCase());
+                                    if (isDuplicate) {
+                                        return Promise.reject(new Error("Tên khối lớp này đã tồn tại"));
+                                    }
+                                } else {
+                                    const isDuplicate = listGrades.some(g => 
+                                        g.gradeName?.toLowerCase() === value.toLowerCase() && g.id !== editingGrade.id
+                                    );
+                                    if (isDuplicate) {
+                                        return Promise.reject(new Error("Tên khối lớp này đã tồn tại"));
+                                    }
+                                }
+                                return Promise.resolve();
+                            }
+                        }
+                    ]}
                 >
                     <Input placeholder="Ví dụ: Khối 10" />
                 </Form.Item>
