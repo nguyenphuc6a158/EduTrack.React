@@ -14,11 +14,11 @@ interface IStudentTableProps {
 	listStudents?: UserDto[];
 }
 
-const StudentTable: React.FC<IStudentTableProps> = ({ 
-	dataSource, 
-	loading, 
-	onEdit, 
-	onDelete, 
+const StudentTable: React.FC<IStudentTableProps> = ({
+	dataSource,
+	loading,
+	onEdit,
+	onDelete,
 	totalStudent,
 	listStudents = []
 }) => {
@@ -27,26 +27,17 @@ const StudentTable: React.FC<IStudentTableProps> = ({
 		return listStudents.find(s => s.id === studentId);
 	};
 
-	const filterStudentNames = useMemo(()=>{
-			 return [...new Set(dataSource?.flatMap(item => {
-				const student = listStudents.find(s => s.id === item.studentId);
-				return student?.fullName || `Học sinh #${item.studentId}`;
-			}))].map(name=>{
-				return({
-					value: name,
-					text: name || "",
-				})
-			})
-		},[dataSource, listStudents]);
-
-	const filterClassNames = useMemo(()=>{
-		 return [...new Set(dataSource?.flatMap(item => item.className || []))].map(name=>{
-			return({
+	const filterStudentNames = useMemo(() => {
+		return [...new Set(dataSource?.flatMap(item => {
+			const student = listStudents.find(s => s.id === item.studentId);
+			return student?.fullName || `Học sinh #${item.studentId}`;
+		}))].map(name => {
+			return ({
 				value: name,
 				text: name || "",
 			})
 		})
-	},[dataSource]);
+	}, [dataSource, listStudents]);
 
 	const columns = [
 		{
@@ -70,14 +61,11 @@ const StudentTable: React.FC<IStudentTableProps> = ({
 			key: "className",
 			dataIndex: "className",
 			width: 120,
-			filters: filterClassNames,
-			filterSearch: true,
-			onFilter: (value: any, record: StudentClassDto) => (record.className || "").includes(String(value)),
 		},
 		{
-			title: "Thao tác",
+			title: "Hành động",
 			key: "action",
-			width: 100,
+			width: 200,
 			align: "center" as const,
 			render: (_: unknown, record: StudentClassDto) => (
 				<Space size="middle">

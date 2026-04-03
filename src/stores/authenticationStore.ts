@@ -1,4 +1,3 @@
-import { AppConsts } from 'src/lib/appconst';
 import http from '../services/httpService';
 import { AuthenticateModel, TokenAuthService } from '../services/services_autogen';
 export default class AuthenticationStore {
