@@ -68,7 +68,7 @@ const StudentModal: React.FC<IStudentModalProps> = ({
 			onCancel={onCancel}
 			confirmLoading={confirmLoading}
 			width={600}
-		>
+		>	
 			<Form form={form} layout="vertical">
 				<Form.Item
 					name="classId"

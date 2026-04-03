@@ -3,6 +3,7 @@ import { Button, Col, Space, Select, App } from "antd";
 import { PlusOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons";
 import StudentTable from "./components/StudentTable";
 import StudentModal from "./components/StudentModal";
+import ImportStudentModal from "./components/ImportStudentModal";
 import { useStudentClasses, useStudentClassLoading, useStudentClassActions, useTotalCountStudentClass } from "src/stores/studentClassStore";
 import { useClasses, useClassActions } from "src/stores/classStore";
 import { useUserActions, useStudents } from "src/stores/userStore";
@@ -11,6 +12,7 @@ import { CreateStudentClassDto, UpdateStudentClassDto, StudentClassDto } from "s
 const StudentManagement = () => {
 	const { message } = App.useApp();
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<StudentClassDto | null>(null);
 	const [idSelectedClass, setIdSelectedClass] = useState<number | null>(()=>{
 		let idSelectedClassInLocalStorage = localStorage.getItem("idSelectedClass");
@@ -25,6 +27,7 @@ const StudentManagement = () => {
 	const listStudents = useStudents();
 	const userActions = useUserActions();
 	const totalStudentClass = useTotalCountStudentClass();
+	const [importLoading, setImportLoading] = useState(false);
 
 	const fetchStudentsByClass = async (idSelectedClass: number | null) => {
 		if(idSelectedClass){ 
@@ -110,7 +113,7 @@ const StudentManagement = () => {
 						<Button type="primary" icon={<SearchOutlined />} />
 					</Space.Compact>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<Button type="primary" icon={<UploadOutlined />} onClick={() => {  }}>
+					<Button type="primary" icon={<UploadOutlined />} onClick={() => setIsImportModalOpen(true)}>
 						Tải lên tệp 
 					</Button>
 					&nbsp;&nbsp;&nbsp;&nbsp;
@@ -137,6 +140,11 @@ const StudentManagement = () => {
 				onCancel={() => setIsModalOpen(false)} 
 				confirmLoading={loading} 
 				listStudents={listStudents}
+			/>
+			<ImportStudentModal
+				visible={isImportModalOpen}
+				onCancel={() => setIsImportModalOpen(false)}
+				confirmLoading={importLoading}
 			/>
 		</div>
 	);
