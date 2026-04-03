@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Modal, Form, Input, Switch } from "antd";
-import { requiredRule } from "src/lib/validation";
+import { requiredRule, duplicateNameValidator } from "src/lib/validation";
 import { GradeDto } from "src/services/services_autogen";
 
 interface GradeModalProps {
@@ -49,26 +49,8 @@ const GradeModal: React.FC<GradeModalProps> = ({ visible, editingGrade, onOk, on
                     name="gradeName"
                     label="Tên khối lớp"
                     rules={[
-                        requiredRule("Vui lòng nhập tên khối lớp"),
-                        {
-                            validator: (_, value) => {
-                                if (!value) return Promise.resolve();
-                                if (!editingGrade) {
-                                    const isDuplicate = listGrades.some(g => g.gradeName?.toLowerCase() === value.toLowerCase());
-                                    if (isDuplicate) {
-                                        return Promise.reject(new Error("Tên khối lớp này đã tồn tại"));
-                                    }
-                                } else {
-                                    const isDuplicate = listGrades.some(g => 
-                                        g.gradeName?.toLowerCase() === value.toLowerCase() && g.id !== editingGrade.id
-                                    );
-                                    if (isDuplicate) {
-                                        return Promise.reject(new Error("Tên khối lớp này đã tồn tại"));
-                                    }
-                                }
-                                return Promise.resolve();
-                            }
-                        }
+                        requiredRule("tên khối lớp"),
+                        duplicateNameValidator(listGrades, "Tên khối lớp", editingGrade?.id)
                     ]}
                 >
                     <Input placeholder="Ví dụ: Khối 10" />

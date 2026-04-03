@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Modal, Form, Input, Select, Row, Col, Switch } from "antd";
-import { requiredRule } from "src/lib/validation";
+import { requiredRule, duplicateNameValidator } from "src/lib/validation";
 import type { ClassDto, GradeDto, UserDto } from "src/services/services_autogen";
 
 interface IClassModalProps {
@@ -69,26 +69,8 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
                     name="className" 
                     label="Tên lớp học"
                     rules={[
-                        requiredRule("Vui lòng nhập tên lớp học"),
-                        {
-                            validator: (_, value) => {
-                                if (!value) return Promise.resolve();
-                                if (!editingItem) {
-                                    const isDuplicate = listClasses.some(c => c.className?.toLowerCase() === value.toLowerCase());
-                                    if (isDuplicate) {
-                                        return Promise.reject(new Error("Tên lớp học này đã tồn tại"));
-                                    }
-                                } else {
-                                    const isDuplicate = listClasses.some(c => 
-                                        c.className?.toLowerCase() === value.toLowerCase() && c.id !== editingItem.id
-                                    );
-                                    if (isDuplicate) {
-                                        return Promise.reject(new Error("Tên lớp học này đã tồn tại"));
-                                    }
-                                }
-                                return Promise.resolve();
-                            }
-                        }
+                        requiredRule("tên lớp học"),
+                        duplicateNameValidator(listClasses, "Tên lớp học", editingItem?.id)
                     ]}
                 >
                     <Input placeholder="Ví dụ: 10A1" />
