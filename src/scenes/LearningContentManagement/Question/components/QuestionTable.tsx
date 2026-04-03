@@ -4,14 +4,17 @@ import type React from "react";
 import { AppConsts } from "src/lib/appconst";
 import type { QuestionDto } from "src/services/services_autogen";
 interface IQuestionTableProps{
-	listQuestions: QuestionDto[];
+	listQuestions?: QuestionDto[];
 	onDelete: (item: QuestionDto) => void;
 	onEdit: (selectedQuestion: QuestionDto) => void;
 	openInforQuestionModal: (selectedQuestion: QuestionDto) => void;
-	loading: boolean;
-	totalCountQuestion: number;
+	loading?: boolean;
+	totalCountQuestion?: number;
+	onlyView?: boolean;
+	pushSelectedQuestion?: (selectedItems: QuestionDto) => void;
+	onDoubleClick?: (question: QuestionDto) => void;
 }
-const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, onEdit, openInforQuestionModal, loading, totalCountQuestion}) => {
+const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, onEdit, openInforQuestionModal, loading, totalCountQuestion, onlyView, pushSelectedQuestion, onDoubleClick}) => {
 	const formatFileName = (fileName: string) => {
 		const parts = fileName.split("_");
 		if (parts.length > 1) {
@@ -47,6 +50,8 @@ const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, 
 			dataIndex:'chapterName',
 			key:'chapterName',
 		},
+	]
+	const actionColumn = [
 		{
 			title:'Hành động',
 			width: 200,
@@ -83,21 +88,31 @@ const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, 
 					</Space>
 				)
 			}
-		},
+		}
 	]
+	const finalColumns = onlyView ? columns : [...columns, ...actionColumn];
 	return(
 		<Table
-			columns={columns}
+			columns={finalColumns}
 			dataSource={listQuestions}
 			rowKey={"id"}
 			loading={loading}
-			pagination={{
-				placement: ["topEnd"],
-				total: totalCountQuestion,
-				pageSize: 10,
-				showSizeChanger: true,
-				showTotal: (totalCountQuestion) => `Tổng: ${totalCountQuestion}`,
+			onRow={(record) => {
+				return {
+					onClick: () => pushSelectedQuestion && pushSelectedQuestion(record),
+					onDoubleClick: () => onDoubleClick && onDoubleClick(record)
+				};
 			}}
+			pagination={
+				onlyView ? false :
+				{
+					placement: ["topEnd"],
+					total: totalCountQuestion,
+					pageSize: 10,
+					showSizeChanger: true,
+					showTotal: (totalCountQuestion) => `Tổng: ${totalCountQuestion}`,
+				}
+			}
 		/>
 	)
 }

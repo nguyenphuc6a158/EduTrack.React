@@ -1,7 +1,7 @@
 import { App, Button, Col, message, Select, Space } from "antd";
 import type React from "react";
 import QuestionTable from "./components/QuestionTable";
-import { useQuestionActions, useQuestiones, useQuestionLoading } from "src/stores/questionStore";
+import { useQuestionActions, useQuestions, useQuestionLoading } from "src/stores/questionStore";
 import { CreateQuestionDto, CreateQuestionOptionDto, CreateQuestionWithOptionsDto, QuestionDto, UpdateQuestionDto } from "src/services/services_autogen";
 import { useEffect, useMemo, useState } from "react";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
@@ -12,7 +12,7 @@ import InformationModal from "./components/InformationModal";
 
 const QuestionManagement: React.FC = () => {
 	const {message} = App.useApp();
-	const listQuestions = useQuestiones();
+	const listQuestions = useQuestions();
 	const listChapters = useChapters();
 	const actionChapters = useChapterActions();
 	const questionActios = useQuestionActions();
@@ -158,6 +158,7 @@ const QuestionManagement: React.FC = () => {
 				onDelete={onDelete}
 				onEdit={openEditModal}
 				totalCountQuestion={totalCountQuestion}
+				onlyView={false}
 			/>
 			<QuestionModal
 				onOk={handleSubmit}

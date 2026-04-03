@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { AssignmentDto, AssignmentService, CreateAssignmentDto, UpdateAssignmentDto } from "src/services/services_autogen";
+import { AssignmentDto, AssignmentService, CreateAssignmentDto, CreateWithQuestionsDto, UpdateAssignmentDto } from "src/services/services_autogen";
 import { create } from 'zustand';
 const assignmentService = new AssignmentService('',http);
 interface AssignmentState {
@@ -13,6 +13,7 @@ interface AssignmentState {
 		update: (body: UpdateAssignmentDto) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
+		createWithQuestions: (body: CreateWithQuestionsDto) => Promise<void>;
 	};
 }
 const useAssignmentStore = create<AssignmentState>((set) => ({
@@ -21,6 +22,13 @@ const useAssignmentStore = create<AssignmentState>((set) => ({
 	loading: false,
 	assignmentItem: undefined,
 	actions: {
+		createWithQuestions: async (body) : Promise<void> => {
+			try {
+				await assignmentService.createWithQuestions(body);
+			} catch (error) {
+				console.error("Error creating assignment with questions:", error);
+			}
+		},
 		getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
 			set({ loading: true });
 			try{

@@ -3,7 +3,7 @@ import { CreateQuestionDto, CreateQuestionWithOptionsDto, QuestionDto, QuestionS
 import { create } from 'zustand';
 const questionService = new QuestionService('',http);
 interface QuestionState {
-	listQuestiones: QuestionDto[];
+	listQuestions: QuestionDto[];
 	questionItem?: QuestionDto;
 	totalCountQuestion: number;
 	loading: boolean;
@@ -19,7 +19,7 @@ interface QuestionState {
 	};
 }
 const useQuestionStore = create<QuestionState>((set) => ({
-	listQuestiones: [],
+	listQuestions: [],
 	totalCountQuestion: 0,
 	loading: false,
 	questionItem: undefined,
@@ -46,7 +46,7 @@ const useQuestionStore = create<QuestionState>((set) => ({
 				const result = await questionService.getQuestionByChapter(chapterId);
 				if(result){
 					set({
-						listQuestiones: result.items || [],
+						listQuestions: result.items || [],
 						totalCountQuestion: result.items?.length  || 0
 					})
 				}
@@ -60,7 +60,7 @@ const useQuestionStore = create<QuestionState>((set) => ({
 				const result = await questionService.getAll(keyword, skipCount, maxResultCount);
 				if(result){
 					set({
-						listQuestiones: result.items || [],
+						listQuestions: result.items || [],
 						totalCountQuestion: result.items?.length  || 0
 					})
 				}
@@ -93,7 +93,7 @@ const useQuestionStore = create<QuestionState>((set) => ({
 	}
 }));
 
-export const useQuestiones = () => useQuestionStore((state) => state.listQuestiones);
+export const useQuestions = () => useQuestionStore((state) => state.listQuestions);
 export const useTotalCountQuestion = () => useQuestionStore((state) => state.totalCountQuestion);
 export const useQuestion = () => useQuestionStore((state) => state.questionItem);
 export const useQuestionLoading = () => useQuestionStore((state) => state.loading);
