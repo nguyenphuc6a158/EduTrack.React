@@ -4,16 +4,19 @@ import AssignmentTable from "./components/AssignmentTable";
 import { useAssignmentActions, useAssignments } from "src/stores/assignmentStore";
 import { useEffect, useState } from "react";
 import AssignmentModal from "./components/AssignmentModal";
-import type { AssignmentDto, QuestionDto } from "src/services/services_autogen";
+import type { AssignmentDto, CreateWithQuestionsDto, QuestionDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
 import { useQuestionActions, useQuestions } from "src/stores/questionStore";
 import InformationModal from "../Question/components/InformationModal";
+import { useChapterActions, useChapters } from "src/stores/chapterStore";
 
 const AssignmentManagement: React.FC = () =>{
 	const listAssignment = useAssignments();
 	const assignmentActions = useAssignmentActions();
 	const listQuestions = useQuestions();
 	const questionsActions = useQuestionActions();
+	const listChapters = useChapters();
+	const chaptersActions = useChapterActions();
 
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 	const [isOpenInfoModal, setIsOpenInfoModal] = useState<boolean>(false);
@@ -33,9 +36,17 @@ const AssignmentManagement: React.FC = () =>{
 			console.error("Failed to fetch questions: ", error);
 		}
 	}
+	const fetchChapter = async () => {
+		try{
+			await chaptersActions.getAll();
+		} catch(error){
+			console.error("Failed to fetch chapters: ", error);
+		}
+	}
 	useEffect(() => {
 		fetchAssigment();
 		fetchQuestion();
+		fetchChapter();
 	}, []) 
 
 	const onEdit = (item: any) => {
@@ -48,8 +59,22 @@ const AssignmentManagement: React.FC = () =>{
 		setIsOpenModal(true);
 		setSelectedAssignment(undefined);
 	}
-	const handleSubmit = (values: any) => {
-		console.log("Form values: ", values);
+	const handleSubmit = (values: CreateWithQuestionsDto) => {
+		if(selectedAssignment) {
+			try{
+
+			} catch(error) {
+				console.error("Failed to update assignment: ", error);
+			}
+		} else {
+			try {
+				assignmentActions.createWithQuestions(values);
+				setIsOpenModal(false);
+				fetchAssigment();
+			} catch(error) {
+				console.error("Failed to create assignment: ", error);
+			}
+		}
 	}
 	const openInforModal = (question: QuestionDto) => {
 		setSelectedQuestion(question);
@@ -85,6 +110,7 @@ const AssignmentManagement: React.FC = () =>{
 				selectedAssignment={selectedAssignment}
 				listQuestions={listQuestions}
 				openInforModal={openInforModal}
+				listChapters={listChapters}
 			/>
 			<InformationModal 
 				open={isOpenInfoModal}

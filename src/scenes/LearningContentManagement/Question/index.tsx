@@ -9,6 +9,7 @@ import QuestionModal from "./components/QuestionModal";
 import { useChapterActions, useChapters, usetotalCountChapter } from "src/stores/chapterStore";
 import { useFileActions } from "src/stores/fileStore";
 import InformationModal from "./components/InformationModal";
+import { ModeTableQuestionsEnum } from "src/lib/enum";
 
 const QuestionManagement: React.FC = () => {
 	const {message} = App.useApp();
@@ -158,7 +159,7 @@ const QuestionManagement: React.FC = () => {
 				onDelete={onDelete}
 				onEdit={openEditModal}
 				totalCountQuestion={totalCountQuestion}
-				onlyView={false}
+				tableMode={ModeTableQuestionsEnum.QUESTION}
 			/>
 			<QuestionModal
 				onOk={handleSubmit}
