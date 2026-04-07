@@ -9,11 +9,13 @@ interface ClassState {
 	loading: boolean;
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
+		getByTeacherName: (teacherName?: string) => Promise<void>;
 		create: (body: CreateClassDto) => Promise<void>;
 		update: (body: UpdateClassDto) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
 		getClassByGrade: (gradeId: number) => Promise<void>;
+		getClassByTeacher: (teacherId: number) => Promise<void>;
 	};
 }
 const useClassStore = create<ClassState>((set) => ({
@@ -22,6 +24,21 @@ const useClassStore = create<ClassState>((set) => ({
 	loading: false,
 	classItem: undefined,
 	actions: {
+		getClassByTeacher: async (id) => {
+			set({ loading: true });
+			try{
+				const result = await classService.getClassByTeacher(id);
+				if(result){
+					set({
+						listClasses: result.items || [],
+						totalCountClass: result.items?.length || 0
+					})
+				}
+			} finally {
+				set({ loading: false });
+			}
+		},
+
 		getClassByGrade: async (id) => {
 			set({ loading: true });
 			try{
@@ -44,6 +61,20 @@ const useClassStore = create<ClassState>((set) => ({
 					set({
 						listClasses: result.items || [],
 						totalCountClass: result.items?.length  || 0
+					})
+				}
+			} finally {
+				set({ loading: false });
+			}
+		},
+		getByTeacherName: async (teacherName) : Promise<void> => {
+			set({ loading: true });
+			try{
+				const result = await classService.getAll(teacherName, 0, 100);
+				if(result){
+					set({
+						listClasses: result.items || [],
+						totalCountClass: result.items?.length || 0
 					})
 				}
 			} finally {
@@ -80,4 +111,7 @@ export const useClass = () => useClassStore((state) => state.classItem);
 export const useTotalCountClass = () => useClassStore((state) => state.totalCountClass);
 export const useClassLoading = () => useClassStore((state) => state.loading);
 export const useClassActions = () => useClassStore((state) => state.actions);
+export const useClassByTeacher = (teacherId: number) => useClassStore((state) => state.listClasses.filter(c => c.teacherId === teacherId));
+export const useClassByGrade = (gradeId: number) => useClassStore((state) => state.listClasses.filter(c => c.gradeId === gradeId));
+
 export default useClassStore;

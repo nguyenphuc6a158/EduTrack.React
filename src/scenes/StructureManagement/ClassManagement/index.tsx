@@ -12,9 +12,9 @@ const ClassManagement = () => {
 	const { message } = App.useApp();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<ClassDto | null>(null);
-	const [idSelectedGrade, setidSelectedGrade] = useState<number | null>(()=>{
-		let idSelectedGradeInLocalStorage = localStorage.getItem("idSelectedGrade");
-    	return idSelectedGradeInLocalStorage ? Number(idSelectedGradeInLocalStorage	) : null;
+	const [selectedTeacherName, setSelectedTeacherName] = useState<string | null>(() => {
+		const selectedTeacherNameInLocalStorage = localStorage.getItem("selectedTeacherName");
+		return selectedTeacherNameInLocalStorage || null;
 	})
 
 	const listClasses = useClasses();
@@ -26,30 +26,36 @@ const ClassManagement = () => {
 	const listTeachers = useTeachers();
 	const userActions = useUserActions();
 
-	const fetchClassAndTeacher = async (idSelectedGrade: number | null) => {
-		await userActions.getAllTeacher();
-		if(idSelectedGrade){ 
-			await classActions.getClassByGrade(idSelectedGrade)
-		}
-		else await classActions.getAll(undefined, 0, 100);
-	}
 	const fetchGrade = async () => {
 		await gradeActions.getAll(undefined,undefined,undefined);
 	}
 	useEffect ( () => {
+		userActions.getAllTeacher();
 		fetchGrade();
 	}, []);
 
 	useEffect(()=>{
-		fetchClassAndTeacher(idSelectedGrade);
-	},[idSelectedGrade])
+		const fetchClasses = async () => {
+			if (!selectedTeacherName) {
+				await classActions.getAll(undefined, 0, 100);
+				return;
+			}
+			const selectedTeacher = listTeachers.find((teacher) => teacher.fullName === selectedTeacherName);
+			if (selectedTeacher?.id) {
+				await classActions.getClassByTeacher(selectedTeacher.id);
+				return;
+			}
+			await classActions.getAll(undefined, 0, 100);
+		};
+		fetchClasses();
+	},[selectedTeacherName, listTeachers])
 	
-	const optionGrade = useMemo(()=>{
-		return(listGrades.map(item => ({
-				value: item.id,
-				label: item.gradeName
+	const optionTeacher = useMemo(()=>{
+		return(listTeachers.map(item => ({
+				value: item.fullName || "",
+				label: item.fullName || ""
 		})))
-	},[listGrades])
+	},[listTeachers])
 	
 	const handleOk = async (values: any) => {
 		try {
@@ -75,15 +81,14 @@ const ClassManagement = () => {
 			message.error("Lỗi khi lưu");
 		}
 	};
-	const onChangeSelectGrade = (value: number | undefined) => {
-		console.log(value)
+	const onChangeSelectTeacher = (value: string | undefined) => {
 		if (value == undefined) {
-			localStorage.removeItem("idSelectedGrade");
-			setidSelectedGrade(null);
+			localStorage.removeItem("selectedTeacherName");
+			setSelectedTeacherName(null);
 			return;
 		}
-		localStorage.setItem("idSelectedGrade", value.toString());
-		setidSelectedGrade(value);
+		localStorage.setItem("selectedTeacherName", value);
+		setSelectedTeacherName(value);
 	}
 	const onDeleteClass = async (id: number) => {
 		await classActions.delete(id); 
@@ -101,11 +106,11 @@ const ClassManagement = () => {
 					<Space.Compact>
 						<Select 
 							allowClear
-							options={optionGrade}
-							placeholder="Tìm kiếm theo khối học..."
+							options={optionTeacher}
+							placeholder="Tìm kiếm theo giáo viên..."
 							style={{width: '200px'}}
-							value={idSelectedGrade}
-							onChange={(value)=>onChangeSelectGrade(value)}
+							value={selectedTeacherName}
+							onChange={(value)=>onChangeSelectTeacher(value)}
 						/>
 						<Button type="primary" icon={<SearchOutlined />} />
 					</Space.Compact>
