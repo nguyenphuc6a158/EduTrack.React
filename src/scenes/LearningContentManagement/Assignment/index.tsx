@@ -49,8 +49,9 @@ const AssignmentManagement: React.FC = () =>{
 		fetchChapter();
 	}, []) 
 
-	const onEdit = (item: any) => {
-		console.log("Edit item: ", item);
+	const onEdit = (item: AssignmentDto) => {
+		setSelectedAssignment(item);
+		setIsOpenModal(true);
 	}
 	const onDelete = (id: number) => {
 		console.log("Delete item with id: ", id);

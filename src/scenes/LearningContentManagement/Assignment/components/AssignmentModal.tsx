@@ -2,7 +2,7 @@ import { App, Card, Col, Form, Input, Modal, Row, Select, Table } from "antd";
 import type React from "react";
 import { CreateAssignmentQuestionDto, CreateQuestionWithOptionsDto, CreateWithQuestionsDto, type AssignmentDto, type ChapterDto, type QuestionDto } from "src/services/services_autogen";
 import QuestionTable from "../../Question/components/QuestionTable";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ModeTableQuestionsEnum } from "src/lib/enum";
 interface IAssignmentModalProps {
 	open: boolean;
@@ -33,6 +33,18 @@ const AssignmentModal : React.FC<IAssignmentModalProps> = ({ open, onCancel, onS
 		const updatedList = listSelectedQuestions.filter(question => question.id !== questionId);
 		setListSelectedQuestions(updatedList);
 	}
+	useEffect(() => {
+		if(selectedAssignment) {
+			formRef.setFieldsValue({
+				title: selectedAssignment.title,
+				chapterId: selectedAssignment.chapterId,
+			});
+			
+		} else {
+			formRef.resetFields();
+			setListSelectedQuestions([]);
+		}
+	}, [selectedAssignment]);
 	const onOk = () => {
 		let values = formRef.getFieldsValue();
 		if (!listSelectedQuestions.length) {

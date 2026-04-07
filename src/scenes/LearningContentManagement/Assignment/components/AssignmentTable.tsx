@@ -21,8 +21,8 @@ const AssignmentTable: React.FC<IAssignmentTableProps> = ({listAssignment, onEdi
 		},
 		{
 			title: "Người tạo",
-			dataIndex: "createdBy",
-			key: "createdBy"
+			dataIndex: "createBy",
+			key: "createBy"
 		},
 		{
 			title:"Hành động",
