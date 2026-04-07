@@ -60,6 +60,7 @@ const AssignmentTable: React.FC<IAssignmentTableProps> = ({listAssignment, onEdi
 		<Table 
 			columns={columns}
 			dataSource={listAssignment}
+			rowKey={`id`}
 		/>
 	)
 }

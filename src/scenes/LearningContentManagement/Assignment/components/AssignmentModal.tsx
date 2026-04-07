@@ -4,6 +4,7 @@ import { CreateAssignmentQuestionDto, CreateQuestionWithOptionsDto, CreateWithQu
 import QuestionTable from "../../Question/components/QuestionTable";
 import { useEffect, useMemo, useState } from "react";
 import { ModeTableQuestionsEnum } from "src/lib/enum";
+import { useQuestionsByAssignment } from "src/stores/questionStore";
 interface IAssignmentModalProps {
 	open: boolean;
 	onCancel: () => void;
@@ -12,10 +13,12 @@ interface IAssignmentModalProps {
 	listQuestions: QuestionDto[];
 	openInforModal: (question: QuestionDto) => void;
 	listChapters: ChapterDto[];
+	listQuestionsByAssignment: QuestionDto[];
 }
-const AssignmentModal : React.FC<IAssignmentModalProps> = ({ open, onCancel, onSubmit, selectedAssignment, listQuestions, openInforModal, listChapters }) => {
+const AssignmentModal : React.FC<IAssignmentModalProps> = ({ open, onCancel, onSubmit, selectedAssignment, listQuestions, openInforModal, listChapters, listQuestionsByAssignment }) => {
 	const [formRef] = Form.useForm();
 	const message = App.useApp().message;
+
 	const [listSelectedQuestions, setListSelectedQuestions] = useState<QuestionDto[]>([]);
 	const pushSelectedQuestion = (selectedItems: QuestionDto) => {
 		if(listSelectedQuestions.some(question => question.id === selectedItems.id)) {
@@ -23,6 +26,21 @@ const AssignmentModal : React.FC<IAssignmentModalProps> = ({ open, onCancel, onS
 		}
 		setListSelectedQuestions([...listSelectedQuestions, selectedItems]);
 	};
+	useEffect(() => {
+		if (open) {
+			if (selectedAssignment) {
+				formRef.setFieldsValue({
+					title: selectedAssignment.title,
+					chapterId: selectedAssignment.chapterId,
+				});
+				setListSelectedQuestions([...listQuestionsByAssignment]);
+				console.log("listQuestionsByAssignment: ", listQuestionsByAssignment);
+			} else {
+				formRef.resetFields();
+				setListSelectedQuestions([]);
+			}
+		}
+	}, [selectedAssignment, listQuestionsByAssignment]);
 	const listOptionsChapter = useMemo(() => {
 		return listChapters.map((chapter) => ({
 			label: chapter.chapterName,

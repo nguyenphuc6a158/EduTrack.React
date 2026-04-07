@@ -7,6 +7,7 @@ interface QuestionState {
 	questionItem?: QuestionDto;
 	totalCountQuestion: number;
 	loading: boolean;
+	listQuestionsByAssignment: QuestionDto[];
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
 		create: (body: CreateQuestionDto) => Promise<QuestionDto>;
@@ -16,14 +17,30 @@ interface QuestionState {
 		getQuestionByChapter: (chapterId: number) => Promise<void>;
 		createWithOptions: (body?: CreateQuestionWithOptionsDto) => Promise<void>;
 		updateWithOptions: (body?: UpdateQuestionWithOptionsDto) => Promise<void>;
+		getQuestionByAssignment: (assignmentId: number) => Promise<void>;
 	};
 }
 const useQuestionStore = create<QuestionState>((set) => ({
 	listQuestions: [],
+	listQuestionsByAssignment: [],
 	totalCountQuestion: 0,
 	loading: false,
 	questionItem: undefined,
 	actions: {
+		getQuestionByAssignment : async (assignmentId: number) : Promise<void> => {
+			set({ loading: true });
+			try{
+				const result = await questionService.getQuestionByAssignment(assignmentId);
+				if(result){
+					set({
+						listQuestionsByAssignment: result.items || [],
+						totalCountQuestion: result.items?.length  || 0
+					})
+				}
+			} finally {
+				set({ loading: false });
+			}
+		},
 		updateWithOptions: async (body) => {
 			set({ loading: true });
 			try{
@@ -94,6 +111,7 @@ const useQuestionStore = create<QuestionState>((set) => ({
 }));
 
 export const useQuestions = () => useQuestionStore((state) => state.listQuestions);
+export const useQuestionsByAssignment = () => useQuestionStore((state) => state.listQuestionsByAssignment);
 export const useTotalCountQuestion = () => useQuestionStore((state) => state.totalCountQuestion);
 export const useQuestion = () => useQuestionStore((state) => state.questionItem);
 export const useQuestionLoading = () => useQuestionStore((state) => state.loading);

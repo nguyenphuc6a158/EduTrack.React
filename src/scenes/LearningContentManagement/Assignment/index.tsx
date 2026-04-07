@@ -1,4 +1,4 @@
-import { Button, Col } from "antd";
+import { App, Button, Col, message } from "antd";
 import type React from "react";
 import AssignmentTable from "./components/AssignmentTable";
 import { useAssignmentActions, useAssignments } from "src/stores/assignmentStore";
@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import AssignmentModal from "./components/AssignmentModal";
 import type { AssignmentDto, CreateWithQuestionsDto, QuestionDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
-import { useQuestionActions, useQuestions } from "src/stores/questionStore";
+import { useQuestionActions, useQuestions, useQuestionsByAssignment } from "src/stores/questionStore";
 import InformationModal from "../Question/components/InformationModal";
 import { useChapterActions, useChapters } from "src/stores/chapterStore";
 
@@ -17,6 +17,8 @@ const AssignmentManagement: React.FC = () =>{
 	const questionsActions = useQuestionActions();
 	const listChapters = useChapters();
 	const chaptersActions = useChapterActions();
+	const listQuestionsByAssignment = useQuestionsByAssignment();
+	const message = App.useApp().message;
 
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 	const [isOpenInfoModal, setIsOpenInfoModal] = useState<boolean>(false);
@@ -49,9 +51,10 @@ const AssignmentManagement: React.FC = () =>{
 		fetchChapter();
 	}, []) 
 
-	const onEdit = (item: AssignmentDto) => {
+	const onEdit = async (item: AssignmentDto) => {
 		setSelectedAssignment(item);
 		setIsOpenModal(true);
+		await questionsActions.getQuestionByAssignment(item.id);
 	}
 	const onDelete = (id: number) => {
 		console.log("Delete item with id: ", id);
@@ -60,22 +63,20 @@ const AssignmentManagement: React.FC = () =>{
 		setIsOpenModal(true);
 		setSelectedAssignment(undefined);
 	}
-	const handleSubmit = (values: CreateWithQuestionsDto) => {
-		if(selectedAssignment) {
-			try{
-
-			} catch(error) {
-				console.error("Failed to update assignment: ", error);
-			}
-		} else {
-			try {
-				assignmentActions.createWithQuestions(values);
+	const handleSubmit = async (values: CreateWithQuestionsDto) => {
+		try{
+			if(selectedAssignment) {
+			} else {
+				await assignmentActions.createWithQuestions(values);
 				setIsOpenModal(false);
 				fetchAssigment();
-			} catch(error) {
-				console.error("Failed to create assignment: ", error);
+				message.success("Tạo bài tập thành công!");
 			}
+		} catch(error) {
+			console.error("Failed to submit assignment: ", error);
+			message.error("Tạo bài tập thất bại!");
 		}
+		await assignmentActions.getAll();
 	}
 	const openInforModal = (question: QuestionDto) => {
 		setSelectedQuestion(question);
@@ -112,6 +113,7 @@ const AssignmentManagement: React.FC = () =>{
 				listQuestions={listQuestions}
 				openInforModal={openInforModal}
 				listChapters={listChapters}
+				listQuestionsByAssignment={listQuestionsByAssignment}
 			/>
 			<InformationModal 
 				open={isOpenInfoModal}

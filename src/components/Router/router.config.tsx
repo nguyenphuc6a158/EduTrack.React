@@ -5,6 +5,7 @@ import { AppConsts } from "src/lib/appconst";
 import { systemManagementRouter } from "./systemManagementRouter";
 import { learningContentManagementRouter } from "./learningContentManagementRouter";
 import classManagementRouter from "./classManagementRouter";
+import homeWorkRouter from "./homeWorkRouter";
 
 export type IMenuItem = {
 	key: string;
@@ -26,6 +27,7 @@ export const routers: IMenuItem[] = [
 		permissions: '',
 		component: React.lazy(() => import("src/scenes/Dashboard")),
 	},
+	...homeWorkRouter,
 	...classManagementRouter,
 	...learningContentManagementRouter,
 	...systemManagementRouter,
