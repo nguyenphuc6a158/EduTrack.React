@@ -3,14 +3,14 @@ import { useEffect, useMemo, useState } from "react";
 import { requiredRule } from "src/lib/validation";
 import { ChapterDto, type SubjectDto } from "src/services/services_autogen";
 
-interface IChapterModalProps {
+interface IChapterCreateUpdateModalProps {
 	open: boolean;
 	onCancel: () => void;
 	onOk: (value: any) => void;
 	selectedChapter: ChapterDto | null;
 	listSubject: SubjectDto[];
 };
-const ChapterModal: React.FC<IChapterModalProps> = ({open, selectedChapter, onCancel, onOk, listSubject}) => {
+const ChapterCreateUpdateModal: React.FC<IChapterCreateUpdateModalProps> = ({open, selectedChapter, onCancel, onOk, listSubject}) => {
 	const [form] = Form.useForm();
 	useEffect(()=>{
 		if(selectedChapter != null && selectedChapter.id != undefined){
@@ -59,4 +59,4 @@ const ChapterModal: React.FC<IChapterModalProps> = ({open, selectedChapter, onCa
 		</Modal>
 	)
 }
-export default ChapterModal
+export default ChapterCreateUpdateModal

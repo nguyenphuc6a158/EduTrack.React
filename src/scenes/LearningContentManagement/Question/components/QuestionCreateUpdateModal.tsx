@@ -6,14 +6,14 @@ import { requiredRule } from "src/lib/validation";
 import { ChapterDto, QuestionDto, type FileParameter } from "src/services/services_autogen";
 import { useFileActions } from "src/stores/fileStore";
 
-interface IQuestionModalProps {
+interface IQuestionCreateUpdateModalProps {
 	onOk: (value: any) => void;
 	open: boolean;
 	selectedQuestion: QuestionDto | null
 	onCancel: () => void;
 	listChapter: ChapterDto[];
 };
-const QuestionModal: React.FC<IQuestionModalProps> = ({ onOk, open, selectedQuestion, onCancel, listChapter }) => {
+const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ onOk, open, selectedQuestion, onCancel, listChapter }) => {
 	const [form] = Form.useForm();
 	const fileActions = useFileActions();
 	useEffect(() => {
@@ -145,4 +145,4 @@ const QuestionModal: React.FC<IQuestionModalProps> = ({ onOk, open, selectedQues
 		</Modal>
 	)
 }
-export default QuestionModal
+export default QuestionCreateUpdateModal

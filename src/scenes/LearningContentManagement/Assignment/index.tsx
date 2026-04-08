@@ -3,12 +3,13 @@ import type React from "react";
 import AssignmentTable from "./components/AssignmentTable";
 import { useAssignmentActions, useAssignments } from "src/stores/assignmentStore";
 import { useEffect, useState } from "react";
-import AssignmentModal from "./components/AssignmentModal";
-import type { AssignmentDto, CreateWithQuestionsDto, QuestionDto } from "src/services/services_autogen";
-import { PlusOutlined } from "@ant-design/icons";
+import type { AssignmentDto, CreateAssignmentWithQuestionsDto, QuestionDto, UpdateAssignmentWithQuestionsDto } from "src/services/services_autogen";
+import { ExportOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQuestionActions, useQuestions, useQuestionsByAssignment } from "src/stores/questionStore";
-import InformationModal from "../Question/components/InformationModal";
 import { useChapterActions, useChapters } from "src/stores/chapterStore";
+import QuestionInformationModal from "../Question/components/QuestionInformationModal";
+import ExerciseCreateUpdateModal from "./components/ExerciseCreateUpdateModal";
+import AssigmentModal from "./components/AssignmentModal";
 
 const AssignmentManagement: React.FC = () =>{
 	const listAssignment = useAssignments();
@@ -22,6 +23,7 @@ const AssignmentManagement: React.FC = () =>{
 
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 	const [isOpenInfoModal, setIsOpenInfoModal] = useState<boolean>(false);
+	const [isOpenAssignmentModal, setIsOpenAssignmentModal] = useState<boolean>(false);
 	const [selectedAssignment, setSelectedAssignment] = useState<AssignmentDto | undefined>(undefined);
 	const [selectedQuestion, setSelectedQuestion] = useState<QuestionDto | null>(null);
 	const fetchAssigment = async () => {
@@ -56,18 +58,24 @@ const AssignmentManagement: React.FC = () =>{
 		setIsOpenModal(true);
 		await questionsActions.getQuestionByAssignment(item.id);
 	}
-	const onDelete = (id: number) => {
-		console.log("Delete item with id: ", id);
+	const onDelete = async (id: number) => {
+		await assignmentActions.delete(id);
+		message.success("Xóa bài tập thành công!");
+		fetchAssigment();
 	}
 	const openAddModal = () => {
 		setIsOpenModal(true);
 		setSelectedAssignment(undefined);
 	}
-	const handleSubmit = async (values: CreateWithQuestionsDto) => {
+	const handleSubmit = async (values: CreateAssignmentWithQuestionsDto | UpdateAssignmentWithQuestionsDto) => {
 		try{
 			if(selectedAssignment) {
+				await assignmentActions.updateAssignmentWithQuestions(values as UpdateAssignmentWithQuestionsDto);
+				setIsOpenModal(false);
+				fetchAssigment();
+				message.success("Sửa bài tập thành công!");
 			} else {
-				await assignmentActions.createWithQuestions(values);
+				await assignmentActions.createAssignmentWithQuestions(values as CreateAssignmentWithQuestionsDto);
 				setIsOpenModal(false);
 				fetchAssigment();
 				message.success("Tạo bài tập thành công!");
@@ -82,6 +90,12 @@ const AssignmentManagement: React.FC = () =>{
 		setSelectedQuestion(question);
 		setIsOpenInfoModal(true);
 	}
+	const onOkAssignment = () => {
+
+	}
+	const openAssignmentModal = () => {
+		setIsOpenAssignmentModal(true);
+	}
 	return (
 		<div className="p-6">
 			<div className="flex justify-between items-center mb-6">
@@ -90,6 +104,15 @@ const AssignmentManagement: React.FC = () =>{
 					<p className="text-gray-500">Thêm sửa xóa bài tập</p>
 				</Col>
 				<Col>
+					<Button
+						type="primary"
+						icon={<ExportOutlined />}
+						onClick={openAssignmentModal}
+						size="large"
+					>
+						Giao bài tập
+					</Button>
+					&nbsp;&nbsp;&nbsp;&nbsp;
 					<Button
 						type="primary"
 						icon={<PlusOutlined />}
@@ -105,7 +128,7 @@ const AssignmentManagement: React.FC = () =>{
 				onEdit={onEdit}
 				onDelete={onDelete}
 			/>
-			<AssignmentModal
+			<ExerciseCreateUpdateModal
 				open={isOpenModal}
 				onCancel={() => setIsOpenModal(false)}
 				onSubmit={handleSubmit}
@@ -115,10 +138,15 @@ const AssignmentManagement: React.FC = () =>{
 				listChapters={listChapters}
 				listQuestionsByAssignment={listQuestionsByAssignment}
 			/>
-			<InformationModal 
+			<QuestionInformationModal 
 				open={isOpenInfoModal}
 				selectedQuestion={selectedQuestion}
 				onCancel={() => setIsOpenInfoModal(false)}
+			/>
+			<AssigmentModal 
+				open={isOpenAssignmentModal}
+				onCancel={() => setIsOpenAssignmentModal(false)}
+				onOk={onOkAssignment}
 			/>
 		</div>
 	)

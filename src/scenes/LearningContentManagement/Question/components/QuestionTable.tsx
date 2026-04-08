@@ -127,12 +127,20 @@ const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, 
 			align: "center" as const,
 			render: (record: QuestionDto) => {
 				return (
-					<Button
-						title="Bỏ chọn"
-						type="text"
-						icon={<RollbackOutlined />}
-						onClick={() => removeSelectedQuestion && removeSelectedQuestion(record.id)}
-					/>
+					<Space>
+						<Button
+							title="Bỏ chọn"
+							type="text"
+							icon={<RollbackOutlined />}
+							onClick={() => removeSelectedQuestion && removeSelectedQuestion(record.id)}
+						/>
+						<Button
+							title="Xem chi tiết"
+							type="text"
+							icon={<InfoCircleOutlined />}
+							onClick={() => openInforQuestionModal(record)}
+						/>
+					</Space>
 				)
 			}
 		}

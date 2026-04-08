@@ -4,8 +4,8 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import SubjectTable from "./components/SubjectTable";
 import { useSubjectLoading, useSubjects, useSubjectsActions, useTotalCountSubjectSubjects } from "src/stores/subjectStore";
-import SubjectModal from "./components/SubjectModal";
 import { CreateSubjectDto, SubjectDto, UpdateSubjectDto } from "src/services/services_autogen";
+import SubjectCreateUpdateModal from "./components/SubjectCreateUpdateModal";
 
 const SubjectManagement: React.FC = ()=>{
 	const { message } = App.useApp();
@@ -81,7 +81,7 @@ const SubjectManagement: React.FC = ()=>{
 					Thêm môn học
 				</Button>
 			</div>
-			<SubjectModal
+			<SubjectCreateUpdateModal
 				handleOk={handleOk}
 				selectedSubject={selectedSubject}
 				open={isCreateUpdateModalOpen}

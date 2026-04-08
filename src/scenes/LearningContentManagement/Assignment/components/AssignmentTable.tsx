@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table } from "antd"
-import type { AssignmentDto } from "src/services/services_autogen"
+import { useMemo } from "react";
+import type { Assignment, AssignmentDto } from "src/services/services_autogen"
 
 interface IAssignmentTableProps {
 	listAssignment: AssignmentDto[];
@@ -8,16 +9,35 @@ interface IAssignmentTableProps {
 	onDelete: (id: number) => void;
 }
 const AssignmentTable: React.FC<IAssignmentTableProps> = ({listAssignment, onEdit, onDelete}) => {
+	const filterListChapters = useMemo(() => {
+		return [... new Set(listAssignment.flatMap(assignment => assignment.chapterName))].map(chapterName => ({
+			text: chapterName,
+			value: chapterName || "",
+		}));
+	}, [listAssignment]);
+	const filterListTitles = useMemo(() => {
+		return [... new Set(listAssignment.flatMap(assignment => assignment.chapterName))].map(chapterName => ({
+			text: chapterName,
+			value: chapterName || "",
+		}));
+	}, [listAssignment]);
+
 	const columns = [
 		{
 			title: "Tên bài tập",
 			dataIndex: "title",
-			key: "title"
+			key: "title",
+			filters:filterListTitles,
+			filterSearch: true,
+			onFilter: (value:any, record: AssignmentDto) =>record.title === value,
 		},
 		{
 			title: "Chương",
 			dataIndex: "chapterName",
-			key: "chapterName"
+			key: "chapterName",
+			filters:filterListChapters,
+			filterSearch: true,
+			onFilter: (value:any, record: AssignmentDto) =>record.chapterName === value,
 		},
 		{
 			title: "Người tạo",

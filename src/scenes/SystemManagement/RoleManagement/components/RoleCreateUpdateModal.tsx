@@ -3,14 +3,14 @@ import { Modal, Form, Input, Checkbox, Row, Col } from "antd";
 import { useRolePermissions, useRoleActions, useRoles } from "src/stores/roleStore";
 import { duplicateNameValidator, requiredRule } from "src/lib/validation";
 
-interface RoleModalProps {
+interface RoleCreateUpdateModalProps {
     open: boolean;
     editingRole: any | null;
     onOk: (values: any) => void;
     onCancel: () => void;
 }
 
-const RoleModal: React.FC<RoleModalProps> = ({ open, editingRole, onOk, onCancel }) => {
+const RoleCreateUpdateModal: React.FC<RoleCreateUpdateModalProps> = ({ open, editingRole, onOk, onCancel }) => {
     const [form] = Form.useForm();
     const permissions = useRolePermissions();
     const listRoles = useRoles();
@@ -102,4 +102,4 @@ const RoleModal: React.FC<RoleModalProps> = ({ open, editingRole, onOk, onCancel
     );
 };
 
-export default RoleModal;
+export default RoleCreateUpdateModal;

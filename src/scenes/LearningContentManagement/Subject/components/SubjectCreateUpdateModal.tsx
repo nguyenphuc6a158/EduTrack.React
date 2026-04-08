@@ -3,13 +3,13 @@ import type React from "react";
 import { useEffect } from "react";
 import { requiredRule } from "src/lib/validation";
 import type { SubjectDto } from "src/services/services_autogen";
-interface ISubjectModalProps {
+interface ISubjectCreateUpdateModalProps {
 	selectedSubject: SubjectDto|null;
 	open: boolean;
 	handleOk: (value: any) => void;
 	onCancel: () => void;
 };
-const SubjectModal: React.FC<ISubjectModalProps> = ({open, onCancel, selectedSubject, handleOk}) => {
+const SubjectCreateUpdateModal: React.FC<ISubjectCreateUpdateModalProps> = ({open, onCancel, selectedSubject, handleOk}) => {
 	const [form] = Form.useForm();
 	useEffect(()=>{
 		if (!open) return;
@@ -44,4 +44,4 @@ const SubjectModal: React.FC<ISubjectModalProps> = ({open, onCancel, selectedSub
 		</Modal>
 	)
 }
-export default SubjectModal
+export default SubjectCreateUpdateModal

@@ -5,11 +5,11 @@ import { useQuestionActions, useQuestions, useQuestionLoading } from "src/stores
 import { CreateQuestionDto, CreateQuestionOptionDto, CreateQuestionWithOptionsDto, QuestionDto, UpdateQuestionDto } from "src/services/services_autogen";
 import { useEffect, useMemo, useState } from "react";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import QuestionModal from "./components/QuestionModal";
 import { useChapterActions, useChapters, usetotalCountChapter } from "src/stores/chapterStore";
 import { useFileActions } from "src/stores/fileStore";
-import InformationModal from "./components/InformationModal";
 import { ModeTableQuestionsEnum } from "src/lib/enum";
+import QuestionInformationModal from "./components/QuestionInformationModal";
+import QuestionCreateUpdateModal from "./components/QuestionCreateUpdateModal";
 
 const QuestionManagement: React.FC = () => {
 	const {message} = App.useApp();
@@ -161,14 +161,14 @@ const QuestionManagement: React.FC = () => {
 				totalCountQuestion={totalCountQuestion}
 				tableMode={ModeTableQuestionsEnum.QUESTION}
 			/>
-			<QuestionModal
+			<QuestionCreateUpdateModal
 				onOk={handleSubmit}
 				open={isOpenModal}
 				selectedQuestion={selectedQuestion}
 				onCancel={()=>{setIsOpenModal(false)}}
 				listChapter={listChapters}
 			/>
-			<InformationModal 
+			<QuestionInformationModal 
 				open={isOpenInforModal}
 				selectedQuestion={selectedQuestion}
 				onCancel={()=>{setIsOpenInforModal(false)}}

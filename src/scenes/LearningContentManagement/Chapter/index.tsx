@@ -6,7 +6,7 @@ import { useChapterActions, useChapters, usetotalCountChapter } from "src/stores
 import { useSubjects, useSubjectsActions } from "src/stores/subjectStore";
 import ChapterTable from "./components/ChapterTable";
 import { CreateChapterDto, ChapterDto, UpdateChapterDto } from "src/services/services_autogen";
-import ChapterModal from "./components/ChapterModal";
+import ChapterCreateUpdateModal from "./components/ChapterCreateUpdateModal";
 
 const ChapterManagement: React.FC = ()=>{
 	const { message } = App.useApp();
@@ -140,7 +140,7 @@ const ChapterManagement: React.FC = ()=>{
 				onEdit={openEditModal}
 				totalChapter={totalChapter}
 			/>
-			<ChapterModal 
+			<ChapterCreateUpdateModal 
 				onCancel={()=>(setIsOpenModal(false))}
 				onOk={handleOk}
 				open={isOpenModal}

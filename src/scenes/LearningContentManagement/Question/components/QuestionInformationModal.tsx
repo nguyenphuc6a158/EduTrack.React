@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { extractDocxWithImages } from "src/lib/convertToHtml";
 import type { QuestionDto } from "src/services/services_autogen";
 
-interface IInformationModalProps {
+interface IQuestionInformationModalProps {
 	open: boolean;
 	selectedQuestion: QuestionDto | null;
 	onCancel: () => void;
 }
 
-const InformationModal: React.FC<IInformationModalProps> = ({ open, selectedQuestion, onCancel }) => {
+const QuestionInformationModal: React.FC<IQuestionInformationModalProps> = ({ open, selectedQuestion, onCancel }) => {
 	const [htmlContent, setHtmlContent] = useState("");
 	const [htmlExplanation, setHtmlExplanation] = useState("");
 	useEffect(() => {
@@ -44,4 +44,4 @@ const InformationModal: React.FC<IInformationModalProps> = ({ open, selectedQues
 		</Modal>
 	)
 };
-export default InformationModal;
+export default QuestionInformationModal;

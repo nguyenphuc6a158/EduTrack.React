@@ -4,7 +4,7 @@ import { useRoles, useRoleActions, useRoleLoading } from "src/stores/roleStore";
 import { CreateRoleDto, RoleDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
 import RoleTable from "./components/RoleTable";
-import RoleModal from "./components/RoleModal";
+import RoleCreateUpdateModal from "./components/RoleCreateUpdateModal";
 
 const RoleManagement = () => {
     const { message } = App.useApp();
@@ -95,7 +95,7 @@ const RoleManagement = () => {
                 onDelete={handleDelete}
             />
 
-            <RoleModal 
+            <RoleCreateUpdateModal 
                 open={isModalOpen}
                 editingRole={editingRole}
                 onOk={handleOk}

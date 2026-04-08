@@ -153,8 +153,8 @@ export class AssignmentService {
      * @param body (optional) 
      * @return OK
      */
-    createWithQuestions(body: CreateWithQuestionsDto | undefined, cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/services/app/Assignment/CreateWithQuestions";
+    createAssignmentWithQuestions(body: CreateAssignmentWithQuestionsDto | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/Assignment/CreateAssignmentWithQuestions";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -176,11 +176,63 @@ export class AssignmentService {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processCreateWithQuestions(_response);
+            return this.processCreateAssignmentWithQuestions(_response);
         });
     }
 
-    protected processCreateWithQuestions(response: AxiosResponse): Promise<void> {
+    protected processCreateAssignmentWithQuestions(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    updateAssignmentWithQuestions(body: UpdateAssignmentWithQuestionsDto | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/Assignment/UpdateAssignmentWithQuestions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUpdateAssignmentWithQuestions(_response);
+        });
+    }
+
+    protected processUpdateAssignmentWithQuestions(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -7920,6 +7972,69 @@ export interface ICreateAssignmentQuestionDto {
     orderIndex: number;
 }
 
+export class CreateAssignmentWithQuestionsDto implements ICreateAssignmentWithQuestionsDto {
+    id!: number | undefined;
+    title!: string | undefined;
+    chapterId!: number;
+    assignmentQuestions!: CreateAssignmentQuestionDto[] | undefined;
+
+    constructor(data?: ICreateAssignmentWithQuestionsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.chapterId = _data["chapterId"];
+            if (Array.isArray(_data["assignmentQuestions"])) {
+                this.assignmentQuestions = [] as any;
+                for (let item of _data["assignmentQuestions"])
+                    this.assignmentQuestions!.push(CreateAssignmentQuestionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateAssignmentWithQuestionsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateAssignmentWithQuestionsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["chapterId"] = this.chapterId;
+        if (Array.isArray(this.assignmentQuestions)) {
+            data["assignmentQuestions"] = [];
+            for (let item of this.assignmentQuestions)
+                data["assignmentQuestions"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+
+    clone(): CreateAssignmentWithQuestionsDto {
+        const json = this.toJSON();
+        let result = new CreateAssignmentWithQuestionsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateAssignmentWithQuestionsDto {
+    id: number | undefined;
+    title: string | undefined;
+    chapterId: number;
+    assignmentQuestions: CreateAssignmentQuestionDto[] | undefined;
+}
+
 export class CreateChapterDto implements ICreateChapterDto {
     chapterName!: string | undefined;
     subjectId!: number;
@@ -8759,69 +8874,6 @@ export interface ICreateUserDto {
     password: string;
     dateOfBirth: Date;
     phoneNumber: string | undefined;
-}
-
-export class CreateWithQuestionsDto implements ICreateWithQuestionsDto {
-    id!: number | undefined;
-    title!: string | undefined;
-    chapterId!: number;
-    assignmentQuestions!: CreateAssignmentQuestionDto[] | undefined;
-
-    constructor(data?: ICreateWithQuestionsDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.title = _data["title"];
-            this.chapterId = _data["chapterId"];
-            if (Array.isArray(_data["assignmentQuestions"])) {
-                this.assignmentQuestions = [] as any;
-                for (let item of _data["assignmentQuestions"])
-                    this.assignmentQuestions!.push(CreateAssignmentQuestionDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): CreateWithQuestionsDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateWithQuestionsDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["title"] = this.title;
-        data["chapterId"] = this.chapterId;
-        if (Array.isArray(this.assignmentQuestions)) {
-            data["assignmentQuestions"] = [];
-            for (let item of this.assignmentQuestions)
-                data["assignmentQuestions"].push(item ? item.toJSON() : undefined as any);
-        }
-        return data;
-    }
-
-    clone(): CreateWithQuestionsDto {
-        const json = this.toJSON();
-        let result = new CreateWithQuestionsDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ICreateWithQuestionsDto {
-    id: number | undefined;
-    title: string | undefined;
-    chapterId: number;
-    assignmentQuestions: CreateAssignmentQuestionDto[] | undefined;
 }
 
 export class FlatPermissionDto implements IFlatPermissionDto {
@@ -11760,6 +11812,69 @@ export interface IUpdateAssignmentQuestionDto {
     assignmentId: number;
     questionId: number;
     orderIndex: number;
+}
+
+export class UpdateAssignmentWithQuestionsDto implements IUpdateAssignmentWithQuestionsDto {
+    id!: number;
+    title!: string | undefined;
+    chapterId!: number;
+    assignmentQuestions!: CreateAssignmentQuestionDto[] | undefined;
+
+    constructor(data?: IUpdateAssignmentWithQuestionsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.chapterId = _data["chapterId"];
+            if (Array.isArray(_data["assignmentQuestions"])) {
+                this.assignmentQuestions = [] as any;
+                for (let item of _data["assignmentQuestions"])
+                    this.assignmentQuestions!.push(CreateAssignmentQuestionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UpdateAssignmentWithQuestionsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAssignmentWithQuestionsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["chapterId"] = this.chapterId;
+        if (Array.isArray(this.assignmentQuestions)) {
+            data["assignmentQuestions"] = [];
+            for (let item of this.assignmentQuestions)
+                data["assignmentQuestions"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+
+    clone(): UpdateAssignmentWithQuestionsDto {
+        const json = this.toJSON();
+        let result = new UpdateAssignmentWithQuestionsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateAssignmentWithQuestionsDto {
+    id: number;
+    title: string | undefined;
+    chapterId: number;
+    assignmentQuestions: CreateAssignmentQuestionDto[] | undefined;
 }
 
 export class UpdateChapterDto implements IUpdateChapterDto {
