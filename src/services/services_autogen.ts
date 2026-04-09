@@ -254,6 +254,58 @@ export class AssignmentService {
     }
 
     /**
+     * @param id (optional) 
+     * @return OK
+     */
+    delete(id: number | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/Assignment/Delete?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processDelete(_response);
+        });
+    }
+
+    protected processDelete(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
      * @param keyword (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
@@ -296,6 +348,77 @@ export class AssignmentService {
     }
 
     protected processGetAll(response: AxiosResponse): Promise<AssignmentDtoPagedResultDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = AssignmentDtoPagedResultDto.fromJS(resultData200.result);
+            return Promise.resolve<AssignmentDtoPagedResultDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<AssignmentDtoPagedResultDto>(null as any);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @param userId (optional) 
+     * @return OK
+     */
+    getAllAssignmentForStudent(keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, userId: number | undefined, cancelToken?: CancelToken): Promise<AssignmentDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Assignment/GetAllAssignmentForStudent?";
+        if (keyword === null)
+            throw new globalThis.Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (skipCount === null)
+            throw new globalThis.Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new globalThis.Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (userId === null)
+            throw new globalThis.Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetAllAssignmentForStudent(_response);
+        });
+    }
+
+    protected processGetAllAssignmentForStudent(response: AxiosResponse): Promise<AssignmentDtoPagedResultDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -485,58 +608,6 @@ export class AssignmentService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<AssignmentDto>(null as any);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return OK
-     */
-    delete(id: number | undefined, cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/services/app/Assignment/Delete?";
-        if (id === null)
-            throw new globalThis.Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "DELETE",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processDelete(_response);
-        });
-    }
-
-    protected processDelete(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(null as any);
     }
 }
 
@@ -7579,6 +7650,7 @@ export class ClassAssignment implements IClassAssignment {
     lastModifierUserId!: number | undefined;
     assignmentId!: number;
     classId!: number;
+    publicTime!: Date;
     class!: Class;
     assignment!: Assignment;
 
@@ -7600,6 +7672,7 @@ export class ClassAssignment implements IClassAssignment {
             this.lastModifierUserId = _data["lastModifierUserId"];
             this.assignmentId = _data["assignmentId"];
             this.classId = _data["classId"];
+            this.publicTime = _data["publicTime"] ? new Date(_data["publicTime"].toString()) : undefined as any;
             this.class = _data["class"] ? Class.fromJS(_data["class"]) : undefined as any;
             this.assignment = _data["assignment"] ? Assignment.fromJS(_data["assignment"]) : undefined as any;
         }
@@ -7621,6 +7694,7 @@ export class ClassAssignment implements IClassAssignment {
         data["lastModifierUserId"] = this.lastModifierUserId;
         data["assignmentId"] = this.assignmentId;
         data["classId"] = this.classId;
+        data["publicTime"] = this.publicTime ? this.publicTime.toISOString() : undefined as any;
         data["class"] = this.class ? this.class.toJSON() : undefined as any;
         data["assignment"] = this.assignment ? this.assignment.toJSON() : undefined as any;
         return data;
@@ -7642,6 +7716,7 @@ export interface IClassAssignment {
     lastModifierUserId: number | undefined;
     assignmentId: number;
     classId: number;
+    publicTime: Date;
     class: Class;
     assignment: Assignment;
 }
@@ -7650,6 +7725,7 @@ export class ClassAssignmentDto implements IClassAssignmentDto {
     id!: number;
     assignmentId!: number;
     classId!: number;
+    publicTime!: Date;
 
     constructor(data?: IClassAssignmentDto) {
         if (data) {
@@ -7665,6 +7741,7 @@ export class ClassAssignmentDto implements IClassAssignmentDto {
             this.id = _data["id"];
             this.assignmentId = _data["assignmentId"];
             this.classId = _data["classId"];
+            this.publicTime = _data["publicTime"] ? new Date(_data["publicTime"].toString()) : undefined as any;
         }
     }
 
@@ -7680,6 +7757,7 @@ export class ClassAssignmentDto implements IClassAssignmentDto {
         data["id"] = this.id;
         data["assignmentId"] = this.assignmentId;
         data["classId"] = this.classId;
+        data["publicTime"] = this.publicTime ? this.publicTime.toISOString() : undefined as any;
         return data;
     }
 
@@ -7695,6 +7773,7 @@ export interface IClassAssignmentDto {
     id: number;
     assignmentId: number;
     classId: number;
+    publicTime: Date;
 }
 
 export class ClassAssignmentDtoPagedResultDto implements IClassAssignmentDtoPagedResultDto {
@@ -8085,6 +8164,7 @@ export interface ICreateChapterDto {
 export class CreateClassAssignmentDto implements ICreateClassAssignmentDto {
     assignmentId!: number;
     classId!: number;
+    publicTime!: Date;
 
     constructor(data?: ICreateClassAssignmentDto) {
         if (data) {
@@ -8099,6 +8179,7 @@ export class CreateClassAssignmentDto implements ICreateClassAssignmentDto {
         if (_data) {
             this.assignmentId = _data["assignmentId"];
             this.classId = _data["classId"];
+            this.publicTime = _data["publicTime"] ? new Date(_data["publicTime"].toString()) : undefined as any;
         }
     }
 
@@ -8113,6 +8194,7 @@ export class CreateClassAssignmentDto implements ICreateClassAssignmentDto {
         data = typeof data === 'object' ? data : {};
         data["assignmentId"] = this.assignmentId;
         data["classId"] = this.classId;
+        data["publicTime"] = this.publicTime ? this.publicTime.toISOString() : undefined as any;
         return data;
     }
 
@@ -8127,6 +8209,7 @@ export class CreateClassAssignmentDto implements ICreateClassAssignmentDto {
 export interface ICreateClassAssignmentDto {
     assignmentId: number;
     classId: number;
+    publicTime: Date;
 }
 
 export class CreateClassDto implements ICreateClassDto {
@@ -11932,6 +12015,7 @@ export class UpdateClassAssignmentDto implements IUpdateClassAssignmentDto {
     id!: number;
     assignmentId!: number;
     classId!: number;
+    publicTime!: Date;
 
     constructor(data?: IUpdateClassAssignmentDto) {
         if (data) {
@@ -11947,6 +12031,7 @@ export class UpdateClassAssignmentDto implements IUpdateClassAssignmentDto {
             this.id = _data["id"];
             this.assignmentId = _data["assignmentId"];
             this.classId = _data["classId"];
+            this.publicTime = _data["publicTime"] ? new Date(_data["publicTime"].toString()) : undefined as any;
         }
     }
 
@@ -11962,6 +12047,7 @@ export class UpdateClassAssignmentDto implements IUpdateClassAssignmentDto {
         data["id"] = this.id;
         data["assignmentId"] = this.assignmentId;
         data["classId"] = this.classId;
+        data["publicTime"] = this.publicTime ? this.publicTime.toISOString() : undefined as any;
         return data;
     }
 
@@ -11977,6 +12063,7 @@ export interface IUpdateClassAssignmentDto {
     id: number;
     assignmentId: number;
     classId: number;
+    publicTime: Date;
 }
 
 export class UpdateClassDto implements IUpdateClassDto {
