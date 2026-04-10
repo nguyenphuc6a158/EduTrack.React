@@ -7,6 +7,7 @@ import { useGradeActions, useGradees } from "src/stores/gradeStore";
 import { useClassActions, useClasses, useClassLoading, useTotalCountClass } from "src/stores/classStore";
 import { ClassDto, CreateClassDto, UpdateClassDto } from "src/services/services_autogen";
 import { useTeachers, useUserActions } from "src/stores/userStore";
+import { ModeTabClassesEnum } from "src/lib/enum";
 
 const ClassManagement = () => {
 	const { message } = App.useApp();
@@ -127,6 +128,7 @@ const ClassManagement = () => {
 				onEdit={(item: any) => { setEditingItem(item); setIsModalOpen(true); }} 
 				onDelete={(id)=>onDeleteClass(id)} 
 				totalClass={totalClass}
+				mode={ModeTabClassesEnum.CLASS}
 			/>
 			<ClassModal 
 				listGrades={listGrades}

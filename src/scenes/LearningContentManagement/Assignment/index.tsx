@@ -10,15 +10,18 @@ import { useChapterActions, useChapters } from "src/stores/chapterStore";
 import QuestionInformationModal from "../Question/components/QuestionInformationModal";
 import ExerciseCreateUpdateModal from "./components/ExerciseCreateUpdateModal";
 import AssigmentModal from "./components/AssignmentModal";
+import { useClassActions, useClasses } from "src/stores/classStore";
 
 const AssignmentManagement: React.FC = () =>{
 	const listAssignment = useAssignments();
 	const assignmentActions = useAssignmentActions();
 	const listQuestions = useQuestions();
 	const questionsActions = useQuestionActions();
+	const classesActions = useClassActions();
 	const listChapters = useChapters();
 	const chaptersActions = useChapterActions();
 	const listQuestionsByAssignment = useQuestionsByAssignment();
+	const listClasses = useClasses();
 	const message = App.useApp().message;
 
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
@@ -26,6 +29,13 @@ const AssignmentManagement: React.FC = () =>{
 	const [isOpenAssignmentModal, setIsOpenAssignmentModal] = useState<boolean>(false);
 	const [selectedAssignment, setSelectedAssignment] = useState<AssignmentDto | undefined>(undefined);
 	const [selectedQuestion, setSelectedQuestion] = useState<QuestionDto | null>(null);
+	const fetchClass = async () => {
+		try{
+			await classesActions.getAll();
+		} catch(error){
+			console.error("Failed to fetch assignment: ", error);
+		}
+	}
 	const fetchAssigment = async () => {
 		try{
 			await assignmentActions.getAll();
@@ -51,6 +61,7 @@ const AssignmentManagement: React.FC = () =>{
 		fetchAssigment();
 		fetchQuestion();
 		fetchChapter();
+		fetchClass();
 	}, []) 
 
 	const onEdit = async (item: AssignmentDto) => {
@@ -147,6 +158,7 @@ const AssignmentManagement: React.FC = () =>{
 				open={isOpenAssignmentModal}
 				onCancel={() => setIsOpenAssignmentModal(false)}
 				onOk={onOkAssignment}
+				listClasses={listClasses}
 			/>
 		</div>
 	)
