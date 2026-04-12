@@ -26,21 +26,6 @@ const ExerciseCreateUpdateModal : React.FC<IExerciseCreateUpdateModalProps> = ({
 		}
 		setListSelectedQuestions([...listSelectedQuestions, selectedItems]);
 	};
-	useEffect(() => {
-		if (open) {
-			if (selectedAssignment) {
-				formRef.setFieldsValue({
-					title: selectedAssignment.title,
-					chapterId: selectedAssignment.chapterId,
-				});
-				setListSelectedQuestions([...listQuestionsByAssignment]);
-				console.log("listQuestionsByAssignment: ", listQuestionsByAssignment);
-			} else {
-				formRef.resetFields();
-				setListSelectedQuestions([]);
-			}
-		}
-	}, [selectedAssignment, listQuestionsByAssignment]);
 	const listOptionsChapter = useMemo(() => {
 		return listChapters.map((chapter) => ({
 			label: chapter.chapterName,
@@ -52,6 +37,9 @@ const ExerciseCreateUpdateModal : React.FC<IExerciseCreateUpdateModalProps> = ({
 		setListSelectedQuestions(updatedList);
 	}
 	useEffect(() => {
+		if(!open) {
+			return;
+		}
 		if(selectedAssignment) {
 			formRef.setFieldsValue({
 				title: selectedAssignment.title,

@@ -6,17 +6,17 @@ import type { RcFile } from "antd/es/upload";
 interface IImportStudentModalProps {
     visible: boolean;
     onCancel: () => void;
-    onImport?: (data: never[]) => void;
+    // onImport?: (data: never[]) => void;
     confirmLoading?: boolean;
 }
 
 const ImportStudentModal: React.FC<IImportStudentModalProps> = ({ 
     visible, 
     onCancel, 
-    onImport,
+    // onImport,
     confirmLoading = false
 }) => {
-    const [fileData, setFileData] = useState<any[]>([]);
+    // const [fileData, setFileData] = useState<any[]>([]);
 
     const handleFileUpload = (file: RcFile) => {
         
@@ -38,40 +38,40 @@ const ImportStudentModal: React.FC<IImportStudentModalProps> = ({
         },
     ];
 
-    const handleImport = () => {
-        if (fileData.length === 0) {
-            message.error("Vui lòng chọn tệp để tải lên");
-            return;
-        }
-        onImport?.(fileData);
-        setFileData([]);
-    };
+    // const handleImport = () => {
+    //     if (fileData.length === 0) {
+    //         message.error("Vui lòng chọn tệp để tải lên");
+    //         return;
+    //     }
+    //     onImport?.(fileData);
+    //     setFileData([]);
+    // };
 
     return (
         <Modal
             title="Tải lên danh sách học sinh"
             open={visible}
             onCancel={() => {
-                setFileData([]);
+                // setFileData([]);
                 onCancel();
             }}
             width={800}
             footer={[
                 <Button key="cancel" onClick={() => {
-                    setFileData([]);
+                    // setFileData([]);
                     onCancel();
                 }}>
                     Hủy
                 </Button>,
-                <Button 
-                    key="import" 
-                    type="primary" 
-                    loading={confirmLoading}
-                    onClick={handleImport}
-                    disabled={fileData.length === 0}
-                >
-                    Import
-                </Button>,
+                // <Button 
+                //     key="import" 
+                //     type="primary" 
+                //     loading={confirmLoading}
+                //     onClick={handleImport}
+                //     disabled={fileData.length === 0}
+                // >
+                //     Import
+                // </Button>,
             ]}
         >
             <div>
@@ -91,7 +91,7 @@ const ImportStudentModal: React.FC<IImportStudentModalProps> = ({
                     </p>
                 </div>
 
-                {fileData.length > 0 && (
+                {/* {fileData.length > 0 && (
                     <div>
                         <h4> Xem trước dữ liệu</h4>
                         <Table
@@ -101,7 +101,7 @@ const ImportStudentModal: React.FC<IImportStudentModalProps> = ({
                             size="small"
                         />
                     </div>
-                )}
+                )} */}
             </div>
         </Modal>
     );

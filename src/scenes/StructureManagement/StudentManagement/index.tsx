@@ -141,11 +141,11 @@ const StudentManagement = () => {
 				confirmLoading={loading} 
 				listStudents={listStudents}
 			/>
-			<ImportStudentModal
+			{/* <ImportStudentModal
 				visible={isImportModalOpen}
 				onCancel={() => setIsImportModalOpen(false)}
 				confirmLoading={importLoading}
-			/>
+			/> */}
 		</div>
 	);
 };

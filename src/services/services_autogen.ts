@@ -1693,6 +1693,125 @@ export class ClassAssignmentService {
     }
 
     /**
+     * @param body (optional) 
+     * @return OK
+     */
+    createListClassAssignment(body: CreateListClassAssgnmentDto | undefined, cancelToken?: CancelToken): Promise<ClassAssignmentDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/ClassAssignment/CreateListClassAssignment";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreateListClassAssignment(_response);
+        });
+    }
+
+    protected processCreateListClassAssignment(response: AxiosResponse): Promise<ClassAssignmentDto[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ClassAssignmentDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return Promise.resolve<ClassAssignmentDto[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ClassAssignmentDto[]>(null as any);
+    }
+
+    /**
+     * @param createrUserId (optional) 
+     * @return OK
+     */
+    getAllClassAssignmentByCreaterUserId(createrUserId: number | undefined, cancelToken?: CancelToken): Promise<ClassAssignmentDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/ClassAssignment/GetAllClassAssignmentByCreaterUserId?";
+        if (createrUserId === null)
+            throw new globalThis.Error("The parameter 'createrUserId' cannot be null.");
+        else if (createrUserId !== undefined)
+            url_ += "createrUserId=" + encodeURIComponent("" + createrUserId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetAllClassAssignmentByCreaterUserId(_response);
+        });
+    }
+
+    protected processGetAllClassAssignmentByCreaterUserId(response: AxiosResponse): Promise<ClassAssignmentDtoPagedResultDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = ClassAssignmentDtoPagedResultDto.fromJS(resultData200.result);
+            return Promise.resolve<ClassAssignmentDtoPagedResultDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ClassAssignmentDtoPagedResultDto>(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return OK
      */
@@ -7724,8 +7843,11 @@ export interface IClassAssignment {
 export class ClassAssignmentDto implements IClassAssignmentDto {
     id!: number;
     assignmentId!: number;
+    assignmentName!: string | undefined;
     classId!: number;
+    className!: string | undefined;
     publicTime!: Date;
+    createrUserId!: number;
 
     constructor(data?: IClassAssignmentDto) {
         if (data) {
@@ -7740,8 +7862,11 @@ export class ClassAssignmentDto implements IClassAssignmentDto {
         if (_data) {
             this.id = _data["id"];
             this.assignmentId = _data["assignmentId"];
+            this.assignmentName = _data["assignmentName"];
             this.classId = _data["classId"];
+            this.className = _data["className"];
             this.publicTime = _data["publicTime"] ? new Date(_data["publicTime"].toString()) : undefined as any;
+            this.createrUserId = _data["createrUserId"];
         }
     }
 
@@ -7756,8 +7881,11 @@ export class ClassAssignmentDto implements IClassAssignmentDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["assignmentId"] = this.assignmentId;
+        data["assignmentName"] = this.assignmentName;
         data["classId"] = this.classId;
+        data["className"] = this.className;
         data["publicTime"] = this.publicTime ? this.publicTime.toISOString() : undefined as any;
+        data["createrUserId"] = this.createrUserId;
         return data;
     }
 
@@ -7772,8 +7900,11 @@ export class ClassAssignmentDto implements IClassAssignmentDto {
 export interface IClassAssignmentDto {
     id: number;
     assignmentId: number;
+    assignmentName: string | undefined;
     classId: number;
+    className: string | undefined;
     publicTime: Date;
+    createrUserId: number;
 }
 
 export class ClassAssignmentDtoPagedResultDto implements IClassAssignmentDtoPagedResultDto {
@@ -8304,6 +8435,65 @@ export class CreateGradeDto implements ICreateGradeDto {
 
 export interface ICreateGradeDto {
     gradeName: string;
+}
+
+export class CreateListClassAssgnmentDto implements ICreateListClassAssgnmentDto {
+    assignmentId!: number;
+    listClasses!: ClassDto[] | undefined;
+    publicTime!: Date;
+
+    constructor(data?: ICreateListClassAssgnmentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.assignmentId = _data["assignmentId"];
+            if (Array.isArray(_data["listClasses"])) {
+                this.listClasses = [] as any;
+                for (let item of _data["listClasses"])
+                    this.listClasses!.push(ClassDto.fromJS(item));
+            }
+            this.publicTime = _data["publicTime"] ? new Date(_data["publicTime"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): CreateListClassAssgnmentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateListClassAssgnmentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["assignmentId"] = this.assignmentId;
+        if (Array.isArray(this.listClasses)) {
+            data["listClasses"] = [];
+            for (let item of this.listClasses)
+                data["listClasses"].push(item ? item.toJSON() : undefined as any);
+        }
+        data["publicTime"] = this.publicTime ? this.publicTime.toISOString() : undefined as any;
+        return data;
+    }
+
+    clone(): CreateListClassAssgnmentDto {
+        const json = this.toJSON();
+        let result = new CreateListClassAssgnmentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateListClassAssgnmentDto {
+    assignmentId: number;
+    listClasses: ClassDto[] | undefined;
+    publicTime: Date;
 }
 
 export class CreateQuestionDto implements ICreateQuestionDto {

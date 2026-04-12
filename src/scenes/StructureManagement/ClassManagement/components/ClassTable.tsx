@@ -10,8 +10,10 @@ interface IClassTableProps {
 	onDelete: (id: number)=> void;
 	totalClass: number;
 	mode: ModeTabClassesEnum;
+	onClickRowClass?: (record: ClassDto) => void;
+	onRemoveSelectedClass?: (record: ClassDto) => void;
 }
-const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, onDelete, totalClass, mode}) => {
+const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, onDelete, totalClass, mode, onClickRowClass, onRemoveSelectedClass }) => {
 	const filterTeacherNames = useMemo(()=>{
 		 return [...new Set(dataSource?.flatMap(dataSource => dataSource.teacherName || []))].map(item=>{
             return({
@@ -60,14 +62,14 @@ const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, o
 			render: (_: any, record: ClassDto) => (
 				<Space size="middle">
 					<Button type="link" icon={<EditOutlined />} onClick={() => onEdit(record)}></Button>
-					<Popconfirm title="Xóa lớp học này?" onConfirm={() => onDelete(record.id)}>
+					<Popconfirm title="Xóa lớp học này?" onConfirm={() =>record.id && onDelete(record.id)}>
 						<Button type="link" danger icon={<DeleteOutlined />}></Button>
 					</Popconfirm>
 				</Space>
 			),
 		},
 	];
-	const returnActionColumn = [
+	const actionReturnColumn = [
 		{
 			title: "Thao tác",
 			key: "action",
@@ -75,18 +77,26 @@ const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, o
 			align: "center" as const,
 			render: (_: any, record: ClassDto) => (
 				<Space size="middle">
-					<Button type="link" icon={<EditOutlined />} onClick={() => onEdit(record)}></Button>
-					<Popconfirm title="Xóa lớp học này?" onConfirm={() => onDelete(record.id)}>
-						<Button type="link" danger icon={<RollbackOutlined />}></Button>
-					</Popconfirm>
+					<Button type="link" onClick={()=>onRemoveSelectedClass?.(record)} danger icon={<RollbackOutlined />}></Button>
 				</Space>
 			),
 		}
 	];
-	const finalColumns = mode === ModeTabClassesEnum.CLASS ? [...columns, ...actionColumn] : columns;
+	const finalColumns = () =>{
+		if(mode === ModeTabClassesEnum.ASSIGNMENT){
+			return columns;
+		}
+		if(mode === ModeTabClassesEnum.CLASS){
+			return [...columns, ...actionColumn];
+		}
+		if(mode === ModeTabClassesEnum.ASSIGNMENT_SELECTED){
+			return [...columns, ...actionReturnColumn];
+		}
+	}
+
 	return (
 		<Table 
-			columns={finalColumns} 
+			columns={finalColumns()} 
 			dataSource={dataSource} 
 			rowKey="id" 
 			loading={loading} 
@@ -100,8 +110,11 @@ const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, o
 						showTotal: (total) => `Tổng: ${total}`,
 					} : false
 			}
+			onRow={onClickRowClass ? (record) => ({
+				onClick: () => onClickRowClass(record),
+			}) : undefined}
 		/>
 	)
-};
+}
 
 export default ClassTable;
