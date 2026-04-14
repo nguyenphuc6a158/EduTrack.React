@@ -15,6 +15,7 @@ interface AssignmentState {
 		get: (id: number) => Promise<void>;
 		createAssignmentWithQuestions: (body: CreateAssignmentWithQuestionsDto) => Promise<void>;
 		updateAssignmentWithQuestions: (body: UpdateAssignmentWithQuestionsDto) => Promise<void>;
+		getAllAssignmentForStudent: (studentId?: number, chapterId?: number, keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
 	};
 }
 const useAssignmentStore = create<AssignmentState>((set) => ({
@@ -23,6 +24,18 @@ const useAssignmentStore = create<AssignmentState>((set) => ({
 	loading: false,
 	assignmentItem: undefined,
 	actions: {
+		getAllAssignmentForStudent: async (studentId, chapterId, keyword, skipCount, maxResultCount) : Promise<void> => {
+			try{
+				set({loading: true})
+				let result = await assignmentService.getAllAssignmentForStudent(studentId, chapterId, keyword, skipCount, maxResultCount);
+				set({
+					listAssignments: result.items || [],
+					totalCountAssignment: result.totalCount
+				})
+			}finally{
+				set({loading: false})
+			}
+		},
 		updateAssignmentWithQuestions: async (body) : Promise<void> => {
 			try {
 				await assignmentService.updateAssignmentWithQuestions(body);

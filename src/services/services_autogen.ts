@@ -372,14 +372,23 @@ export class AssignmentService {
     }
 
     /**
+     * @param userId (optional) 
+     * @param chapterId (optional) 
      * @param keyword (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
-     * @param userId (optional) 
      * @return OK
      */
-    getAllAssignmentForStudent(keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, userId: number | undefined, cancelToken?: CancelToken): Promise<AssignmentDtoPagedResultDto> {
+    getAllAssignmentForStudent(userId: number | undefined, chapterId: number | undefined, keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, cancelToken?: CancelToken): Promise<AssignmentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Assignment/GetAllAssignmentForStudent?";
+        if (userId === null)
+            throw new globalThis.Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (chapterId === null)
+            throw new globalThis.Error("The parameter 'chapterId' cannot be null.");
+        else if (chapterId !== undefined)
+            url_ += "chapterId=" + encodeURIComponent("" + chapterId) + "&";
         if (keyword === null)
             throw new globalThis.Error("The parameter 'keyword' cannot be null.");
         else if (keyword !== undefined)
@@ -392,10 +401,6 @@ export class AssignmentService {
             throw new globalThis.Error("The parameter 'maxResultCount' cannot be null.");
         else if (maxResultCount !== undefined)
             url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
-        if (userId === null)
-            throw new globalThis.Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
