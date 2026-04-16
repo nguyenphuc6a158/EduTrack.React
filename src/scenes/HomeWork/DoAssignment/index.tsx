@@ -1,7 +1,7 @@
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Select, Space } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import { Button, Card, Col, Select, Space } from "antd";
 import type React from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAssignmentActions, useAssignments } from "src/stores/assignmentStore";
 import { useChapterActions, useChapters } from "src/stores/chapterStore";
 
@@ -11,20 +11,37 @@ const DoAssignment: React.FC = () => {
 	const chapterActions = useChapterActions();
 	const listChapter = useChapters();
 
-	const userId = Number(localStorage.getItem("userId"));
-	const [selectedChapterId, setSelectedChapterId] = useState<number | undefined> (undefined)
+	const [selectedChapterId, setSelectedChapterId] = useState<number | undefined>(undefined);
+	const userId = localStorage.getItem("userId");
+
+	useEffect(() => {
+		void chapterActions.getAll();
+	}, [chapterActions]);
+
 	const fetchAssigment = async () => {
-		await asignmentActions.getAllAssignmentForStudent(userId,selectedChapterId)
-	}
-	const optionSelectChapter = useMemo(()=>{
-		return listChapter.map(item=>({
+		if (!selectedChapterId) {
+			return;
+		}
+		try {
+			await asignmentActions.getAllAssignmentForStudent(Number(userId), selectedChapterId, undefined, 0, 10);
+		} catch (error) {
+			console.error("Cannot load student assignments:", error);
+		}
+	};
+
+	const optionSelectChapter = useMemo(() => {
+		return listChapter.map((item) => ({
 			value: item.id,
 			label: item.chapterName || "",
-		}))
-	},[listChapter])
-	const onchangeChapterSelected =(chapterSelectedId: number) => {
-		setSelectedChapterId(selectedChapterId);
-	}
+		}));
+	}, [listChapter]);
+
+	const onChangeChapterSelected = (chapterSelectedId: number | undefined) => {
+		setSelectedChapterId(chapterSelectedId);
+	};
+
+	const gridAssignments = useMemo(() => listAssignment.slice(0, 10), [listAssignment]);
+
 	return (
 		<div className="p-6">
 			<Col className="flex justify-between items-center mb-6">
@@ -37,13 +54,27 @@ const DoAssignment: React.FC = () => {
 					<Select
 						allowClear
 						value={selectedChapterId}
-						onChange={(item) => onchangeChapterSelected(item)}
+						onChange={(item) => onChangeChapterSelected(item)}
 						options={optionSelectChapter}
-						placeholder="Tìm kiếm theo môn học..."
+						placeholder="Lọc theo chương..."
 						style={{ width: "200px" }}
 					/>
-					<Button type="primary" icon={<SearchOutlined />} />
+					<Button type="primary" icon={<SearchOutlined />} onClick={fetchAssigment} />
 				</Space.Compact>
+			</Col>
+			<Col className="mt-6">
+				<div className="grid grid-cols-5 gap-4">
+					{gridAssignments.map((assignment) => (
+						<Card
+							key={assignment.id}
+							title={assignment.title || "Bai tap"}
+							className="h-full"
+							size="small"
+						>
+							<p className="text-gray-500 mb-0">{assignment.chapterName || "Chua co chuong"}</p>
+						</Card>
+					))}
+				</div>
 			</Col>
 		</div>
 	);
