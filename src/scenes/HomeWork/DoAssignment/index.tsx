@@ -11,11 +11,24 @@ const DoAssignment: React.FC = () => {
 	const chapterActions = useChapterActions();
 	const listChapter = useChapters();
 
-	const [selectedChapterId, setSelectedChapterId] = useState<number | undefined>(undefined);
 	const userId = localStorage.getItem("userId");
-
+	const [selectedChapterId, setSelectedChapterId] = useState<number | undefined>
+	(localStorage.getItem("selectedChapterId") ? Number(localStorage.getItem("selectedChapterId")) : undefined);
+	const fetchChapter = async () => {
+		try {
+			await chapterActions.getAll();
+		} catch (error) {
+			console.error("Cannot load chapters:", error);
+		}
+	};
+	const fetchAssignmentForStudent = async () => {
+		if (!userId || !selectedChapterId) {
+			return;
+		}
+		await asignmentActions.getAllAssignmentForStudent(Number(userId), selectedChapterId, undefined, 0, 10);
+	}
 	useEffect(() => {
-		void chapterActions.getAll();
+		fetchChapter();
 	}, [chapterActions]);
 
 	const fetchAssigment = async () => {
@@ -38,6 +51,11 @@ const DoAssignment: React.FC = () => {
 
 	const onChangeChapterSelected = (chapterSelectedId: number | undefined) => {
 		setSelectedChapterId(chapterSelectedId);
+		if ( chapterSelectedId != null || chapterSelectedId == undefined) {
+			localStorage.setItem("selectedChapterId",chapterSelectedId?.toString() || "");
+		} else {
+			localStorage.removeItem("selectedChapterId");
+		}
 	};
 
 	const gridAssignments = useMemo(() => listAssignment.slice(0, 10), [listAssignment]);
