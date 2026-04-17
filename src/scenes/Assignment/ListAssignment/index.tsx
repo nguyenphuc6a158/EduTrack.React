@@ -2,18 +2,24 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Select, Space } from "antd";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { useAssignmentActions, useAssignments } from "src/stores/assignmentStore";
+import { useAssignmentActions, useAssignments, useDetailAssignmentForStudents } from "src/stores/assignmentStore";
 import { useChapterActions, useChapters } from "src/stores/chapterStore";
+import ListAssignmentGridView from "./components/ListAssignmentGridView";
+import { useNavigate } from "react-router-dom";
+import { useQuestionActions, useSelectedAssimentId } from "src/stores/questionStore";
 
 const DoAssignment: React.FC = () => {
 	const asignmentActions = useAssignmentActions();
-	const listAssignment = useAssignments();
+	const listDetailAssignmentForAssignment = useDetailAssignmentForStudents();
 	const chapterActions = useChapterActions();
 	const listChapter = useChapters();
-
+	const questionActions = useQuestionActions();
 	const userId = localStorage.getItem("userId");
 	const [selectedChapterId, setSelectedChapterId] = useState<number | undefined>
 	(localStorage.getItem("selectedChapterId") ? Number(localStorage.getItem("selectedChapterId")) : undefined);
+
+	const navigate = useNavigate();
+
 	const fetchChapter = async () => {
 		try {
 			await chapterActions.getAll();
@@ -21,22 +27,16 @@ const DoAssignment: React.FC = () => {
 			console.error("Cannot load chapters:", error);
 		}
 	};
-	const fetchAssignmentForStudent = async () => {
-		if (!userId || !selectedChapterId) {
-			return;
-		}
-		await asignmentActions.getAllAssignmentForStudent(Number(userId), selectedChapterId, undefined, 0, 10);
-	}
 	useEffect(() => {
 		fetchChapter();
 	}, [chapterActions]);
 
-	const fetchAssigment = async () => {
-		if (!selectedChapterId) {
+	const fetchAssignmentForStudent = async () => {
+		if (!userId || !selectedChapterId) {
 			return;
 		}
 		try {
-			await asignmentActions.getAllAssignmentForStudent(Number(userId), selectedChapterId, undefined, 0, 10);
+			await asignmentActions.getAllAssignmentForStudent(Number(userId), selectedChapterId);
 		} catch (error) {
 			console.error("Cannot load student assignments:", error);
 		}
@@ -57,9 +57,10 @@ const DoAssignment: React.FC = () => {
 			localStorage.removeItem("selectedChapterId");
 		}
 	};
-
-	const gridAssignments = useMemo(() => listAssignment.slice(0, 10), [listAssignment]);
-
+	const choseAssignment = (selectedDetailAssignmentId: number) =>{
+		questionActions.setSelectedAssimentId(selectedDetailAssignmentId);
+		navigate("/detail-assignment");
+	}
 	return (
 		<div className="p-6">
 			<Col className="flex justify-between items-center mb-6">
@@ -77,22 +78,14 @@ const DoAssignment: React.FC = () => {
 						placeholder="Lọc theo chương..."
 						style={{ width: "200px" }}
 					/>
-					<Button type="primary" icon={<SearchOutlined />} onClick={fetchAssigment} />
+					<Button type="primary" icon={<SearchOutlined />} onClick={fetchAssignmentForStudent} />
 				</Space.Compact>
 			</Col>
 			<Col className="mt-6">
-				<div className="grid grid-cols-5 gap-4">
-					{gridAssignments.map((assignment) => (
-						<Card
-							key={assignment.id}
-							title={assignment.title || "Bai tap"}
-							className="h-full"
-							size="small"
-						>
-							<p className="text-gray-500 mb-0">{assignment.chapterName || "Chua co chuong"}</p>
-						</Card>
-					))}
-				</div>
+				<ListAssignmentGridView 
+					listDetailAssignmentForAssignment={listDetailAssignmentForAssignment}
+					choseAssignment={choseAssignment}
+				/>
 			</Col>
 		</div>
 	);

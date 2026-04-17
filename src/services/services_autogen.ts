@@ -379,7 +379,7 @@ export class AssignmentService {
      * @param maxResultCount (optional) 
      * @return OK
      */
-    getAllAssignmentForStudent(userId: number | undefined, chapterId: number | undefined, keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, cancelToken?: CancelToken): Promise<AssignmentDtoPagedResultDto> {
+    getAllAssignmentForStudent(userId: number | undefined, chapterId: number | undefined, keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, cancelToken?: CancelToken): Promise<DetailAssignmentForStudentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Assignment/GetAllAssignmentForStudent?";
         if (userId === null)
             throw new globalThis.Error("The parameter 'userId' cannot be null.");
@@ -423,7 +423,7 @@ export class AssignmentService {
         });
     }
 
-    protected processGetAllAssignmentForStudent(response: AxiosResponse): Promise<AssignmentDtoPagedResultDto> {
+    protected processGetAllAssignmentForStudent(response: AxiosResponse): Promise<DetailAssignmentForStudentDtoPagedResultDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -437,14 +437,14 @@ export class AssignmentService {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = AssignmentDtoPagedResultDto.fromJS(resultData200.result);
-            return Promise.resolve<AssignmentDtoPagedResultDto>(result200);
+            result200 = DetailAssignmentForStudentDtoPagedResultDto.fromJS(resultData200.result);
+            return Promise.resolve<DetailAssignmentForStudentDtoPagedResultDto>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<AssignmentDtoPagedResultDto>(null as any);
+        return Promise.resolve<DetailAssignmentForStudentDtoPagedResultDto>(null as any);
     }
 
     /**
@@ -2727,6 +2727,67 @@ export class QuestionService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<QuestionDtoPagedResultDto>(null as any);
+    }
+
+    /**
+     * @param assignmentId (optional) 
+     * @param orderIndex (optional) 
+     * @return OK
+     */
+    getQuestionByAssignmentIdAndOrderIndex(assignmentId: number | undefined, orderIndex: number | undefined, cancelToken?: CancelToken): Promise<QuestionDto> {
+        let url_ = this.baseUrl + "/api/services/app/Question/GetQuestionByAssignmentIdAndOrderIndex?";
+        if (assignmentId === null)
+            throw new globalThis.Error("The parameter 'assignmentId' cannot be null.");
+        else if (assignmentId !== undefined)
+            url_ += "assignmentId=" + encodeURIComponent("" + assignmentId) + "&";
+        if (orderIndex === null)
+            throw new globalThis.Error("The parameter 'orderIndex' cannot be null.");
+        else if (orderIndex !== undefined)
+            url_ += "orderIndex=" + encodeURIComponent("" + orderIndex) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetQuestionByAssignmentIdAndOrderIndex(_response);
+        });
+    }
+
+    protected processGetQuestionByAssignmentIdAndOrderIndex(response: AxiosResponse): Promise<QuestionDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = QuestionDto.fromJS(resultData200.result);
+            return Promise.resolve<QuestionDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<QuestionDto>(null as any);
     }
 
     /**
@@ -9152,6 +9213,128 @@ export interface ICreateUserDto {
     password: string;
     dateOfBirth: Date;
     phoneNumber: string | undefined;
+}
+
+export class DetailAssignmentForStudentDto implements IDetailAssignmentForStudentDto {
+    id!: number;
+    active!: number;
+    title!: string | undefined;
+    chapterId!: number;
+    chapterName!: string | undefined;
+    createBy!: string | undefined;
+    chapters!: Chapter;
+
+    constructor(data?: IDetailAssignmentForStudentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.active = _data["active"];
+            this.title = _data["title"];
+            this.chapterId = _data["chapterId"];
+            this.chapterName = _data["chapterName"];
+            this.createBy = _data["createBy"];
+            this.chapters = _data["chapters"] ? Chapter.fromJS(_data["chapters"]) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): DetailAssignmentForStudentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DetailAssignmentForStudentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["active"] = this.active;
+        data["title"] = this.title;
+        data["chapterId"] = this.chapterId;
+        data["chapterName"] = this.chapterName;
+        data["createBy"] = this.createBy;
+        data["chapters"] = this.chapters ? this.chapters.toJSON() : undefined as any;
+        return data;
+    }
+
+    clone(): DetailAssignmentForStudentDto {
+        const json = this.toJSON();
+        let result = new DetailAssignmentForStudentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDetailAssignmentForStudentDto {
+    id: number;
+    active: number;
+    title: string | undefined;
+    chapterId: number;
+    chapterName: string | undefined;
+    createBy: string | undefined;
+    chapters: Chapter;
+}
+
+export class DetailAssignmentForStudentDtoPagedResultDto implements IDetailAssignmentForStudentDtoPagedResultDto {
+    items!: DetailAssignmentForStudentDto[] | undefined;
+    totalCount!: number;
+
+    constructor(data?: IDetailAssignmentForStudentDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(DetailAssignmentForStudentDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): DetailAssignmentForStudentDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DetailAssignmentForStudentDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item ? item.toJSON() : undefined as any);
+        }
+        data["totalCount"] = this.totalCount;
+        return data;
+    }
+
+    clone(): DetailAssignmentForStudentDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new DetailAssignmentForStudentDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDetailAssignmentForStudentDtoPagedResultDto {
+    items: DetailAssignmentForStudentDto[] | undefined;
+    totalCount: number;
 }
 
 export class FlatPermissionDto implements IFlatPermissionDto {

@@ -1,9 +1,10 @@
 import http from "src/services/httpService";
-import { AssignmentDto, AssignmentService, CreateAssignmentDto, CreateAssignmentWithQuestionsDto, UpdateAssignmentDto, UpdateAssignmentWithQuestionsDto } from "src/services/services_autogen";
+import { AssignmentDto, AssignmentService, CreateAssignmentDto, CreateAssignmentWithQuestionsDto, DetailAssignmentForStudentDto, UpdateAssignmentDto, UpdateAssignmentWithQuestionsDto } from "src/services/services_autogen";
 import { create } from 'zustand';
 const assignmentService = new AssignmentService('',http);
 interface AssignmentState {
 	listAssignments: AssignmentDto[];
+	listDetailAssignmentForAssignment: DetailAssignmentForStudentDto [];
 	assignmentItem?: AssignmentDto;
 	totalCountAssignment: number;
 	loading: boolean;
@@ -23,13 +24,14 @@ const useAssignmentStore = create<AssignmentState>((set) => ({
 	totalCountAssignment: 0,
 	loading: false,
 	assignmentItem: undefined,
+	listDetailAssignmentForAssignment: [],
 	actions: {
 		getAllAssignmentForStudent: async (studentId, chapterId, keyword, skipCount, maxResultCount) : Promise<void> => {
 			try{
 				set({loading: true})
 				let result = await assignmentService.getAllAssignmentForStudent(studentId, chapterId, keyword, skipCount, maxResultCount);
 				set({
-					listAssignments: result.items || [],
+					listDetailAssignmentForAssignment: result.items || [],
 					totalCountAssignment: result.totalCount
 				})
 			}finally{
@@ -90,6 +92,7 @@ const useAssignmentStore = create<AssignmentState>((set) => ({
 }));
 
 export const useAssignments = () => useAssignmentStore((state) => state.listAssignments);
+export const useDetailAssignmentForStudents = () => useAssignmentStore((state) => state.listDetailAssignmentForAssignment);
 export const useAssignment = () => useAssignmentStore((state) => state.assignmentItem);
 export const usetotalCountAssignment = () => useAssignmentStore((state) => state.totalCountAssignment);
 export const useAssignmentLoading = () => useAssignmentStore((state) => state.loading);
