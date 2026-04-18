@@ -1,16 +1,26 @@
-import { Button, Card, Col, Divider, Row } from "antd";
-import { useEffect, useState } from "react";
-import { extractDocxWithImages, extractRawTextFromFile, parseContentQuestion } from "src/lib/convertToHtml";
+import { Button, Card, Col, Divider, Radio, Row } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import { extractDocxWithImages, extractRawTextFromUrlFile } from "src/lib/convertToHtml";
+import { useQuestionOption, useQuestionOptionActions, useQuestionOptions } from "src/stores/questionOptionStore";
 import { useQuestion, useQuestionActions, useSelectedAssimentId } from "src/stores/questionStore";
 const DetailAssignment: React.FC = () => {
     const questionActions = useQuestionActions();
 	const selectedDetailAssignment = useSelectedAssimentId();
 	const itemQuetion = useQuestion();
+	const questionOptionActions = useQuestionOptionActions();
+	const listQuestionOptions = useQuestionOptions();
+	const itemQuestionOption = useQuestionOption();
 	const [orderIndex, setOrderIndex] = useState<number>(0);
-	const [htmlContent, setHtmlContent] = useState<string>("");
-
+	const [answer, setAnswer] = useState<string>("");
+	const [value, setValue] = useState<string>();
+	const fetchQuestionOption = async () => {
+		if (!itemQuetion?.id) {
+			return;
+		}
+		await questionOptionActions.getAllByQuestionId(itemQuetion.id);
+	};
 	const getItemQuestion = async () => {
-        if (orderIndex == 0 || selectedDetailAssignment == 0) {
+        if (orderIndex === 0 || selectedDetailAssignment === 0) {
             return;
         }
         try {
@@ -20,7 +30,7 @@ const DetailAssignment: React.FC = () => {
             );
         } catch (error) {
             console.log(error);
-			setOrderIndex(0);
+            setOrderIndex(0);
         }
     };
     useEffect(() => {
@@ -28,44 +38,112 @@ const DetailAssignment: React.FC = () => {
     }, [orderIndex, selectedDetailAssignment]);
 
 	const goToNextQuestion = () => {
-        let curOrderIndex = orderIndex + 1;
-        setOrderIndex(curOrderIndex);
+        setOrderIndex(orderIndex + 1);
     };
 
 	const goToPreQuestion = () => {
-		let curOrderIndex = orderIndex + 1;
-        setOrderIndex(curOrderIndex);
-	}
+        setOrderIndex(Math.max(1, orderIndex - 1));
+	};
 	const load = async () => {
 		if (!itemQuetion) return;
-		const htmlContent = await extractDocxWithImages(itemQuetion?.fileUrl || "");
-		setHtmlContent(htmlContent);
+		let text = await extractRawTextFromUrlFile(itemQuetion.fileUrl||"")
+		setAnswer(text.split("Đáp án:")[0].trim());
+		await extractDocxWithImages(itemQuetion?.fileUrl || "");
 	};
 	useEffect(() => {
+		if (!itemQuetion?.id) {
+			return;
+		}
 		load();
-	}, [itemQuetion]);
+		fetchQuestionOption();
+	}, [itemQuetion?.id]);
 
+	useEffect(() => {
+		if (selectedDetailAssignment > 0) {
+			setOrderIndex(1);
+		}
+	}, [selectedDetailAssignment]);
+	const radioOptions = useMemo(() => {
+		return listQuestionOptions.map(item=>{
+			return{
+				label: item.content || "", 
+				value: item.id
+			}
+		})
+	},[listQuestionOptions])
+	const checkAnswers = async () => {
+		await questionOptionActions.get(Number(value))
+		
+	}
+	const renderCheckAnswer = () => {
+		if (!itemQuestionOption || !itemQuetion) return null;
+		if (itemQuestionOption.questionId !== itemQuetion.id) return null;
+		return (itemQuestionOption.isCorrect ?
+		<div style={{display: "flex"}}>
+			<h2 style={{marginRight:"10px"}}>Đúng</h2> 
+			<svg 
+				xmlns="http://www.w3.org/2000/svg" 
+				width="30" 
+				height="30" 
+				viewBox="0 0 24 24" 
+				fill="none" 
+				stroke="#009d17" 
+				strokeWidth="2" 
+				strokeLinecap="round" 
+				strokeLinejoin="round"
+			>
+				<path d="M20 6 9 17l-5-5" />
+			</svg>
+		</div>
+		:
+		<div style={{display: "flex"}}>
+			<h2 style={{marginRight:"10px"}}>Sai</h2> 
+			<svg 
+				xmlns="http://www.w3.org/2000/svg" 
+				width="30" 
+				height="30" 
+				viewBox="0 0 24 24" 
+				fill="none" 
+				stroke="#ff0000" 
+				strokeWidth="2" 
+				strokeLinecap="round" 
+				strokeLinejoin="round"
+			>
+				<path d="M18 6 6 18"/>
+				<path d="m6 6 12 12"/>
+			</svg>
+		</div>
+		)
+	}
     return (
         <Card>
 			<Row>
 				<Col span={24}>
 					{itemQuetion && (
 					<div className="w-full" style={{ maxHeight: "70vh", overflowY: "auto", paddingRight: 8 }}>
-						<Card className="w-full mb-4">
-						<h5><b>Nội dung câu hỏi:</b></h5>
-						<Divider style={{ margin: "8px 0" }} />
-						<div
-							style={{ lineHeight: 1.6 }}
-							dangerouslySetInnerHTML={{ __html: htmlContent }}
-						/>
-						</Card>
+						{answer}
 					</div>
 					)}
+					{listQuestionOptions.length > 0 && (
+						<div className="mt-4">
+							<Divider />
+							<Radio.Group
+								options={radioOptions}
+								value={value}
+								onChange={(e) => setValue(e.target.value)}
+								style={{ display: "flex", flexDirection: "column" }}
+							/>
+						</div>
+					)}
+					{renderCheckAnswer()}
 				</Col>
 			</Row>
-			<Row justify={"center"}>
+			<Row style={{marginTop:"20px"}} justify={"center"} gutter={200}>
 				<Col>
-					<Button onClick={goToPreQuestion}>Câu trước</Button>
+					<Button onClick={goToPreQuestion} disabled={orderIndex==1}>Câu trước</Button>
+				</Col>
+				<Col>
+					<Button type="primary" onClick={checkAnswers}>Xác nhận câu trả lời</Button>
 				</Col>
 				<Col>
 					<Button onClick={goToNextQuestion}>Câu tiếp</Button>

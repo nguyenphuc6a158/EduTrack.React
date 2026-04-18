@@ -3185,6 +3185,77 @@ export class QuestionOptionService {
     }
 
     /**
+     * @param questionId (optional) 
+     * @param keyword (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return OK
+     */
+    getAllByQuestionId(questionId: number | undefined, keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, cancelToken?: CancelToken): Promise<QuestionOptionDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/QuestionOption/GetAllByQuestionId?";
+        if (questionId === null)
+            throw new globalThis.Error("The parameter 'questionId' cannot be null.");
+        else if (questionId !== undefined)
+            url_ += "questionId=" + encodeURIComponent("" + questionId) + "&";
+        if (keyword === null)
+            throw new globalThis.Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (skipCount === null)
+            throw new globalThis.Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new globalThis.Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetAllByQuestionId(_response);
+        });
+    }
+
+    protected processGetAllByQuestionId(response: AxiosResponse): Promise<QuestionOptionDtoPagedResultDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = QuestionOptionDtoPagedResultDto.fromJS(resultData200.result);
+            return Promise.resolve<QuestionOptionDtoPagedResultDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<QuestionOptionDtoPagedResultDto>(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return OK
      */

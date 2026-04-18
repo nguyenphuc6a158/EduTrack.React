@@ -52,6 +52,14 @@ export const extractRawTextFromFile = async (file: File): Promise<string> => {
 	const result = await mammoth.extractRawText({ arrayBuffer });
 	return result.value;
 };
+export const extractRawTextFromUrlFile = async (urlFoder: string) => {
+	let url = import.meta.env.VITE_APP_BASE_API + urlFoder;
+	const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+
+    const result = await mammoth.extractRawText({ arrayBuffer });
+    return result.value;
+};
 
 export const parseContentQuestion = (text: string) => {
 	const cleanText = text.replace(/\r/g, "");

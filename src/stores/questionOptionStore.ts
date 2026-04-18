@@ -13,6 +13,7 @@ interface QuestionOptionState {
 		update: (body: UpdateQuestionOptionDto) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
+		getAllByQuestionId: (questionId: number) => Promise<void>;
 	};
 }
 const useQuestionOptionStore = create<QuestionOptionState>((set) => ({
@@ -21,6 +22,20 @@ const useQuestionOptionStore = create<QuestionOptionState>((set) => ({
 	loading: false,
 	questionOptionItem: undefined,
 	actions: {
+		getAllByQuestionId: async(questionId: number) : Promise<void> => {
+			set({ loading: true });
+			try{
+				const result = await questionOptionService.getAllByQuestionId(questionId,undefined,undefined,undefined);
+				if(result){
+					set({
+						listQuestionOptions: result.items || [],
+						totalCountQuestionOption: result.totalCount  || 0
+					})
+				}
+			} finally {
+				set({ loading: false });
+			}
+		},
 		getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
 			set({ loading: true });
 			try{
@@ -28,7 +43,7 @@ const useQuestionOptionStore = create<QuestionOptionState>((set) => ({
 				if(result){
 					set({
 						listQuestionOptions: result.items || [],
-						totalCountQuestionOption: result.items?.length  || 0
+						totalCountQuestionOption: result.totalCount  || 0
 					})
 				}
 			} finally {
