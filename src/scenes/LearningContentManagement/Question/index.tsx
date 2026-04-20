@@ -64,7 +64,7 @@ const QuestionManagement: React.FC = () => {
 	const onDelete = async (item: QuestionDto) =>{
 		try {
 			await questionActios.delete(item.id);
-			await fileActions.delete(item.fileUrl||"");
+			await fileActions.delete(item.fileUrlAssignment||"");
 			await fetchQuestions(idSelectedChapter);
 			message.success("Xóa câu hỏi thành công");
 		}catch(error){
@@ -77,14 +77,16 @@ const QuestionManagement: React.FC = () => {
 				let item: UpdateQuestionDto = new UpdateQuestionDto();
 				item.id = selectedQuestion.id;
 				item.chapterId = value.chapterId;
-				item.fileUrl = value.fileUrl;
+				item.fileUrlAssignment = value.fileUrlAssignment;
+				item.fileUrlExplain = value.fileUrlExplain;
 				item.difficultyLevel = value.difficultyLevel;
 				await questionActios.update(item);
 			} else {
 				let item: CreateQuestionWithOptionsDto = new CreateQuestionWithOptionsDto();
 				
 				item.chapterId = value.chapterId;
-				item.fileUrl = value.fileUrl;
+				item.fileUrlAssignment = value.fileUrlAssignment;
+				item.fileUrlExplain = value.fileUrlExplain;
 				item.difficultyLevel = value.difficultyLevel;
 				item.answers = value.answers.map((answer: any) => {
 					let answerItem: CreateQuestionOptionDto = new CreateQuestionOptionDto();
@@ -92,7 +94,7 @@ const QuestionManagement: React.FC = () => {
 					answerItem.isCorrect = answer.isCorrect;
 					return answerItem;
 				});
-				await questionActios.createWithOptions(item);
+				// await questionActios.createWithOptions(item);
 			}
 		await fetchQuestions(idSelectedChapter);
 		message.success('Cập nhật thông tin thành công')

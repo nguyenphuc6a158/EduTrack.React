@@ -29,7 +29,7 @@ const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, 
 		return fileName;
 	};
 	const filterListFileUrlOptions = useMemo(() => {
-		return [... new Set(listQuestions.flatMap(question => question.fileUrl))].map(fileUrl => ({
+		return [... new Set(listQuestions.flatMap(question => question.fileUrlAssignment))].map(fileUrl => ({
 			text: formatFileName(fileUrl ? (fileUrl.split("/").pop() || "") : ""),
 			value: fileUrl || "",
 		}));
@@ -49,11 +49,11 @@ const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, 
 	const columns = useMemo(() => [
 		{
 			title:'Nội dung câu hỏi',
-			dataIndex:'fileUrl',
-			key:'fileUrl',
+			dataIndex:'fileUrlAssignment',
+			key:'fileUrlAssignment',
 			width: 500,
 			filters:filterListFileUrlOptions,
-			onFilter: (value:any, record: QuestionDto) =>record.fileUrl === value,
+			onFilter: (value:any, record: QuestionDto) =>record.fileUrlAssignment === value,
 			filterSearch: true,
 			render: (text: string) =>{
 				let splitContent = text.split("/");

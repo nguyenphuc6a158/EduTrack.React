@@ -2899,6 +2899,58 @@ export class QuestionService {
     }
 
     /**
+     * @param id (optional) 
+     * @return OK
+     */
+    delete(id: number | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/Question/Delete?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processDelete(_response);
+        });
+    }
+
+    protected processDelete(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return OK
      */
@@ -3116,58 +3168,6 @@ export class QuestionService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<QuestionDto>(null as any);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return OK
-     */
-    delete(id: number | undefined, cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/services/app/Question/Delete?";
-        if (id === null)
-            throw new globalThis.Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "DELETE",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processDelete(_response);
-        });
-    }
-
-    protected processDelete(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(null as any);
     }
 }
 
@@ -8634,7 +8634,8 @@ export interface ICreateListClassAssgnmentDto {
 }
 
 export class CreateQuestionDto implements ICreateQuestionDto {
-    fileUrl!: string | undefined;
+    fileUrlAssignment!: string | undefined;
+    fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
 
@@ -8649,7 +8650,8 @@ export class CreateQuestionDto implements ICreateQuestionDto {
 
     init(_data?: any) {
         if (_data) {
-            this.fileUrl = _data["fileUrl"];
+            this.fileUrlAssignment = _data["fileUrlAssignment"];
+            this.fileUrlExplain = _data["fileUrlExplain"];
             this.chapterId = _data["chapterId"];
             this.difficultyLevel = _data["difficultyLevel"];
         }
@@ -8664,7 +8666,8 @@ export class CreateQuestionDto implements ICreateQuestionDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["fileUrl"] = this.fileUrl;
+        data["fileUrlAssignment"] = this.fileUrlAssignment;
+        data["fileUrlExplain"] = this.fileUrlExplain;
         data["chapterId"] = this.chapterId;
         data["difficultyLevel"] = this.difficultyLevel;
         return data;
@@ -8679,7 +8682,8 @@ export class CreateQuestionDto implements ICreateQuestionDto {
 }
 
 export interface ICreateQuestionDto {
-    fileUrl: string | undefined;
+    fileUrlAssignment: string | undefined;
+    fileUrlExplain: string | undefined;
     chapterId: number;
     difficultyLevel: number;
 }
@@ -8740,7 +8744,8 @@ export interface ICreateQuestionOptionDto {
 }
 
 export class CreateQuestionWithOptionsDto implements ICreateQuestionWithOptionsDto {
-    fileUrl!: string | undefined;
+    fileUrlAssignment!: string | undefined;
+    fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
     answers!: CreateQuestionOptionDto[] | undefined;
@@ -8756,7 +8761,8 @@ export class CreateQuestionWithOptionsDto implements ICreateQuestionWithOptionsD
 
     init(_data?: any) {
         if (_data) {
-            this.fileUrl = _data["fileUrl"];
+            this.fileUrlAssignment = _data["fileUrlAssignment"];
+            this.fileUrlExplain = _data["fileUrlExplain"];
             this.chapterId = _data["chapterId"];
             this.difficultyLevel = _data["difficultyLevel"];
             if (Array.isArray(_data["answers"])) {
@@ -8776,7 +8782,8 @@ export class CreateQuestionWithOptionsDto implements ICreateQuestionWithOptionsD
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["fileUrl"] = this.fileUrl;
+        data["fileUrlAssignment"] = this.fileUrlAssignment;
+        data["fileUrlExplain"] = this.fileUrlExplain;
         data["chapterId"] = this.chapterId;
         data["difficultyLevel"] = this.difficultyLevel;
         if (Array.isArray(this.answers)) {
@@ -8796,7 +8803,8 @@ export class CreateQuestionWithOptionsDto implements ICreateQuestionWithOptionsD
 }
 
 export interface ICreateQuestionWithOptionsDto {
-    fileUrl: string | undefined;
+    fileUrlAssignment: string | undefined;
+    fileUrlExplain: string | undefined;
     chapterId: number;
     difficultyLevel: number;
     answers: CreateQuestionOptionDto[] | undefined;
@@ -10054,7 +10062,11 @@ export class Question implements IQuestion {
     creatorUserId!: number | undefined;
     lastModificationTime!: Date | undefined;
     lastModifierUserId!: number | undefined;
-    fileUrl!: string;
+    isDeleted!: boolean;
+    deleterUserId!: number | undefined;
+    deletionTime!: Date | undefined;
+    fileUrlAssignment!: string;
+    fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
     chapter!: Chapter;
@@ -10078,7 +10090,11 @@ export class Question implements IQuestion {
             this.creatorUserId = _data["creatorUserId"];
             this.lastModificationTime = _data["lastModificationTime"] ? new Date(_data["lastModificationTime"].toString()) : undefined as any;
             this.lastModifierUserId = _data["lastModifierUserId"];
-            this.fileUrl = _data["fileUrl"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? new Date(_data["deletionTime"].toString()) : undefined as any;
+            this.fileUrlAssignment = _data["fileUrlAssignment"];
+            this.fileUrlExplain = _data["fileUrlExplain"];
             this.chapterId = _data["chapterId"];
             this.difficultyLevel = _data["difficultyLevel"];
             this.chapter = _data["chapter"] ? Chapter.fromJS(_data["chapter"]) : undefined as any;
@@ -10114,7 +10130,11 @@ export class Question implements IQuestion {
         data["creatorUserId"] = this.creatorUserId;
         data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : undefined as any;
         data["lastModifierUserId"] = this.lastModifierUserId;
-        data["fileUrl"] = this.fileUrl;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : undefined as any;
+        data["fileUrlAssignment"] = this.fileUrlAssignment;
+        data["fileUrlExplain"] = this.fileUrlExplain;
         data["chapterId"] = this.chapterId;
         data["difficultyLevel"] = this.difficultyLevel;
         data["chapter"] = this.chapter ? this.chapter.toJSON() : undefined as any;
@@ -10150,7 +10170,11 @@ export interface IQuestion {
     creatorUserId: number | undefined;
     lastModificationTime: Date | undefined;
     lastModifierUserId: number | undefined;
-    fileUrl: string;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: Date | undefined;
+    fileUrlAssignment: string;
+    fileUrlExplain: string | undefined;
     chapterId: number;
     difficultyLevel: number;
     chapter: Chapter;
@@ -10161,7 +10185,8 @@ export interface IQuestion {
 
 export class QuestionDto implements IQuestionDto {
     id!: number;
-    fileUrl!: string | undefined;
+    fileUrlAssignment!: string | undefined;
+    fileUrlExplain!: string | undefined;
     chapterId!: number;
     chapterName!: string | undefined;
     difficultyLevel!: number;
@@ -10178,7 +10203,8 @@ export class QuestionDto implements IQuestionDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.fileUrl = _data["fileUrl"];
+            this.fileUrlAssignment = _data["fileUrlAssignment"];
+            this.fileUrlExplain = _data["fileUrlExplain"];
             this.chapterId = _data["chapterId"];
             this.chapterName = _data["chapterName"];
             this.difficultyLevel = _data["difficultyLevel"];
@@ -10195,7 +10221,8 @@ export class QuestionDto implements IQuestionDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["fileUrl"] = this.fileUrl;
+        data["fileUrlAssignment"] = this.fileUrlAssignment;
+        data["fileUrlExplain"] = this.fileUrlExplain;
         data["chapterId"] = this.chapterId;
         data["chapterName"] = this.chapterName;
         data["difficultyLevel"] = this.difficultyLevel;
@@ -10212,7 +10239,8 @@ export class QuestionDto implements IQuestionDto {
 
 export interface IQuestionDto {
     id: number;
-    fileUrl: string | undefined;
+    fileUrlAssignment: string | undefined;
+    fileUrlExplain: string | undefined;
     chapterId: number;
     chapterName: string | undefined;
     difficultyLevel: number;
@@ -12619,7 +12647,8 @@ export interface IUpdateGradeDto {
 
 export class UpdateQuestionDto implements IUpdateQuestionDto {
     id!: number;
-    fileUrl!: string;
+    fileUrlAssignment!: string;
+    fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
 
@@ -12635,7 +12664,8 @@ export class UpdateQuestionDto implements IUpdateQuestionDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.fileUrl = _data["fileUrl"];
+            this.fileUrlAssignment = _data["fileUrlAssignment"];
+            this.fileUrlExplain = _data["fileUrlExplain"];
             this.chapterId = _data["chapterId"];
             this.difficultyLevel = _data["difficultyLevel"];
         }
@@ -12651,7 +12681,8 @@ export class UpdateQuestionDto implements IUpdateQuestionDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["fileUrl"] = this.fileUrl;
+        data["fileUrlAssignment"] = this.fileUrlAssignment;
+        data["fileUrlExplain"] = this.fileUrlExplain;
         data["chapterId"] = this.chapterId;
         data["difficultyLevel"] = this.difficultyLevel;
         return data;
@@ -12667,7 +12698,8 @@ export class UpdateQuestionDto implements IUpdateQuestionDto {
 
 export interface IUpdateQuestionDto {
     id: number;
-    fileUrl: string;
+    fileUrlAssignment: string;
+    fileUrlExplain: string | undefined;
     chapterId: number;
     difficultyLevel: number;
 }
@@ -12730,6 +12762,7 @@ export interface IUpdateQuestionOptionDto {
 export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsDto {
     id!: number;
     fileUrl!: string | undefined;
+    fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
     answers!: CreateQuestionOptionDto[] | undefined;
@@ -12747,6 +12780,7 @@ export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsD
         if (_data) {
             this.id = _data["id"];
             this.fileUrl = _data["fileUrl"];
+            this.fileUrlExplain = _data["fileUrlExplain"];
             this.chapterId = _data["chapterId"];
             this.difficultyLevel = _data["difficultyLevel"];
             if (Array.isArray(_data["answers"])) {
@@ -12768,6 +12802,7 @@ export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsD
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["fileUrl"] = this.fileUrl;
+        data["fileUrlExplain"] = this.fileUrlExplain;
         data["chapterId"] = this.chapterId;
         data["difficultyLevel"] = this.difficultyLevel;
         if (Array.isArray(this.answers)) {
@@ -12789,6 +12824,7 @@ export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsD
 export interface IUpdateQuestionWithOptionsDto {
     id: number;
     fileUrl: string | undefined;
+    fileUrlExplain: string | undefined;
     chapterId: number;
     difficultyLevel: number;
     answers: CreateQuestionOptionDto[] | undefined;

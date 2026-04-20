@@ -1,6 +1,5 @@
 import { Button, Card, Col, Divider, Radio, Row } from "antd";
 import { useEffect, useMemo, useState } from "react";
-import { extractDocxWithImages, extractRawTextFromUrlFile } from "src/lib/convertToHtml";
 import { useQuestionOption, useQuestionOptionActions, useQuestionOptions } from "src/stores/questionOptionStore";
 import { useQuestion, useQuestionActions, useSelectedAssimentId } from "src/stores/questionStore";
 const DetailAssignment: React.FC = () => {
@@ -44,17 +43,17 @@ const DetailAssignment: React.FC = () => {
 	const goToPreQuestion = () => {
         setOrderIndex(Math.max(1, orderIndex - 1));
 	};
-	const load = async () => {
-		if (!itemQuetion) return;
-		let text = await extractRawTextFromUrlFile(itemQuetion.fileUrl||"")
-		setAnswer(text.split("Đáp án:")[0].trim());
-		await extractDocxWithImages(itemQuetion?.fileUrl || "");
-	};
+	// const load = async () => {
+	// 	if (!itemQuetion) return;
+	// 	let text = await extractRawTextFromUrlFile(itemQuetion.fileUrl||"")
+	// 	setAnswer(text.split("Đáp án:")[0].trim());
+	// 	await extractDocxWithImages(itemQuetion?.fileUrl || "");
+	// };
 	useEffect(() => {
 		if (!itemQuetion?.id) {
 			return;
 		}
-		load();
+		// load();
 		fetchQuestionOption();
 	}, [itemQuetion?.id]);
 

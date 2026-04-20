@@ -1,7 +1,8 @@
 import { DownloadOutlined, UploadOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, message, Modal, Row, Select, Upload } from "antd";
+import { App, Button, Col, Form, Input, message, Modal, Row, Select, Upload } from "antd";
 import { useEffect, useMemo, useState } from "react";
-import { extractRawTextFromFile, parseContentQuestion } from "src/lib/convertToHtml";
+import ViewFilePDF from "src/components/ViewFilePDF";
+import { parseAnswers, readPdfText } from "src/lib/readTextPdf";
 import { requiredRule } from "src/lib/validation";
 import { ChapterDto, QuestionDto, type FileParameter } from "src/services/services_autogen";
 import { useFileActions } from "src/stores/fileStore";
@@ -16,6 +17,17 @@ interface IQuestionCreateUpdateModalProps {
 const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ onOk, open, selectedQuestion, onCancel, listChapter }) => {
 	const [form] = Form.useForm();
 	const fileActions = useFileActions();
+	const {message} = App.useApp();
+	const [listAnswers, setListAnswers] = useState<{ key: string; content: string }[]>([])
+	const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+	const optionCorrectAnswer = useMemo(()=>{
+		return listAnswers.map(item=>{
+			return{
+				value: item.key,
+				label: item.key || "",
+			}
+		})
+	},[listAnswers])
 	useEffect(() => {
 		if (selectedQuestion) {
 			form.setFieldsValue({
@@ -53,30 +65,53 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 			value: 4,
 		},
 	]
+	const handleFileChange = async (file: File) => {
+		try {
+			let text = await readPdfText(file);
+			let answers = parseAnswers(text);
+
+			setListAnswers(answers);
+			const url = URL.createObjectURL(file);
+			setPdfUrl(url);
+			form.setFieldsValue({
+				correctAnswer: undefined,
+			});
+		} catch (err) {
+			console.log(err);
+			message.error("Lỗi đọc file PDF");
+		}
+	};
 	const handleOk = async () => {
 		try {
 			const value = await form.validateFields();
-			console.log("value: ", value);
-			const fileContent = value.contentQuestion?.[0]?.originFileObj;
-			if (!fileContent) {
-				message.error("Vui lòng chọn file đề bài");
+			const fileAssignment = value.fileAssignment?.[0]?.originFileObj;
+			const fileExplain = value.fileExplain?.[0]?.originFileObj;
+			if (!fileAssignment || !fileExplain) {
 				return;
 			}
-			const fileParamContent: FileParameter =
+			const fileParamAssignment: FileParameter =
 			{
-				data: fileContent,
-				fileName: fileContent.name,
+				data: fileAssignment,
+				fileName: fileAssignment.name,
 			}
-			let textInFile = await extractRawTextFromFile(fileContent);
-			let paseTextInFile = parseContentQuestion(textInFile);
-			const fileUrlContent = await fileActions.upload(fileParamContent);
-			onOk(
-				{
-					...value,
-					fileUrl: fileUrlContent,
-					answers: paseTextInFile.answers
-				}
-			);
+			const fileParamExplain: FileParameter =
+			{
+				data: fileExplain,
+				fileName: fileExplain.name,
+			}
+			const fileUrlAssignment = await fileActions.upload(fileParamAssignment);
+			const fileUrlExplain = await fileActions.upload(fileParamExplain);
+			let text = await readPdfText(fileAssignment);
+			let answers = parseAnswers(text);
+			let item = {
+				chapterId: value.chapterId,
+				difficultyLevel: value.difficultyLevel,
+				fileUrlAssignment: fileUrlAssignment,
+				fileUrlExplain: fileUrlExplain,
+				answers: answers,
+
+			}
+			onOk(item);
 		} catch (error) {
 			console.log(error)
 		}
@@ -89,57 +124,114 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 			onCancel={onCancel}
 			onOk={handleOk}
 			forceRender
+			width={"90%"}
 		>
-			<Row justify="space-between" align="middle" gutter={16} style={{ marginBottom: 16 }}>
-				<Col>
-					{selectedQuestion ? <h2><b>Chỉnh sửa câu hỏi</b></h2> : <h2><b>Tạo mới câu hỏi</b></h2>}
+			<Row>
+				<Col span={12}>
+					{ViewFilePDF(pdfUrl)}
 				</Col>
+				<Col span={12}>
+					<Row justify="space-between" align="middle" gutter={16} style={{ marginBottom: 16 }}>
+						<Col>
+							{selectedQuestion ? <h2><b>Chỉnh sửa câu hỏi</b></h2> : <h2><b>Tạo mới câu hỏi</b></h2>}
+						</Col>
 
-				<Col>
-					<Button href="/form-cau-hoi-mau.docx" download type="primary" icon={<DownloadOutlined />}>
-						Tải file mẫu
-					</Button>
-				</Col>
-			</Row>
-			<Row gutter={16}>
-				<Col span={24}>
-					<Form form={form} layout="vertical">
+						<Col>
+							<Button href="/form-cau-hoi-mau.docx" download type="primary" icon={<DownloadOutlined />}>
+								Tải file mẫu
+							</Button>
+						</Col>
+					</Row>
+					<Row gutter={16}>
+						<Col span={24}>
+							<Form form={form} layout="vertical">
 
-						<Form.Item
-							name="chapterId"
-							label="Thuộc chương"
-							rules={[requiredRule("Chương")]}
-						>
-							<Select
-								placeholder="Câu hỏi thuộc chương"
-								options={optionChapters}
-							/>
-						</Form.Item>
+								<Form.Item
+									name="chapterId"
+									label="Thuộc chương"
+									rules={[requiredRule("Chương")]}
+								>
+									<Select
+										placeholder="Câu hỏi thuộc chương"
+										options={optionChapters}
+									/>
+								</Form.Item>
 
-						<Form.Item
-							name="difficultyLevel"
-							label="Độ khó"
-							rules={[requiredRule("Độ khó")]}
-						>
-							<Select
-								placeholder="Độ khó của câu hỏi"
-								options={optionDifficultyLevel}
-							/>
-						</Form.Item>
-
-						<Form.Item
-							name="contentQuestion"
-							label="Upload câu hỏi"
-							valuePropName="fileList"
-							getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
-							rules={[requiredRule("File câu hỏi")]}
-						>
-							<Upload beforeUpload={() => false} maxCount={1}>
-								<Button icon={<UploadOutlined />}>Chọn file</Button>
-							</Upload>
-						</Form.Item>
-
-					</Form>
+								<Form.Item
+									name="difficultyLevel"
+									label="Độ khó"
+									rules={[requiredRule("Độ khó")]}
+								>
+									<Select
+										placeholder="Độ khó của câu hỏi"
+										options={optionDifficultyLevel}
+									/>
+								</Form.Item>
+								<Row>
+									<Col span={12}>
+										<Form.Item
+											name="fileAssignment"
+											label="Upload câu hỏi"
+											valuePropName="fileList"
+											getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
+											rules={[requiredRule("File câu hỏi")]}
+										>
+											<Upload 
+												beforeUpload={(file) => {
+													const isPdf = file.type === "application/pdf";
+													if (!isPdf) {
+														message.error("Chỉ được upload file PDF!");
+													return Upload.LIST_IGNORE;
+													}
+													handleFileChange(file);
+													return false;
+												}}
+												accept=".pdf,application/pdf"
+												maxCount={1}
+											>
+												<Button icon={<UploadOutlined />}>Chọn file</Button>
+											</Upload>
+										</Form.Item>
+									</Col>
+									<Col span={12}>
+										<Form.Item
+											name="fileExplain"
+											label="Upload giải thích"
+											valuePropName="fileList"
+											getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
+											rules={[requiredRule("File câu hỏi")]}
+										>
+											<Upload 
+												beforeUpload={(file) => {
+													const isPdf = file.type === "application/pdf";
+													if (!isPdf) {
+														message.error("Chỉ được upload file PDF!");
+													return Upload.LIST_IGNORE;
+													}
+													return false;
+												}}
+												accept=".pdf,application/pdf"
+												maxCount={1}
+											>
+												<Button icon={<UploadOutlined />}>Chọn file</Button>
+											</Upload>
+										</Form.Item>
+									</Col>
+									<Form.Item
+										name="correctAnswer"
+										label="Chọn câu trả lời đúng"
+										rules={[requiredRule("File câu hỏi")]}
+									>
+										<Select 
+											// open={!listAnswers}
+											// disabled={!listAnswers}
+											options={optionCorrectAnswer}
+										/>
+									</Form.Item>
+								</Row>
+							</Form>
+						</Col>
+					</Row>
 				</Col>
 			</Row>
 		</Modal>
