@@ -27,7 +27,8 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 				label: item.key || "",
 			}
 		})
-	},[listAnswers])
+	},[listAnswers]);
+
 	useEffect(() => {
 		if (selectedQuestion) {
 			form.setFieldsValue({
@@ -81,6 +82,7 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 			message.error("Lỗi đọc file PDF");
 		}
 	};
+
 	const handleOk = async () => {
 		try {
 			const value = await form.validateFields();
@@ -129,6 +131,7 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 			<Row>
 				<Col span={12}>
 					{ViewFilePDF(pdfUrl)}
+					{/* {ViewFilePDF(pdfUrl)} */}
 				</Col>
 				<Col span={12}>
 					<Row justify="space-between" align="middle" gutter={16} style={{ marginBottom: 16 }}>

@@ -1,17 +1,25 @@
 import { Document, Page, pdfjs } from "react-pdf";
-import workerSrc from "pdfjs-dist/build/pdf.worker?url";
 
-pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 const ViewFilePDF = (fileUrl: string | null ) => {
 	if(!fileUrl){
 		return
 	}
 	return (
-		<div style={{ display: "flex", justifyContent: "center" }}>
-			<Document file={fileUrl}>
+		<div
+			style={{
+				height: 400,
+				overflow: "hidden",    // 👈 cắt phần dư
+				display: "flex",
+				justifyContent: "center",
+			}}
+			>
+			<div style={{ transformOrigin: "top" }}>
+				<Document file={fileUrl}>
 				<Page pageNumber={1} width={600} />
-			</Document>
+				</Document>
+			</div>
 		</div>
 	);
 };
