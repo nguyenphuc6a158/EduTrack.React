@@ -1,17 +1,23 @@
 import { Button, Card, Col, Divider, Radio, Row } from "antd";
 import { useEffect, useMemo, useState } from "react";
+import ViewFilePDF from "src/components/ViewFilePDF";
+import { CreateStudentAssignmentDto } from "src/services/services_autogen";
+import { useAssignmentQuestionActions, useTotalCountAssignmentQuestion } from "src/stores/assignmentQuestionStore";
 import { useQuestionOption, useQuestionOptionActions, useQuestionOptions } from "src/stores/questionOptionStore";
 import { useQuestion, useQuestionActions, useSelectedAssimentId } from "src/stores/questionStore";
+import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
 const DetailAssignment: React.FC = () => {
     const questionActions = useQuestionActions();
-	const selectedDetailAssignment = useSelectedAssimentId();
+	const selectedAssignmentId = useSelectedAssimentId();
 	const itemQuetion = useQuestion();
 	const questionOptionActions = useQuestionOptionActions();
 	const listQuestionOptions = useQuestionOptions();
 	const itemQuestionOption = useQuestionOption();
+	const totalCountAssignmentQuestion = useTotalCountAssignmentQuestion();
+
 	const [orderIndex, setOrderIndex] = useState<number>(0);
-	const [answer, setAnswer] = useState<string>("");
 	const [value, setValue] = useState<string>();
+
 	const fetchQuestionOption = async () => {
 		if (!itemQuetion?.id) {
 			return;
@@ -19,12 +25,12 @@ const DetailAssignment: React.FC = () => {
 		await questionOptionActions.getAllByQuestionId(itemQuetion.id);
 	};
 	const getItemQuestion = async () => {
-        if (orderIndex === 0 || selectedDetailAssignment === 0) {
+        if (orderIndex === 0 || selectedAssignmentId === 0) {
             return;
         }
         try {
             await questionActions.getQuestionByAssignmentIdAndOrderIndex(
-                selectedDetailAssignment,
+                selectedAssignmentId,
                 orderIndex
             );
         } catch (error) {
@@ -34,7 +40,7 @@ const DetailAssignment: React.FC = () => {
     };
     useEffect(() => {
         getItemQuestion();
-    }, [orderIndex, selectedDetailAssignment]);
+    }, [orderIndex, selectedAssignmentId]);
 
 	const goToNextQuestion = () => {
         setOrderIndex(orderIndex + 1);
@@ -43,25 +49,18 @@ const DetailAssignment: React.FC = () => {
 	const goToPreQuestion = () => {
         setOrderIndex(Math.max(1, orderIndex - 1));
 	};
-	// const load = async () => {
-	// 	if (!itemQuetion) return;
-	// 	let text = await extractRawTextFromUrlFile(itemQuetion.fileUrl||"")
-	// 	setAnswer(text.split("Đáp án:")[0].trim());
-	// 	await extractDocxWithImages(itemQuetion?.fileUrl || "");
-	// };
 	useEffect(() => {
 		if (!itemQuetion?.id) {
 			return;
 		}
-		// load();
 		fetchQuestionOption();
 	}, [itemQuetion?.id]);
 
 	useEffect(() => {
-		if (selectedDetailAssignment > 0) {
+		if (selectedAssignmentId > 0) {
 			setOrderIndex(1);
 		}
-	}, [selectedDetailAssignment]);
+	}, [selectedAssignmentId]);
 	const radioOptions = useMemo(() => {
 		return listQuestionOptions.map(item=>{
 			return{
@@ -77,52 +76,48 @@ const DetailAssignment: React.FC = () => {
 	const renderCheckAnswer = () => {
 		if (!itemQuestionOption || !itemQuetion) return null;
 		if (itemQuestionOption.questionId !== itemQuetion.id) return null;
-		return (itemQuestionOption.isCorrect ?
-		<div style={{display: "flex"}}>
-			<h2 style={{marginRight:"10px"}}>Đúng</h2> 
-			<svg 
-				xmlns="http://www.w3.org/2000/svg" 
-				width="30" 
-				height="30" 
-				viewBox="0 0 24 24" 
-				fill="none" 
-				stroke="#009d17" 
-				strokeWidth="2" 
-				strokeLinecap="round" 
-				strokeLinejoin="round"
-			>
-				<path d="M20 6 9 17l-5-5" />
-			</svg>
-		</div>
-		:
-		<div style={{display: "flex"}}>
-			<h2 style={{marginRight:"10px"}}>Sai</h2> 
-			<svg 
-				xmlns="http://www.w3.org/2000/svg" 
-				width="30" 
-				height="30" 
-				viewBox="0 0 24 24" 
-				fill="none" 
-				stroke="#ff0000" 
-				strokeWidth="2" 
-				strokeLinecap="round" 
-				strokeLinejoin="round"
-			>
-				<path d="M18 6 6 18"/>
-				<path d="m6 6 12 12"/>
-			</svg>
-		</div>
+		return (
+			<>
+				{itemQuetion?.fileUrlExplain && (ViewFilePDF(import.meta.env.VITE_APP_BASE_API + itemQuetion.fileUrlExplain))}
+				{itemQuestionOption.isCorrect ? (
+					<div style={{ display: "flex" }}>
+					<h2 style={{ marginRight: "10px" }}>Đúng</h2>
+					<svg 
+						xmlns="http://www.w3.org/2000/svg" 
+						width="30" 
+						height="30" 
+						viewBox="0 0 24 24" 
+						fill="none" 
+						stroke="#009d17" 
+						strokeWidth="2" 
+						strokeLinecap="round" 
+						strokeLinejoin="round"
+					>
+						<path d="M20 6 9 17l-5-5" />
+					</svg>
+					</div>
+				) : (
+					<div style={{ display: "flex" }}>
+					<h2 style={{ marginRight: "10px" }}>Sai</h2>
+					<svg width="30" height="30" viewBox="0 0 24 24" stroke="#ff0000">
+						<path d="M18 6 6 18" />
+						<path d="m6 6 12 12" />
+					</svg>
+					</div>
+				)}
+			</>	
 		)
 	}
     return (
         <Card>
 			<Row>
 				<Col span={24}>
-					{itemQuetion && (
-					<div className="w-full" style={{ maxHeight: "70vh", overflowY: "auto", paddingRight: 8 }}>
-						{answer}
-					</div>
-					)}
+					{itemQuetion && ViewFilePDF(import.meta.env.VITE_APP_BASE_API + itemQuetion.fileUrlAssignment || null)}
+				</Col>
+			</Row>
+			<Row>
+				<Col span={24}>
+				{renderCheckAnswer()}
 					{listQuestionOptions.length > 0 && (
 						<div className="mt-4">
 							<Divider />
@@ -134,7 +129,6 @@ const DetailAssignment: React.FC = () => {
 							/>
 						</div>
 					)}
-					{renderCheckAnswer()}
 				</Col>
 			</Row>
 			<Row style={{marginTop:"20px"}} justify={"center"} gutter={200}>
@@ -145,7 +139,7 @@ const DetailAssignment: React.FC = () => {
 					<Button type="primary" onClick={checkAnswers}>Xác nhận câu trả lời</Button>
 				</Col>
 				<Col>
-					<Button onClick={goToNextQuestion}>Câu tiếp</Button>
+					<Button onClick={goToNextQuestion} disabled={orderIndex == totalCountAssignmentQuestion}>Câu tiếp</Button>
 				</Col>
 			</Row>
         </Card>

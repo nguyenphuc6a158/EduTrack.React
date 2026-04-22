@@ -72,6 +72,8 @@ const QuestionManagement: React.FC = () => {
 		}
 	}
 	const handleSubmit =  async (value: any) => {
+		console.log(value.correctAnswer)
+		console.log(value.answers)
 		try{
 			if(selectedQuestion){
 				let item: UpdateQuestionDto = new UpdateQuestionDto();
@@ -88,13 +90,17 @@ const QuestionManagement: React.FC = () => {
 				item.fileUrlAssignment = value.fileUrlAssignment;
 				item.fileUrlExplain = value.fileUrlExplain;
 				item.difficultyLevel = value.difficultyLevel;
-				item.answers = value.answers.map((answer: any) => {
+				item.answers = value.answers.map((answer: {key: string, content: string}) => {
 					let answerItem: CreateQuestionOptionDto = new CreateQuestionOptionDto();
-					answerItem.content = answer.content;
-					answerItem.isCorrect = answer.isCorrect;
+					answerItem.content = answer.key;
+					if(answer.key == value.correctAnswer){
+						answerItem.isCorrect = true;
+					}else{
+						answerItem.isCorrect = false;
+					}
 					return answerItem;
 				});
-				// await questionActios.createWithOptions(item);
+				await questionActios.createWithOptions(item);
 			}
 		await fetchQuestions(idSelectedChapter);
 		message.success('Cập nhật thông tin thành công')

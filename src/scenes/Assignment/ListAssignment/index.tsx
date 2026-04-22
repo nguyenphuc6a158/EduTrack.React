@@ -31,6 +31,10 @@ const DoAssignment: React.FC = () => {
 		fetchChapter();
 	}, [chapterActions]);
 
+	useEffect(() => {
+		fetchAssignmentForStudent();
+	},[selectedChapterId])
+
 	const fetchAssignmentForStudent = async () => {
 		if (!userId || !selectedChapterId) {
 			return;

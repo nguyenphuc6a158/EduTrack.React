@@ -1,6 +1,6 @@
-import { Document, Page, pdfjs } from "react-pdf";
+﻿import { Document, Page, pdfjs } from "react-pdf";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 const ViewFilePDF = (fileUrl: string | null ) => {
 	if(!fileUrl){
@@ -9,19 +9,17 @@ const ViewFilePDF = (fileUrl: string | null ) => {
 	return (
 		<div
 			style={{
-				height: 400,
-				overflow: "hidden",    // 👈 cắt phần dư
+				height: 600,
+				overflow: "auto",
 				display: "flex",
-				justifyContent: "center",
 			}}
 			>
 			<div style={{ transformOrigin: "top" }}>
 				<Document file={fileUrl}>
-				<Page pageNumber={1} width={600} />
+				    <Page pageNumber={1} width={window.innerWidth / 2} />
 				</Document>
 			</div>
 		</div>
 	);
 };
-
 export default ViewFilePDF;

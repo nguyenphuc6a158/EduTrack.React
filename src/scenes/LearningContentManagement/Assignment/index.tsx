@@ -126,6 +126,8 @@ const AssignmentManagement: React.FC = () =>{
 		item.listClasses = value.listClasses;
 		item.publicTime = value.publicTime.toDate()
 		classAssignmentActions.createListClassAssignment(item);
+		setIsOpenAssignmentModal(false)
+		message.success("Giao bài tập thành công")
 	}
 	const openAssignmentModal = async () => {
 		setIsOpenAssignmentModal(true);

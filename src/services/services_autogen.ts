@@ -630,6 +630,82 @@ export class AssignmentQuestionService {
     }
 
     /**
+     * @param assignmentId (optional) 
+     * @param userId (optional) 
+     * @param keyword (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return OK
+     */
+    getAllAssignmentQuestionByAssignmentId(assignmentId: number | undefined, userId: number | undefined, keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, cancelToken?: CancelToken): Promise<AssignmentQuestionDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/AssignmentQuestion/GetAllAssignmentQuestionByAssignmentId?";
+        if (assignmentId === null)
+            throw new globalThis.Error("The parameter 'assignmentId' cannot be null.");
+        else if (assignmentId !== undefined)
+            url_ += "assignmentId=" + encodeURIComponent("" + assignmentId) + "&";
+        if (userId === null)
+            throw new globalThis.Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (keyword === null)
+            throw new globalThis.Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (skipCount === null)
+            throw new globalThis.Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new globalThis.Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetAllAssignmentQuestionByAssignmentId(_response);
+        });
+    }
+
+    protected processGetAllAssignmentQuestionByAssignmentId(response: AxiosResponse): Promise<AssignmentQuestionDtoPagedResultDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = AssignmentQuestionDtoPagedResultDto.fromJS(resultData200.result);
+            return Promise.resolve<AssignmentQuestionDtoPagedResultDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<AssignmentQuestionDtoPagedResultDto>(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return OK
      */
@@ -4442,6 +4518,68 @@ export class StudentAssignmentService {
 
         this.baseUrl = baseUrl ?? "";
 
+    }
+
+    /**
+     * @param studentId (optional) 
+     * @param assignmentId (optional) 
+     * @return OK
+     */
+    checkExist(studentId: number | undefined, assignmentId: number | undefined, cancelToken?: CancelToken): Promise<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/CheckExist?";
+        if (studentId === null)
+            throw new globalThis.Error("The parameter 'studentId' cannot be null.");
+        else if (studentId !== undefined)
+            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
+        if (assignmentId === null)
+            throw new globalThis.Error("The parameter 'assignmentId' cannot be null.");
+        else if (assignmentId !== undefined)
+            url_ += "assignmentId=" + encodeURIComponent("" + assignmentId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCheckExist(_response);
+        });
+    }
+
+    protected processCheckExist(response: AxiosResponse): Promise<boolean> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : null as any;
+    
+            return Promise.resolve<boolean>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<boolean>(null as any);
     }
 
     /**
@@ -12761,7 +12899,7 @@ export interface IUpdateQuestionOptionDto {
 
 export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsDto {
     id!: number;
-    fileUrl!: string | undefined;
+    fileUrlAssignment!: string | undefined;
     fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
@@ -12779,7 +12917,7 @@ export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsD
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.fileUrl = _data["fileUrl"];
+            this.fileUrlAssignment = _data["fileUrlAssignment"];
             this.fileUrlExplain = _data["fileUrlExplain"];
             this.chapterId = _data["chapterId"];
             this.difficultyLevel = _data["difficultyLevel"];
@@ -12801,7 +12939,7 @@ export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsD
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["fileUrl"] = this.fileUrl;
+        data["fileUrlAssignment"] = this.fileUrlAssignment;
         data["fileUrlExplain"] = this.fileUrlExplain;
         data["chapterId"] = this.chapterId;
         data["difficultyLevel"] = this.difficultyLevel;
@@ -12823,7 +12961,7 @@ export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsD
 
 export interface IUpdateQuestionWithOptionsDto {
     id: number;
-    fileUrl: string | undefined;
+    fileUrlAssignment: string | undefined;
     fileUrlExplain: string | undefined;
     chapterId: number;
     difficultyLevel: number;

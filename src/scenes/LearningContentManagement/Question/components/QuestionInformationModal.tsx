@@ -1,5 +1,4 @@
-import { Card, Divider, Modal, Row } from "antd";
-import { useEffect, useState } from "react";
+import { Modal} from "antd";
 import ViewFilePDF from "src/components/ViewFilePDF";
 import type { QuestionDto } from "src/services/services_autogen";
 
@@ -18,7 +17,8 @@ const QuestionInformationModal: React.FC<IQuestionInformationModalProps> = ({ op
 			width={"70%"}
 			footer={null}
 		>
-			{selectedQuestion && ViewFilePDF(selectedQuestion.fileUrlAssignment ||null)}
+			{selectedQuestion && ViewFilePDF(import.meta.env.VITE_APP_BASE_API + selectedQuestion.fileUrlAssignment ||null)}
+			{selectedQuestion && ViewFilePDF(import.meta.env.VITE_APP_BASE_API + selectedQuestion.fileUrlExplain ||null)}
 		</Modal>
 	)
 };

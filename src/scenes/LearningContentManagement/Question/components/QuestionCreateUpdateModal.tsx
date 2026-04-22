@@ -19,7 +19,9 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 	const fileActions = useFileActions();
 	const {message} = App.useApp();
 	const [listAnswers, setListAnswers] = useState<{ key: string; content: string }[]>([])
-	const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+	const [assignmentPdfUrl, setAssignmentPdfUrl] = useState<string | null>(null);
+	const [explainPdfUrl, setExplainPdfUrl] = useState<string | null>(null);
+	const [selectCorrectAnswer, setSelectCorrectAnswer] = useState<string | null>(null);
 	const optionCorrectAnswer = useMemo(()=>{
 		return listAnswers.map(item=>{
 			return{
@@ -28,7 +30,10 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 			}
 		})
 	},[listAnswers]);
-
+	useEffect(()=>{
+		setAssignmentPdfUrl(null);
+		setExplainPdfUrl(null);
+	},[open,selectedQuestion])
 	useEffect(() => {
 		if (selectedQuestion) {
 			form.setFieldsValue({
@@ -48,6 +53,7 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 			}
 		})
 	}, [listChapter]);
+
 	const optionDifficultyLevel = [
 		{
 			label: "1 - Nhận biết",
@@ -65,15 +71,32 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 			label: "4 - Vận dụng cao",
 			value: 4,
 		},
-	]
-	const handleFileChange = async (file: File) => {
+	];
+
+	const handleFileAssignmentChange = async (file: File) => {
 		try {
 			let text = await readPdfText(file);
 			let answers = parseAnswers(text);
-
+			if(answers.length == 0){
+				message.error("Bạn đang chọn sai định dạng file câu hỏi mẫu")
+				 return Upload.LIST_IGNORE;
+			}
 			setListAnswers(answers);
 			const url = URL.createObjectURL(file);
-			setPdfUrl(url);
+			setAssignmentPdfUrl(url);
+			form.setFieldsValue({
+				correctAnswer: undefined,
+			});
+		} catch (err) {
+			console.log(err);
+			message.error("Lỗi đọc file PDF");
+		}
+	};
+
+	const handleFileExplainChange = async (file: File) => {
+		try {
+			const url = URL.createObjectURL(file);
+			setExplainPdfUrl(url);
 			form.setFieldsValue({
 				correctAnswer: undefined,
 			});
@@ -111,14 +134,16 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 				fileUrlAssignment: fileUrlAssignment,
 				fileUrlExplain: fileUrlExplain,
 				answers: answers,
-
+				correctAnswer: selectCorrectAnswer
 			}
 			onOk(item);
 		} catch (error) {
 			console.log(error)
 		}
 	}
-
+	const onchangeSelectCorrectAnswer = (value: string) => {
+		setSelectCorrectAnswer(value)
+	}
 	return (
 		<Modal
 			open={open}
@@ -130,8 +155,8 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 		>
 			<Row>
 				<Col span={12}>
-					{ViewFilePDF(pdfUrl)}
-					{/* {ViewFilePDF(pdfUrl)} */}
+					{assignmentPdfUrl && ViewFilePDF(assignmentPdfUrl)}
+					{explainPdfUrl && ViewFilePDF(explainPdfUrl)}
 				</Col>
 				<Col span={12}>
 					<Row justify="space-between" align="middle" gutter={16} style={{ marginBottom: 16 }}>
@@ -141,7 +166,11 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 
 						<Col>
 							<Button href="/form-cau-hoi-mau.docx" download type="primary" icon={<DownloadOutlined />}>
-								Tải file mẫu
+								Tải file mẫu câu hỏi
+							</Button>
+							&nbsp;&nbsp;&nbsp;
+							<Button href="/form-giai-thich-mau.docx" download type="primary" icon={<DownloadOutlined />}>
+								Tải file mẫu giải thích
 							</Button>
 						</Col>
 					</Row>
@@ -186,7 +215,7 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 														message.error("Chỉ được upload file PDF!");
 													return Upload.LIST_IGNORE;
 													}
-													handleFileChange(file);
+													handleFileAssignmentChange(file);
 													return false;
 												}}
 												accept=".pdf,application/pdf"
@@ -211,6 +240,7 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 														message.error("Chỉ được upload file PDF!");
 													return Upload.LIST_IGNORE;
 													}
+													handleFileExplainChange(file);
 													return false;
 												}}
 												accept=".pdf,application/pdf"
@@ -226,8 +256,8 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 										rules={[requiredRule("File câu hỏi")]}
 									>
 										<Select 
-											// open={!listAnswers}
-											// disabled={!listAnswers}
+											value={selectCorrectAnswer}
+											onChange={(value)=>onchangeSelectCorrectAnswer(value)}
 											options={optionCorrectAnswer}
 										/>
 									</Form.Item>
