@@ -13,6 +13,7 @@ interface StudentAnswerState {
         update: (body: UpdateStudentAnswerDto) => Promise<void>;
         delete: (id: number) => Promise<void>;
         get: (id: number) => Promise<void>;
+        checkExist: (body: CreateStudentAnswerDto) => Promise<boolean>;
     };
 }
 const useStudentAnswerStore = create<StudentAnswerState>((set) => ({
@@ -21,6 +22,10 @@ const useStudentAnswerStore = create<StudentAnswerState>((set) => ({
     loading: false,
     studentAnswerItem: undefined,
     actions: {
+        checkExist: async (body: CreateStudentAnswerDto) : Promise<boolean> =>{
+            let existed: any = await studentAnswerService.checkExist(body);
+            return existed.result
+        },
         getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
             set({ loading: true });
             try{

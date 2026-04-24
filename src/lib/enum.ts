@@ -12,3 +12,8 @@ export enum ModeViewFilePDF{
 	DEMOQUESTIONVIEW = 0,
 	ASSIGNMENTQUESTIONVIEW = 1
 }
+export enum DetailAssignmentActive{
+	NOTSTARTED = 0,
+	INPROGRESS = 1,
+	COMPLATED = 2,
+}

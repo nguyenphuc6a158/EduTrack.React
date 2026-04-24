@@ -1,8 +1,8 @@
 import { Button, Card, Col, Divider, Radio, Row } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import ViewFilePDF from "src/components/ViewFilePDF";
-import { ModeViewFilePDF } from "src/lib/enum";
-import { CreateStudentAssignmentDto } from "src/services/services_autogen";
+import { DetailAssignmentActive, ModeViewFilePDF } from "src/lib/enum";
+import { CreateStudentAnswerDto, UpdateStudentAssignmentDto } from "src/services/services_autogen";
 import { useAssignmentQuestionActions, useTotalCountAssignmentQuestion } from "src/stores/assignmentQuestionStore";
 import { useQuestionOption, useQuestionOptionActions, useQuestionOptions } from "src/stores/questionOptionStore";
 import { useQuestion, useQuestionActions, useSelectedAssimentId } from "src/stores/questionStore";
@@ -17,13 +17,13 @@ const DetailAssignment: React.FC = () => {
 	const itemQuestionOption = useQuestionOption();
 	const totalCountAssignmentQuestion = useTotalCountAssignmentQuestion();
 	const studentAnswerActions = useStudentAnswerActions();
-
+	const studentAsignmentActions = useStudentAssignmentActions();
 	const [orderIndex, setOrderIndex] = useState<number>(0);
 	const [value, setValue] = useState<number>();
 	const [isCheckingAnswer, setIsCheckingAnswer] = useState<boolean>(false);
 	const [isAnswerChecked, setIsAnswerChecked] = useState<boolean>(false);
 	const [listCheckedAnswers, setlistCheckedAnswers] = useState<Record<number, number>>({});
-
+	const studentId = Number(localStorage.getItem("userId"));
 	const fetchQuestionOption = async () => {
 		if (!itemQuetion?.id) {
 			return;
@@ -87,12 +87,35 @@ const DetailAssignment: React.FC = () => {
 			}
 		})
 	},[listQuestionOptions]);
-
+	const updateStudentAssignment = async() => {
+		let item: UpdateStudentAssignmentDto = new UpdateStudentAssignmentDto();
+		item.assignmentId = selectedAssignmentId;
+		item.studentId = studentId;
+		item.submittedAt = new Date();
+		item.status = DetailAssignmentActive.INPROGRESS;
+		item.score = 0;
+		await studentAsignmentActions.create(item);
+	}
+	const createOrUpdateStudentAnswer = async () => {
+		if (!itemQuestionOption || !itemQuetion){ 
+			return
+		};
+		
+		let item: CreateStudentAnswerDto = new CreateStudentAnswerDto();
+		item.isCorrect = itemQuestionOption.isCorrect;
+		item.questionId = itemQuetion.id;
+		item.selectedOptionId = itemQuestionOption.id;
+		item.studentAssignmentId = studentId;
+		let existed = await studentAnswerActions.checkExist(item)
+		if(existed){
+			return
+		}
+		await studentAnswerActions.create(item);
+	}
 	const checkAnswers = async () => {
 		if (!value || !itemQuetion?.id) return;
 		try {
-
-			studentAnswerActions.create
+		
 			setIsCheckingAnswer(true);
 			await questionOptionActions.get(Number(value));
 			setlistCheckedAnswers({ ...listCheckedAnswers, [itemQuetion.id]: Number(value) });
