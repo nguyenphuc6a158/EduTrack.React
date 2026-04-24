@@ -4521,6 +4521,62 @@ export class StudentAssignmentService {
     }
 
     /**
+     * @param body (optional) 
+     * @return OK
+     */
+    create(body: CreateStudentAssignmentDto | undefined, cancelToken?: CancelToken): Promise<StudentAssignmentDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreate(_response);
+        });
+    }
+
+    protected processCreate(response: AxiosResponse): Promise<StudentAssignmentDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = StudentAssignmentDto.fromJS(resultData200.result);
+            return Promise.resolve<StudentAssignmentDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<StudentAssignmentDto>(null as any);
+    }
+
+    /**
      * @param studentId (optional) 
      * @param assignmentId (optional) 
      * @return OK
@@ -4702,62 +4758,6 @@ export class StudentAssignmentService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<StudentAssignmentDtoPagedResultDto>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return OK
-     */
-    create(body: CreateStudentAssignmentDto | undefined, cancelToken?: CancelToken): Promise<StudentAssignmentDto> {
-        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/Create";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_: AxiosRequestConfig = {
-            data: content_,
-            method: "POST",
-            url: url_,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processCreate(_response);
-        });
-    }
-
-    protected processCreate(response: AxiosResponse): Promise<StudentAssignmentDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = StudentAssignmentDto.fromJS(resultData200.result);
-            return Promise.resolve<StudentAssignmentDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<StudentAssignmentDto>(null as any);
     }
 
     /**
@@ -9440,6 +9440,7 @@ export class DetailAssignmentForStudentDto implements IDetailAssignmentForStuden
     chapterName!: string | undefined;
     createBy!: string | undefined;
     chapters!: Chapter;
+    publicTime!: Date;
 
     constructor(data?: IDetailAssignmentForStudentDto) {
         if (data) {
@@ -9459,6 +9460,7 @@ export class DetailAssignmentForStudentDto implements IDetailAssignmentForStuden
             this.chapterName = _data["chapterName"];
             this.createBy = _data["createBy"];
             this.chapters = _data["chapters"] ? Chapter.fromJS(_data["chapters"]) : undefined as any;
+            this.publicTime = _data["publicTime"] ? new Date(_data["publicTime"].toString()) : undefined as any;
         }
     }
 
@@ -9478,6 +9480,7 @@ export class DetailAssignmentForStudentDto implements IDetailAssignmentForStuden
         data["chapterName"] = this.chapterName;
         data["createBy"] = this.createBy;
         data["chapters"] = this.chapters ? this.chapters.toJSON() : undefined as any;
+        data["publicTime"] = this.publicTime ? this.publicTime.toISOString() : undefined as any;
         return data;
     }
 
@@ -9497,6 +9500,7 @@ export interface IDetailAssignmentForStudentDto {
     chapterName: string | undefined;
     createBy: string | undefined;
     chapters: Chapter;
+    publicTime: Date;
 }
 
 export class DetailAssignmentForStudentDtoPagedResultDto implements IDetailAssignmentForStudentDtoPagedResultDto {

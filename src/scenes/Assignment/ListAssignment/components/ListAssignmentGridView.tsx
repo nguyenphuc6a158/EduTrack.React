@@ -1,4 +1,4 @@
-import Icon, { CheckOutlined, CloseOutlined, ReadOutlined, UserOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, ReadOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Row } from "antd";
 import type React from "react";
 import { CreateStudentAssignmentDto, type DetailAssignmentForStudentDto } from "src/services/services_autogen";
@@ -15,6 +15,16 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 	const totalCountAssignmentQuestion = useTotalCountAssignmentQuestion();
 
 	let isDone: boolean = false;
+	const formatDisplayTime = (value?: string | Date | null) => {
+		if (!value) {
+			return "Chưa có thời gian";
+		}
+		const date = new Date(value);
+		if (Number.isNaN(date.getTime())) {
+			return "Chưa có thời gian";
+		}
+		return date.toLocaleString("vi-VN");
+	};
 
 	const createStudentAsignment = async (detailAssignment: DetailAssignmentForStudentDto, totalQuestions: number) => {
 		let item: CreateStudentAssignmentDto = new CreateStudentAssignmentDto();
@@ -41,6 +51,8 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
 			{listDetailAssignmentForAssignment.map((detailAssignment) => {
 				isDone = detailAssignment.active !== -1;
+				const publicTime = (detailAssignment as DetailAssignmentForStudentDto & { publicTime?: string | Date }).publicTime;
+				const displayTime = formatDisplayTime(publicTime);
 
 				return (
 				<Card
@@ -99,6 +111,9 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 							</Row>
 							<Row className="text-sm mb-2">
 								<UserOutlined style={{marginRight:"10px"}}/> Người tạo: {detailAssignment.createBy}
+							</Row>
+							<Row className="text-sm mb-2">
+								<ClockCircleOutlined style={{marginRight:"10px"}}/> Thời gian giao: {displayTime}
 							</Row>
 						</Col>
 					</Row>
