@@ -2,6 +2,7 @@ import { DownloadOutlined, UploadOutlined } from "@ant-design/icons";
 import { App, Button, Col, Form, Input, message, Modal, Row, Select, Upload } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import ViewFilePDF from "src/components/ViewFilePDF";
+import { ModeViewFilePDF } from "src/lib/enum";
 import { parseAnswers, readPdfText } from "src/lib/readTextPdf";
 import { requiredRule } from "src/lib/validation";
 import { ChapterDto, QuestionDto, type FileParameter } from "src/services/services_autogen";
@@ -153,10 +154,10 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 			forceRender
 			width={"90%"}
 		>
-			<Row>
+			<Row gutter={16}>
 				<Col span={12}>
-					{assignmentPdfUrl && ViewFilePDF(assignmentPdfUrl)}
-					{explainPdfUrl && ViewFilePDF(explainPdfUrl)}
+					{assignmentPdfUrl && <ViewFilePDF fileUrl={assignmentPdfUrl} mode={ModeViewFilePDF.DEMOQUESTIONVIEW}/>}
+					{explainPdfUrl && <ViewFilePDF fileUrl={explainPdfUrl} mode={ModeViewFilePDF.DEMOQUESTIONVIEW}/>}
 				</Col>
 				<Col span={12}>
 					<Row justify="space-between" align="middle" gutter={16} style={{ marginBottom: 16 }}>

@@ -23,6 +23,7 @@ export const readPdfText = async (file: File) => {
 
 export const parseAnswers = (text: string) => {
 	// 1. clean text trước (rất quan trọng với PDF)
+	console.log(text)
 	const clean = text
 		.replace(/\s+/g, " ")
 		.replace(/([A-Za-zÀ-ỹ])\s(?=[A-Za-zÀ-ỹ])/g, "$1")
@@ -32,8 +33,8 @@ export const parseAnswers = (text: string) => {
 	const answerPart = clean.split(/Đáp\s*án:/i)[1];
 	if (!answerPart) return [];
 
-	// 3. regex lấy A B C D
-	const regex = /([A-D])\.\s*(.*?)(?=\s*[A-D]\.|$)/g;
+	// 3. regex lấy A B C D - cho phép có khoảng trắng giữa chữ và dấu .
+	const regex = /([A-D])\s*\.\s*(.*?)(?=\s*[A-D]\s*\.|$)/g;
 
 	const results: { key: string; content: string }[] = [];
 

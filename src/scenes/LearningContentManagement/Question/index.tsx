@@ -156,7 +156,7 @@ const QuestionManagement: React.FC = () => {
 							onClick={openAddModal}
 							size="large"
 						>
-							Thêm chương
+							Thêm câu hỏi
 						</Button>
 				</Col>
 			</div>

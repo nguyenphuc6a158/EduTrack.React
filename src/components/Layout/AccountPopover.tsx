@@ -35,7 +35,7 @@ const AccountPopover: React.FC = () => {
                 >
                     {user.name?.[0].toUpperCase() || <UserOutlined />}
                 </Avatar>
-                <Title level={5} className="!m-0 text-center">
+                <Title level={5} className="m-0! text-center">
                     {user.name} {user.surname}
                 </Title>
                 <Text type="secondary" className="text-xs">

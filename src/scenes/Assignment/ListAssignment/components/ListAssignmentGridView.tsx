@@ -57,10 +57,11 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 										height="30" 
 										viewBox="0 0 24 24" 
 										fill="none" 
-										stroke="#009d17" 
+										stroke="currentColor" 
 										strokeWidth="2" 
 										strokeLinecap="round" 
 										strokeLinejoin="round"
+										className="text-green-600 dark:text-green-400"
 									>
 										<path d="M20 6 9 17l-5-5" />
 									</svg> : 
@@ -70,10 +71,11 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 										height="30" 
 										viewBox="0 0 24 24" 
 										fill="none" 
-										stroke="#ff0000" 
+										stroke="currentColor" 
 										strokeWidth="2" 
 										strokeLinecap="round" 
 										strokeLinejoin="round"
+										className="text-red-600 dark:text-red-400"
 									>
 										<path d="M18 6 6 18"/>
 										<path d="m6 6 12 12"/>
@@ -82,14 +84,13 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 							</Col>
 						</Row>
 					}
-					className={`
-					h-full rounded-2xl shadow-md transition-all duration-200
-					${isDone 
-						? "bg-green-100! border! border-green-400!" 
-						: "bg-red-100! border! border-red-400!"}
-					hover:scale-105 hover:shadow-lg
-					`}
-					style={{backgroundColor: "transparent"}}
+					className="h-full rounded-2xl shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
+					style={{
+						backgroundColor: isDone ? 'var(--color-success-bg)' : 'var(--color-error-bg)',
+						borderColor: isDone ? 'var(--color-success-border)' : 'var(--color-error-border)',
+						borderWidth: '2px',
+						borderStyle: 'solid'
+					}}
 				>
 					<Row>
 						<Col className="flex flex-col h-full">

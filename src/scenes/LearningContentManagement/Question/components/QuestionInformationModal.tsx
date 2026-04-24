@@ -1,5 +1,6 @@
 import { Modal} from "antd";
 import ViewFilePDF from "src/components/ViewFilePDF";
+import { ModeViewFilePDF } from "src/lib/enum";
 import type { QuestionDto } from "src/services/services_autogen";
 
 interface IQuestionInformationModalProps {
@@ -17,8 +18,16 @@ const QuestionInformationModal: React.FC<IQuestionInformationModalProps> = ({ op
 			width={"70%"}
 			footer={null}
 		>
-			{selectedQuestion && ViewFilePDF(import.meta.env.VITE_APP_BASE_API + selectedQuestion.fileUrlAssignment ||null)}
-			{selectedQuestion && ViewFilePDF(import.meta.env.VITE_APP_BASE_API + selectedQuestion.fileUrlExplain ||null)}
+			{selectedQuestion && 
+				<ViewFilePDF 
+					fileUrl={import.meta.env.VITE_APP_BASE_API + selectedQuestion.fileUrlAssignment ||null}
+					mode={ModeViewFilePDF.ASSIGNMENTQUESTIONVIEW}
+				/>}
+			{selectedQuestion && 
+				<ViewFilePDF 
+					fileUrl={import.meta.env.VITE_APP_BASE_API + selectedQuestion.fileUrlExplain ||null}
+					mode={ModeViewFilePDF.ASSIGNMENTQUESTIONVIEW}
+				/>}
 		</Modal>
 	)
 };

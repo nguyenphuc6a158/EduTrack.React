@@ -1,10 +1,12 @@
 import { Button, Card, Col, Divider, Radio, Row } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import ViewFilePDF from "src/components/ViewFilePDF";
+import { ModeViewFilePDF } from "src/lib/enum";
 import { CreateStudentAssignmentDto } from "src/services/services_autogen";
 import { useAssignmentQuestionActions, useTotalCountAssignmentQuestion } from "src/stores/assignmentQuestionStore";
 import { useQuestionOption, useQuestionOptionActions, useQuestionOptions } from "src/stores/questionOptionStore";
 import { useQuestion, useQuestionActions, useSelectedAssimentId } from "src/stores/questionStore";
+import { useStudentAnswerActions } from "src/stores/studentAnswerStore";
 import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
 const DetailAssignment: React.FC = () => {
     const questionActions = useQuestionActions();
@@ -14,9 +16,13 @@ const DetailAssignment: React.FC = () => {
 	const listQuestionOptions = useQuestionOptions();
 	const itemQuestionOption = useQuestionOption();
 	const totalCountAssignmentQuestion = useTotalCountAssignmentQuestion();
+	const studentAnswerActions = useStudentAnswerActions();
 
 	const [orderIndex, setOrderIndex] = useState<number>(0);
-	const [value, setValue] = useState<string>();
+	const [value, setValue] = useState<number>();
+	const [isCheckingAnswer, setIsCheckingAnswer] = useState<boolean>(false);
+	const [isAnswerChecked, setIsAnswerChecked] = useState<boolean>(false);
+	const [listCheckedAnswers, setlistCheckedAnswers] = useState<Record<number, number>>({});
 
 	const fetchQuestionOption = async () => {
 		if (!itemQuetion?.id) {
@@ -24,20 +30,19 @@ const DetailAssignment: React.FC = () => {
 		}
 		await questionOptionActions.getAllByQuestionId(itemQuetion.id);
 	};
+
 	const getItemQuestion = async () => {
         if (orderIndex === 0 || selectedAssignmentId === 0) {
             return;
         }
         try {
-            await questionActions.getQuestionByAssignmentIdAndOrderIndex(
-                selectedAssignmentId,
-                orderIndex
-            );
+            await questionActions.getQuestionByAssignmentIdAndOrderIndex(selectedAssignmentId, orderIndex);
         } catch (error) {
             console.log(error);
             setOrderIndex(0);
         }
     };
+
     useEffect(() => {
         getItemQuestion();
     }, [orderIndex, selectedAssignmentId]);
@@ -49,6 +54,7 @@ const DetailAssignment: React.FC = () => {
 	const goToPreQuestion = () => {
         setOrderIndex(Math.max(1, orderIndex - 1));
 	};
+
 	useEffect(() => {
 		if (!itemQuetion?.id) {
 			return;
@@ -61,24 +67,53 @@ const DetailAssignment: React.FC = () => {
 			setOrderIndex(1);
 		}
 	}, [selectedAssignmentId]);
+
+	useEffect(() => {
+		if (itemQuetion?.id && listCheckedAnswers[itemQuetion.id]) {
+			questionOptionActions.get(listCheckedAnswers[itemQuetion.id]);
+			setValue(listCheckedAnswers[itemQuetion.id]);
+			setIsAnswerChecked(true);
+		} else {
+			setIsAnswerChecked(false);
+			setValue(undefined);
+		}
+	}, [orderIndex, itemQuetion?.id, listCheckedAnswers]);
+
 	const radioOptions = useMemo(() => {
 		return listQuestionOptions.map(item=>{
 			return{
 				label: item.content || "", 
-				value: item.id
+				value: item.id,
 			}
 		})
-	},[listQuestionOptions])
+	},[listQuestionOptions]);
+
 	const checkAnswers = async () => {
-		await questionOptionActions.get(Number(value))
-		
-	}
+		if (!value || !itemQuetion?.id) return;
+		try {
+
+			studentAnswerActions.create
+			setIsCheckingAnswer(true);
+			await questionOptionActions.get(Number(value));
+			setlistCheckedAnswers({ ...listCheckedAnswers, [itemQuetion.id]: Number(value) });
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setIsCheckingAnswer(false);
+			setIsAnswerChecked(true);
+		}
+	};
+
 	const renderCheckAnswer = () => {
 		if (!itemQuestionOption || !itemQuetion) return null;
 		if (itemQuestionOption.questionId !== itemQuetion.id) return null;
 		return (
 			<>
-				{itemQuetion?.fileUrlExplain && (ViewFilePDF(import.meta.env.VITE_APP_BASE_API + itemQuetion.fileUrlExplain))}
+				{itemQuetion?.fileUrlExplain && 
+					<ViewFilePDF 
+						fileUrl={import.meta.env.VITE_APP_BASE_API + itemQuetion.fileUrlExplain}  
+						mode={ModeViewFilePDF.ASSIGNMENTQUESTIONVIEW}
+					/>}
 				{itemQuestionOption.isCorrect ? (
 					<div style={{ display: "flex" }}>
 					<h2 style={{ marginRight: "10px" }}>Đúng</h2>
@@ -112,7 +147,11 @@ const DetailAssignment: React.FC = () => {
         <Card>
 			<Row>
 				<Col span={24}>
-					{itemQuetion && ViewFilePDF(import.meta.env.VITE_APP_BASE_API + itemQuetion.fileUrlAssignment || null)}
+					{itemQuetion && 
+						<ViewFilePDF 
+							fileUrl={import.meta.env.VITE_APP_BASE_API + itemQuetion.fileUrlAssignment || null}
+							mode={ModeViewFilePDF.ASSIGNMENTQUESTIONVIEW}
+						/>}
 				</Col>
 			</Row>
 			<Row>
@@ -126,6 +165,7 @@ const DetailAssignment: React.FC = () => {
 								value={value}
 								onChange={(e) => setValue(e.target.value)}
 								style={{ display: "flex", flexDirection: "column" }}
+								disabled={isAnswerChecked}
 							/>
 						</div>
 					)}
@@ -136,7 +176,7 @@ const DetailAssignment: React.FC = () => {
 					<Button onClick={goToPreQuestion} disabled={orderIndex==1}>Câu trước</Button>
 				</Col>
 				<Col>
-					<Button type="primary" onClick={checkAnswers}>Xác nhận câu trả lời</Button>
+					<Button type="primary" onClick={checkAnswers} loading={isCheckingAnswer} disabled={!value || isAnswerChecked}>Xác nhận câu trả lời</Button>
 				</Col>
 				<Col>
 					<Button onClick={goToNextQuestion} disabled={orderIndex == totalCountAssignmentQuestion}>Câu tiếp</Button>
