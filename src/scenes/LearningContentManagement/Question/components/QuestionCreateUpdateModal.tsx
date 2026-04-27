@@ -2,7 +2,7 @@ import { DownloadOutlined, UploadOutlined } from "@ant-design/icons";
 import { App, Button, Col, Form, Input, message, Modal, Row, Select, Upload } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import ViewFilePDF from "src/components/ViewFilePDF";
-import { ModeViewFilePDF } from "src/lib/enum";
+import { ModeViewFilePDF } from "src/lib/enumconst";
 import { parseAnswers, readPdfText } from "src/lib/readTextPdf";
 import { requiredRule } from "src/lib/validation";
 import { ChapterDto, QuestionDto, type FileParameter } from "src/services/services_autogen";

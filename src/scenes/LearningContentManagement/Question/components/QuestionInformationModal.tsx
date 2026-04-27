@@ -1,6 +1,6 @@
 import { Modal} from "antd";
 import ViewFilePDF from "src/components/ViewFilePDF";
-import { ModeViewFilePDF } from "src/lib/enum";
+import { ModeViewFilePDF } from "src/lib/enumconst";
 import type { QuestionDto } from "src/services/services_autogen";
 
 interface IQuestionInformationModalProps {

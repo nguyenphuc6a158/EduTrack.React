@@ -1,7 +1,7 @@
 import { Card, Col, DatePicker, Modal, Row, Select } from "antd";
 import type { Dayjs } from "dayjs";
 import { useEffect, useMemo, useState } from "react";
-import { ModeTabClassesEnum } from "src/lib/enum";
+import { ModeTabClassesEnum } from "src/lib/enumconst";
 import ClassTable from "src/scenes/StructureManagement/ClassManagement/components/ClassTable";
 import type { AssignmentDto, ClassDto } from "src/services/services_autogen";
 export interface ClassAssignmentItem {
@@ -49,6 +49,7 @@ const AssigmentModal: React.FC<IAssignmentModalProps> = ({open, onCancel, onOk, 
 			publicTime: selectedDate,
 		}
 		onOk(item);
+		
 	}
 	const onChangeDatePicker = async (date: Dayjs | null) => {
 		setSelectedDate(date);

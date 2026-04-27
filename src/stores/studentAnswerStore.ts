@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { CreateStudentAnswerDto, StudentAnswerDto, StudentAnswerService, UpdateStudentAnswerDto } from "src/services/services_autogen";
+import { CreateStudentAnswerInput, StudentAnswerDto, StudentAnswerService, UpdateStudentAnswerInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const studentAnswerService = new StudentAnswerService('',http);
 interface StudentAnswerState {
@@ -9,11 +9,11 @@ interface StudentAnswerState {
     loading: boolean;
     actions: {
         getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-        create: (body: CreateStudentAnswerDto) => Promise<void>;
-        update: (body: UpdateStudentAnswerDto) => Promise<void>;
+        create: (body: CreateStudentAnswerInput) => Promise<void>;
+        update: (body: UpdateStudentAnswerInput) => Promise<void>;
         delete: (id: number) => Promise<void>;
         get: (id: number) => Promise<void>;
-        checkExist: (body: CreateStudentAnswerDto) => Promise<boolean>;
+        checkExist: (body: CreateStudentAnswerInput) => Promise<StudentAnswerDto>;
     };
 }
 const useStudentAnswerStore = create<StudentAnswerState>((set) => ({
@@ -22,9 +22,9 @@ const useStudentAnswerStore = create<StudentAnswerState>((set) => ({
     loading: false,
     studentAnswerItem: undefined,
     actions: {
-        checkExist: async (body: CreateStudentAnswerDto) : Promise<boolean> =>{
-            let existed: any = await studentAnswerService.checkExist(body);
-            return existed.result
+        checkExist: async (body: CreateStudentAnswerInput) : Promise<StudentAnswerDto> =>{
+            let existed = await studentAnswerService.checkExist(body);
+            return existed
         },
         getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
             set({ loading: true });

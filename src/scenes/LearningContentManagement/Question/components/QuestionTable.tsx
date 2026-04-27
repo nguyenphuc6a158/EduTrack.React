@@ -3,7 +3,7 @@ import { Button, Popconfirm, Space, Table } from "antd";
 import type React from "react";
 import { useMemo } from "react";
 import { AppConsts } from "src/lib/appconst";
-import { ModeTableQuestionsEnum } from "src/lib/enum";
+import { ModeTableQuestionsEnum } from "src/lib/enumconst";
 import type { QuestionDto } from "src/services/services_autogen";
 interface IQuestionTableProps{
 	listQuestions: QuestionDto[];

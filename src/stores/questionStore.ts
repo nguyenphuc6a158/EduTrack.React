@@ -8,7 +8,6 @@ interface QuestionState {
 	totalCountQuestion: number;
 	loading: boolean;
 	listQuestionsByAssignment: QuestionDto[];
-	selectedAssimentId: number;
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
 		create: (body: CreateQuestionDto) => Promise<QuestionDto>;
@@ -18,9 +17,8 @@ interface QuestionState {
 		getQuestionByChapter: (chapterId: number) => Promise<void>;
 		createWithOptions: (body?: CreateQuestionWithOptionsDto) => Promise<void>;
 		updateWithOptions: (body?: UpdateQuestionWithOptionsDto) => Promise<void>;
-		getQuestionByAssignment: (assignmentId: number) => Promise<void>;
+		getAllQuestionByAssignment: (assignmentId: number) => Promise<void>;
 		getQuestionByAssignmentIdAndOrderIndex:(assignmentId: number, orderIndex: number) => Promise<void>;
-		setSelectedAssimentId: (assignmentId: number) => void;
 	};
 }
 const useQuestionStore = create<QuestionState>((set) => ({
@@ -29,13 +27,7 @@ const useQuestionStore = create<QuestionState>((set) => ({
 	totalCountQuestion: 0,
 	loading: false,
 	questionItem: undefined,
-	selectedAssimentId: 0,
 	actions: {
-		setSelectedAssimentId: (assignmentId: number) => {
-			set({
-				selectedAssimentId: assignmentId
-			})
-		},
 		getQuestionByAssignmentIdAndOrderIndex: async (assignmentId: number, orderIndex: number) =>{
 			set({ loading: true });
 			try{
@@ -47,10 +39,10 @@ const useQuestionStore = create<QuestionState>((set) => ({
 				set({ loading: false });
 			}
 		},
-		getQuestionByAssignment : async (assignmentId: number) : Promise<void> => {
+		getAllQuestionByAssignment : async (assignmentId: number) : Promise<void> => {
 			set({ loading: true });
 			try{
-				const result = await questionService.getQuestionByAssignment(assignmentId);
+				const result = await questionService.getAllQuestionByAssignment(assignmentId);
 				if(result){
 					set({
 						listQuestionsByAssignment: result.items || [],
@@ -136,5 +128,4 @@ export const useTotalCountQuestion = () => useQuestionStore((state) => state.tot
 export const useQuestion = () => useQuestionStore((state) => state.questionItem);
 export const useQuestionLoading = () => useQuestionStore((state) => state.loading);
 export const useQuestionActions = () => useQuestionStore((state) => state.actions);
-export const useSelectedAssimentId = () => useQuestionStore((state) => state.selectedAssimentId);
 export default useQuestionStore;

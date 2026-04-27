@@ -1,7 +1,6 @@
 ﻿import { Document, Page, pdfjs } from "react-pdf";
 import { useSettings } from "src/stores/settingStore";
-import { ThemeMode } from "src/lib/enumconst";
-import { ModeViewFilePDF } from "src/lib/enum";
+import { ModeViewFilePDF, ThemeMode } from "src/lib/enumconst";
 
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 

@@ -7,7 +7,7 @@ import { useGradeActions, useGradees } from "src/stores/gradeStore";
 import { useClassActions, useClasses, useClassLoading, useTotalCountClass } from "src/stores/classStore";
 import { ClassDto, CreateClassDto, UpdateClassDto } from "src/services/services_autogen";
 import { useTeachers, useUserActions } from "src/stores/userStore";
-import { ModeTabClassesEnum } from "src/lib/enum";
+import { ModeTabClassesEnum } from "src/lib/enumconst";
 
 const ClassManagement = () => {
 	const { message } = App.useApp();

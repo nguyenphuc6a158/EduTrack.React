@@ -7,9 +7,9 @@ import { useEffect, useMemo, useState } from "react";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { useChapterActions, useChapters, usetotalCountChapter } from "src/stores/chapterStore";
 import { useFileActions } from "src/stores/fileStore";
-import { ModeTableQuestionsEnum } from "src/lib/enum";
 import QuestionInformationModal from "./components/QuestionInformationModal";
 import QuestionCreateUpdateModal from "./components/QuestionCreateUpdateModal";
+import { ModeTableQuestionsEnum } from "src/lib/enumconst";
 
 const QuestionManagement: React.FC = () => {
 	const {message} = App.useApp();

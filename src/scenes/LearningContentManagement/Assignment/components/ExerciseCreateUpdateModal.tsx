@@ -3,8 +3,8 @@ import type React from "react";
 import { CreateAssignmentQuestionDto, CreateAssignmentWithQuestionsDto, CreateQuestionWithOptionsDto, UpdateAssignmentWithQuestionsDto, type AssignmentDto, type ChapterDto, type QuestionDto } from "src/services/services_autogen";
 import QuestionTable from "../../Question/components/QuestionTable";
 import { useEffect, useMemo, useState } from "react";
-import { ModeTableQuestionsEnum } from "src/lib/enum";
 import { useQuestionsByAssignment } from "src/stores/questionStore";
+import {ModeTableQuestionsEnum} from "src/lib/enumconst.ts";
 interface IExerciseCreateUpdateModalProps {
 	open: boolean;
 	onCancel: () => void;
@@ -14,8 +14,9 @@ interface IExerciseCreateUpdateModalProps {
 	openInforModal: (question: QuestionDto) => void;
 	listChapters: ChapterDto[];
 	listQuestionsByAssignment: QuestionDto[];
+	getListSelectedQuestion: (listSelectedQuestions: QuestionDto[]) => void;
 }
-const ExerciseCreateUpdateModal : React.FC<IExerciseCreateUpdateModalProps> = ({ open, onCancel, onSubmit, selectedAssignment, listQuestions, openInforModal, listChapters, listQuestionsByAssignment }) => {
+const ExerciseCreateUpdateModal : React.FC<IExerciseCreateUpdateModalProps> = ({ getListSelectedQuestion, open, onCancel, onSubmit, selectedAssignment, listQuestions, openInforModal, listChapters, listQuestionsByAssignment }) => {
 	const [formRef] = Form.useForm();
 	const message = App.useApp().message;
 
@@ -36,6 +37,9 @@ const ExerciseCreateUpdateModal : React.FC<IExerciseCreateUpdateModalProps> = ({
 		const updatedList = listSelectedQuestions.filter(question => question.id !== questionId);
 		setListSelectedQuestions(updatedList);
 	}
+	useEffect(()=>{
+		getListSelectedQuestion(listSelectedQuestions)
+	},[listSelectedQuestions])
 	useEffect(() => {
 		if(!open) {
 			return;

@@ -3,7 +3,7 @@ import type React from "react";
 import AssignmentTable from "./components/AssignmentTable";
 import { useAssignmentActions, useAssignments } from "src/stores/assignmentStore";
 import { useEffect, useState } from "react";
-import { ClassAssignmentDto, CreateListClassAssgnmentDto, UpdateClassAssignmentDto, type AssignmentDto, type CreateAssignmentWithQuestionsDto, type QuestionDto, type UpdateAssignmentWithQuestionsDto } from "src/services/services_autogen";
+import { ClassAssignmentDto, CreateListClassAssgnmentDto, CreateListStudentAssignmentByListClassInput, UpdateClassAssignmentDto, type AssignmentDto, type CreateAssignmentWithQuestionsDto, type QuestionDto, type UpdateAssignmentWithQuestionsDto } from "src/services/services_autogen";
 import { PlusOutlined, ReadOutlined, SendOutlined } from "@ant-design/icons";
 import { useQuestionActions, useQuestions, useQuestionsByAssignment } from "src/stores/questionStore";
 import { useChapterActions, useChapters } from "src/stores/chapterStore";
@@ -14,6 +14,7 @@ import { useClassActions, useClasses } from "src/stores/classStore";
 import { useClassAssignmentActions, useClassAssignments } from "src/stores/classAssignmentStore";
 import EditClassAssignmentModal from "./components/EditClassAssignmentModal";
 import AssignedExercisesTableModal from "./components/AssignedExercisesTableModal";
+import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
 
 const AssignmentManagement: React.FC = () =>{
 	const listAssignment = useAssignments();
@@ -26,9 +27,11 @@ const AssignmentManagement: React.FC = () =>{
 	const listQuestionsByAssignment = useQuestionsByAssignment();
 	const listClasses = useClasses();
 	const classAssignmentActions = useClassAssignmentActions();
+	const studentAssignmentActions = useStudentAssignmentActions();
 	const listClassAssignments = useClassAssignments();
 	const message = App.useApp().message;
 
+	const [listSelectedQuestions, setListSelectedQuestions] = useState<QuestionDto[]>([])
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 	const [isOpenInfoModal, setIsOpenInfoModal] = useState<boolean>(false);
 	const [isOpenAssignmentModal, setIsOpenAssignmentModal] = useState<boolean>(false);
@@ -80,7 +83,7 @@ const AssignmentManagement: React.FC = () =>{
 	const onEditAssignment = async (item: AssignmentDto) => {
 		setSelectedAssignment(item);
 		setIsOpenModal(true);
-		await questionsActions.getQuestionByAssignment(item.id);
+		await questionsActions.getAllQuestionByAssignment(item.id);
 	}
 	const onDeleteAssignment = async (id: number) => {
 		await assignmentActions.delete(id);
@@ -116,7 +119,7 @@ const AssignmentManagement: React.FC = () =>{
 		setSelectedQuestion(question);
 		setIsOpenInfoModal(true);
 	}
-	const onOkAssignmentModal = (value: ClassAssignmentItem) => {
+	const onOkAssignmentModal = async (value: ClassAssignmentItem) => {
 		if(value.listClasses.length === 0 || value.assignmentId === -1 || !value.publicTime){
 			message.error("Vui lòng chọn đầy đủ thông tin!");
 			return;
@@ -125,7 +128,13 @@ const AssignmentManagement: React.FC = () =>{
 		item.assignmentId = value.assignmentId;
 		item.listClasses = value.listClasses;
 		item.publicTime = value.publicTime.toDate()
-		classAssignmentActions.createListClassAssignment(item);
+		await classAssignmentActions.createListClassAssignment(item);
+		let inputCreateListStudentAssignmentByListClass: CreateListStudentAssignmentByListClassInput = new CreateListStudentAssignmentByListClassInput();
+		inputCreateListStudentAssignmentByListClass.listClasses = value.listClasses;
+		inputCreateListStudentAssignmentByListClass.assignmentId = value.assignmentId;
+		inputCreateListStudentAssignmentByListClass.totalQuestions = listSelectedQuestions.length;
+		inputCreateListStudentAssignmentByListClass.submittedAt =  new Date;
+		await studentAssignmentActions.createListStudentAssignmentByListClass(inputCreateListStudentAssignmentByListClass)
 		setIsOpenAssignmentModal(false)
 		message.success("Giao bài tập thành công")
 	}
@@ -167,6 +176,9 @@ const AssignmentManagement: React.FC = () =>{
 		await classAssignmentActions.delete(id);
 		message.success("Xóa bài tập đã giao thành công!");
 		await fetchClassAssignment();
+	}
+	const getListSelectedQuestion = (listSelectedQuestions: QuestionDto[]) => {
+		setListSelectedQuestions(listSelectedQuestions)
 	}
 	return (
 		<div className="p-6">
@@ -210,6 +222,7 @@ const AssignmentManagement: React.FC = () =>{
 				onDelete={onDeleteAssignment}
 			/>
 			<ExerciseCreateUpdateModal
+				getListSelectedQuestion={getListSelectedQuestion}
 				open={isOpenModal}
 				onCancel={() => setIsOpenModal(false)}
 				onSubmit={handleSubmit}

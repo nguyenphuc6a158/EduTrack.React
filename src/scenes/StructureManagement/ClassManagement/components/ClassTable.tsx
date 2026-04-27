@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Table, Button, Space, Popconfirm, Tag } from "antd";
 import { EditOutlined, DeleteOutlined, RollbackOutlined } from "@ant-design/icons";
 import { ClassDto } from "src/services/services_autogen";
-import { ModeTabClassesEnum } from "src/lib/enum";
+import { ModeTabClassesEnum } from "src/lib/enumconst";
 interface IClassTableProps {
 	dataSource: ClassDto [];
 	loading: boolean;

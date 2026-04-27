@@ -2870,8 +2870,8 @@ export class QuestionService {
      * @param assignmentId (optional) 
      * @return OK
      */
-    getQuestionByAssignment(assignmentId: number | undefined, cancelToken?: CancelToken): Promise<QuestionDtoPagedResultDto> {
-        let url_ = this.baseUrl + "/api/services/app/Question/GetQuestionByAssignment?";
+    getAllQuestionByAssignment(assignmentId: number | undefined, cancelToken?: CancelToken): Promise<QuestionDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Question/GetAllQuestionByAssignment?";
         if (assignmentId === null)
             throw new globalThis.Error("The parameter 'assignmentId' cannot be null.");
         else if (assignmentId !== undefined)
@@ -2894,11 +2894,11 @@ export class QuestionService {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGetQuestionByAssignment(_response);
+            return this.processGetAllQuestionByAssignment(_response);
         });
     }
 
-    protected processGetQuestionByAssignment(response: AxiosResponse): Promise<QuestionDtoPagedResultDto> {
+    protected processGetAllQuestionByAssignment(response: AxiosResponse): Promise<QuestionDtoPagedResultDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -4221,6 +4221,118 @@ export class StudentAnswerService {
     }
 
     /**
+     * @param body (optional) 
+     * @return OK
+     */
+    create(body: CreateStudentAnswerInput | undefined, cancelToken?: CancelToken): Promise<StudentAnswerDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentAnswer/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreate(_response);
+        });
+    }
+
+    protected processCreate(response: AxiosResponse): Promise<StudentAnswerDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = StudentAnswerDto.fromJS(resultData200.result);
+            return Promise.resolve<StudentAnswerDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<StudentAnswerDto>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    checkExist(body: CreateStudentAnswerInput | undefined, cancelToken?: CancelToken): Promise<StudentAnswerDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentAnswer/CheckExist";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCheckExist(_response);
+        });
+    }
+
+    protected processCheckExist(response: AxiosResponse): Promise<StudentAnswerDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = StudentAnswerDto.fromJS(resultData200.result);
+            return Promise.resolve<StudentAnswerDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<StudentAnswerDto>(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return OK
      */
@@ -4346,63 +4458,7 @@ export class StudentAnswerService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateStudentAnswerDto | undefined, cancelToken?: CancelToken): Promise<StudentAnswerDto> {
-        let url_ = this.baseUrl + "/api/services/app/StudentAnswer/Create";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_: AxiosRequestConfig = {
-            data: content_,
-            method: "POST",
-            url: url_,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processCreate(_response);
-        });
-    }
-
-    protected processCreate(response: AxiosResponse): Promise<StudentAnswerDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = StudentAnswerDto.fromJS(resultData200.result);
-            return Promise.resolve<StudentAnswerDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<StudentAnswerDto>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return OK
-     */
-    update(body: UpdateStudentAnswerDto | undefined, cancelToken?: CancelToken): Promise<StudentAnswerDto> {
+    update(body: UpdateStudentAnswerInput | undefined, cancelToken?: CancelToken): Promise<StudentAnswerDto> {
         let url_ = this.baseUrl + "/api/services/app/StudentAnswer/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4521,21 +4577,26 @@ export class StudentAssignmentService {
     }
 
     /**
-     * @param body (optional) 
+     * @param studentId (optional) 
+     * @param assignmentId (optional) 
      * @return OK
      */
-    create(body: CreateStudentAssignmentDto | undefined, cancelToken?: CancelToken): Promise<StudentAssignmentDto> {
-        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/Create";
+    getStudentAssignmentByStudentIDAndAssignmentId(studentId: number | undefined, assignmentId: number | undefined, cancelToken?: CancelToken): Promise<StudentAssignmentDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/GetStudentAssignmentByStudentIDAndAssignmentId?";
+        if (studentId === null)
+            throw new globalThis.Error("The parameter 'studentId' cannot be null.");
+        else if (studentId !== undefined)
+            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
+        if (assignmentId === null)
+            throw new globalThis.Error("The parameter 'assignmentId' cannot be null.");
+        else if (assignmentId !== undefined)
+            url_ += "assignmentId=" + encodeURIComponent("" + assignmentId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_: AxiosRequestConfig = {
-            data: content_,
-            method: "POST",
+            method: "GET",
             url: url_,
             headers: {
-                "Content-Type": "application/json",
                 "Accept": "application/json"
             },
             cancelToken
@@ -4548,11 +4609,11 @@ export class StudentAssignmentService {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processCreate(_response);
+            return this.processGetStudentAssignmentByStudentIDAndAssignmentId(_response);
         });
     }
 
-    protected processCreate(response: AxiosResponse): Promise<StudentAssignmentDto> {
+    protected processGetStudentAssignmentByStudentIDAndAssignmentId(response: AxiosResponse): Promise<StudentAssignmentDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -4577,26 +4638,21 @@ export class StudentAssignmentService {
     }
 
     /**
-     * @param studentId (optional) 
-     * @param assignmentId (optional) 
+     * @param body (optional) 
      * @return OK
      */
-    checkExist(studentId: number | undefined, assignmentId: number | undefined, cancelToken?: CancelToken): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/CheckExist?";
-        if (studentId === null)
-            throw new globalThis.Error("The parameter 'studentId' cannot be null.");
-        else if (studentId !== undefined)
-            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
-        if (assignmentId === null)
-            throw new globalThis.Error("The parameter 'assignmentId' cannot be null.");
-        else if (assignmentId !== undefined)
-            url_ += "assignmentId=" + encodeURIComponent("" + assignmentId) + "&";
+    createListStudentAssignmentByListClass(body: CreateListStudentAssignmentByListClassInput | undefined, cancelToken?: CancelToken): Promise<StudentAssignmentDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/CreateListStudentAssignmentByListClass";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_: AxiosRequestConfig = {
+            data: content_,
             method: "POST",
             url: url_,
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             },
             cancelToken
@@ -4609,11 +4665,11 @@ export class StudentAssignmentService {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processCheckExist(_response);
+            return this.processCreateListStudentAssignmentByListClass(_response);
         });
     }
 
-    protected processCheckExist(response: AxiosResponse): Promise<boolean> {
+    protected processCreateListStudentAssignmentByListClass(response: AxiosResponse): Promise<StudentAssignmentDto[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -4627,15 +4683,77 @@ export class StudentAssignmentService {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-                result200 = resultData200 !== undefined ? resultData200 : null as any;
-    
-            return Promise.resolve<boolean>(result200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(StudentAssignmentDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return Promise.resolve<StudentAssignmentDto[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<boolean>(null as any);
+        return Promise.resolve<StudentAssignmentDto[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    update(body: UpdateStudentAssignmentInput | undefined, cancelToken?: CancelToken): Promise<StudentAssignmentDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUpdate(_response);
+        });
+    }
+
+    protected processUpdate(response: AxiosResponse): Promise<StudentAssignmentDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = StudentAssignmentDto.fromJS(resultData200.result);
+            return Promise.resolve<StudentAssignmentDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<StudentAssignmentDto>(null as any);
     }
 
     /**
@@ -4764,15 +4882,15 @@ export class StudentAssignmentService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateStudentAssignmentDto | undefined, cancelToken?: CancelToken): Promise<StudentAssignmentDto> {
-        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/Update";
+    create(body: CreateStudentAssignmentInput | undefined, cancelToken?: CancelToken): Promise<StudentAssignmentDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/Create";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
         let options_: AxiosRequestConfig = {
             data: content_,
-            method: "PUT",
+            method: "POST",
             url: url_,
             headers: {
                 "Content-Type": "application/json",
@@ -4788,11 +4906,11 @@ export class StudentAssignmentService {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processUpdate(_response);
+            return this.processCreate(_response);
         });
     }
 
-    protected processUpdate(response: AxiosResponse): Promise<StudentAssignmentDto> {
+    protected processCreate(response: AxiosResponse): Promise<StudentAssignmentDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -8771,6 +8889,69 @@ export interface ICreateListClassAssgnmentDto {
     publicTime: Date;
 }
 
+export class CreateListStudentAssignmentByListClassInput implements ICreateListStudentAssignmentByListClassInput {
+    listClasses!: ClassDto[] | undefined;
+    assignmentId!: number;
+    totalQuestions!: number;
+    submittedAt!: Date;
+
+    constructor(data?: ICreateListStudentAssignmentByListClassInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["listClasses"])) {
+                this.listClasses = [] as any;
+                for (let item of _data["listClasses"])
+                    this.listClasses!.push(ClassDto.fromJS(item));
+            }
+            this.assignmentId = _data["assignmentId"];
+            this.totalQuestions = _data["totalQuestions"];
+            this.submittedAt = _data["submittedAt"] ? new Date(_data["submittedAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): CreateListStudentAssignmentByListClassInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateListStudentAssignmentByListClassInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.listClasses)) {
+            data["listClasses"] = [];
+            for (let item of this.listClasses)
+                data["listClasses"].push(item ? item.toJSON() : undefined as any);
+        }
+        data["assignmentId"] = this.assignmentId;
+        data["totalQuestions"] = this.totalQuestions;
+        data["submittedAt"] = this.submittedAt ? this.submittedAt.toISOString() : undefined as any;
+        return data;
+    }
+
+    clone(): CreateListStudentAssignmentByListClassInput {
+        const json = this.toJSON();
+        let result = new CreateListStudentAssignmentByListClassInput();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateListStudentAssignmentByListClassInput {
+    listClasses: ClassDto[] | undefined;
+    assignmentId: number;
+    totalQuestions: number;
+    submittedAt: Date;
+}
+
 export class CreateQuestionDto implements ICreateQuestionDto {
     fileUrlAssignment!: string | undefined;
     fileUrlExplain!: string | undefined;
@@ -9015,13 +9196,13 @@ export interface ICreateRoleDto {
     grantedPermissions: string[] | undefined;
 }
 
-export class CreateStudentAnswerDto implements ICreateStudentAnswerDto {
-    studentAssignmentIdƠ!: number;
+export class CreateStudentAnswerInput implements ICreateStudentAnswerInput {
+    studentAssignmentId!: number;
     questionId!: number;
     selectedOptionId!: number;
     isCorrect!: boolean;
 
-    constructor(data?: ICreateStudentAnswerDto) {
+    constructor(data?: ICreateStudentAnswerInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9032,45 +9213,45 @@ export class CreateStudentAnswerDto implements ICreateStudentAnswerDto {
 
     init(_data?: any) {
         if (_data) {
-            this.studentAssignmentIdƠ = _data["studentAssignmentIdƠ"];
+            this.studentAssignmentId = _data["studentAssignmentId"];
             this.questionId = _data["questionId"];
             this.selectedOptionId = _data["selectedOptionId"];
             this.isCorrect = _data["isCorrect"];
         }
     }
 
-    static fromJS(data: any): CreateStudentAnswerDto {
+    static fromJS(data: any): CreateStudentAnswerInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateStudentAnswerDto();
+        let result = new CreateStudentAnswerInput();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["studentAssignmentIdƠ"] = this.studentAssignmentIdƠ;
+        data["studentAssignmentId"] = this.studentAssignmentId;
         data["questionId"] = this.questionId;
         data["selectedOptionId"] = this.selectedOptionId;
         data["isCorrect"] = this.isCorrect;
         return data;
     }
 
-    clone(): CreateStudentAnswerDto {
+    clone(): CreateStudentAnswerInput {
         const json = this.toJSON();
-        let result = new CreateStudentAnswerDto();
+        let result = new CreateStudentAnswerInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateStudentAnswerDto {
-    studentAssignmentIdƠ: number;
+export interface ICreateStudentAnswerInput {
+    studentAssignmentId: number;
     questionId: number;
     selectedOptionId: number;
     isCorrect: boolean;
 }
 
-export class CreateStudentAssignmentDto implements ICreateStudentAssignmentDto {
+export class CreateStudentAssignmentInput implements ICreateStudentAssignmentInput {
     studentId!: number;
     assignmentId!: number;
     status!: number;
@@ -9079,7 +9260,7 @@ export class CreateStudentAssignmentDto implements ICreateStudentAssignmentDto {
     totalQuestions!: number;
     submittedAt!: Date;
 
-    constructor(data?: ICreateStudentAssignmentDto) {
+    constructor(data?: ICreateStudentAssignmentInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9100,9 +9281,9 @@ export class CreateStudentAssignmentDto implements ICreateStudentAssignmentDto {
         }
     }
 
-    static fromJS(data: any): CreateStudentAssignmentDto {
+    static fromJS(data: any): CreateStudentAssignmentInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateStudentAssignmentDto();
+        let result = new CreateStudentAssignmentInput();
         result.init(data);
         return result;
     }
@@ -9119,15 +9300,15 @@ export class CreateStudentAssignmentDto implements ICreateStudentAssignmentDto {
         return data;
     }
 
-    clone(): CreateStudentAssignmentDto {
+    clone(): CreateStudentAssignmentInput {
         const json = this.toJSON();
-        let result = new CreateStudentAssignmentDto();
+        let result = new CreateStudentAssignmentInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateStudentAssignmentDto {
+export interface ICreateStudentAssignmentInput {
     studentId: number;
     assignmentId: number;
     status: number;
@@ -11311,7 +11492,7 @@ export interface IStudentAnswer {
 
 export class StudentAnswerDto implements IStudentAnswerDto {
     id!: number;
-    studentAssignmentIdƠ!: number;
+    studentAssignmentId!: number;
     questionId!: number;
     selectedOptionId!: number;
     isCorrect!: boolean;
@@ -11328,7 +11509,7 @@ export class StudentAnswerDto implements IStudentAnswerDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.studentAssignmentIdƠ = _data["studentAssignmentIdƠ"];
+            this.studentAssignmentId = _data["studentAssignmentId"];
             this.questionId = _data["questionId"];
             this.selectedOptionId = _data["selectedOptionId"];
             this.isCorrect = _data["isCorrect"];
@@ -11345,7 +11526,7 @@ export class StudentAnswerDto implements IStudentAnswerDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["studentAssignmentIdƠ"] = this.studentAssignmentIdƠ;
+        data["studentAssignmentId"] = this.studentAssignmentId;
         data["questionId"] = this.questionId;
         data["selectedOptionId"] = this.selectedOptionId;
         data["isCorrect"] = this.isCorrect;
@@ -11362,7 +11543,7 @@ export class StudentAnswerDto implements IStudentAnswerDto {
 
 export interface IStudentAnswerDto {
     id: number;
-    studentAssignmentIdƠ: number;
+    studentAssignmentId: number;
     questionId: number;
     selectedOptionId: number;
     isCorrect: boolean;
@@ -12972,14 +13153,14 @@ export interface IUpdateQuestionWithOptionsDto {
     answers: CreateQuestionOptionDto[] | undefined;
 }
 
-export class UpdateStudentAnswerDto implements IUpdateStudentAnswerDto {
+export class UpdateStudentAnswerInput implements IUpdateStudentAnswerInput {
     id!: number;
-    studentAssignmentIdƠ!: number;
+    studentAssignmentId!: number;
     questionId!: number;
     selectedOptionId!: number;
     isCorrect!: boolean;
 
-    constructor(data?: IUpdateStudentAnswerDto) {
+    constructor(data?: IUpdateStudentAnswerInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -12991,16 +13172,16 @@ export class UpdateStudentAnswerDto implements IUpdateStudentAnswerDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.studentAssignmentIdƠ = _data["studentAssignmentIdƠ"];
+            this.studentAssignmentId = _data["studentAssignmentId"];
             this.questionId = _data["questionId"];
             this.selectedOptionId = _data["selectedOptionId"];
             this.isCorrect = _data["isCorrect"];
         }
     }
 
-    static fromJS(data: any): UpdateStudentAnswerDto {
+    static fromJS(data: any): UpdateStudentAnswerInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateStudentAnswerDto();
+        let result = new UpdateStudentAnswerInput();
         result.init(data);
         return result;
     }
@@ -13008,30 +13189,30 @@ export class UpdateStudentAnswerDto implements IUpdateStudentAnswerDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["studentAssignmentIdƠ"] = this.studentAssignmentIdƠ;
+        data["studentAssignmentId"] = this.studentAssignmentId;
         data["questionId"] = this.questionId;
         data["selectedOptionId"] = this.selectedOptionId;
         data["isCorrect"] = this.isCorrect;
         return data;
     }
 
-    clone(): UpdateStudentAnswerDto {
+    clone(): UpdateStudentAnswerInput {
         const json = this.toJSON();
-        let result = new UpdateStudentAnswerDto();
+        let result = new UpdateStudentAnswerInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateStudentAnswerDto {
+export interface IUpdateStudentAnswerInput {
     id: number;
-    studentAssignmentIdƠ: number;
+    studentAssignmentId: number;
     questionId: number;
     selectedOptionId: number;
     isCorrect: boolean;
 }
 
-export class UpdateStudentAssignmentDto implements IUpdateStudentAssignmentDto {
+export class UpdateStudentAssignmentInput implements IUpdateStudentAssignmentInput {
     id!: number;
     studentId!: number;
     assignmentId!: number;
@@ -13041,7 +13222,7 @@ export class UpdateStudentAssignmentDto implements IUpdateStudentAssignmentDto {
     totalQuestions!: number;
     submittedAt!: Date;
 
-    constructor(data?: IUpdateStudentAssignmentDto) {
+    constructor(data?: IUpdateStudentAssignmentInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13063,9 +13244,9 @@ export class UpdateStudentAssignmentDto implements IUpdateStudentAssignmentDto {
         }
     }
 
-    static fromJS(data: any): UpdateStudentAssignmentDto {
+    static fromJS(data: any): UpdateStudentAssignmentInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateStudentAssignmentDto();
+        let result = new UpdateStudentAssignmentInput();
         result.init(data);
         return result;
     }
@@ -13083,15 +13264,15 @@ export class UpdateStudentAssignmentDto implements IUpdateStudentAssignmentDto {
         return data;
     }
 
-    clone(): UpdateStudentAssignmentDto {
+    clone(): UpdateStudentAssignmentInput {
         const json = this.toJSON();
-        let result = new UpdateStudentAssignmentDto();
+        let result = new UpdateStudentAssignmentInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateStudentAssignmentDto {
+export interface IUpdateStudentAssignmentInput {
     id: number;
     studentId: number;
     assignmentId: number;

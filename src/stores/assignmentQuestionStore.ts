@@ -13,7 +13,7 @@ interface AssignmentQuestionState {
         update: (body: UpdateAssignmentQuestionDto) => Promise<void>;
         delete: (id: number) => Promise<void>;
         get: (id: number) => Promise<void>;
-        getAllAssignmentQuestionByAssignmentId: (assignmentId: number, userId: number) => Promise<number>;
+        getAllAssignmentQuestionByAssignmentId: (assignmentId: number, userId: number) => Promise<void>;
     };
 }
 const useAssignmentQuestionStore = create<AssignmentQuestionState>((set) => ({
@@ -31,12 +31,11 @@ const useAssignmentQuestionStore = create<AssignmentQuestionState>((set) => ({
                         listAssignmentQuestiones: result.items || [],
                         totalCountAssignmentQuestion: result.totalCount  || 0
                     })
-                    return result.totalCount || 0;
                 }
+                localStorage.setItem("totalCountAssignmentQuestion", (result.totalCount).toString())
             } finally {
                 set({ loading: false });
             }
-            return 0;
         },
         getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
             set({ loading: true });

@@ -6,15 +6,20 @@ import { useAssignmentActions, useAssignments, useDetailAssignmentForStudents } 
 import { useChapterActions, useChapters } from "src/stores/chapterStore";
 import ListAssignmentGridView from "./components/ListAssignmentGridView";
 import { useNavigate } from "react-router-dom";
-import { useQuestionActions, useSelectedAssimentId } from "src/stores/questionStore";
+import { useQuestionOptionActions } from "src/stores/questionOptionStore";
+import { useAssignmentQuestionActions } from "src/stores/assignmentQuestionStore";
+import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
 
 const DoAssignment: React.FC = () => {
 	const asignmentActions = useAssignmentActions();
 	const listDetailAssignmentForAssignment = useDetailAssignmentForStudents();
 	const chapterActions = useChapterActions();
 	const listChapter = useChapters();
-	const questionActions = useQuestionActions();
-	const userId = localStorage.getItem("userId");
+	const questionOptionActions = useQuestionOptionActions();
+	const assignmentQuestionActions = useAssignmentQuestionActions();
+	const studentAssignmentActions = useStudentAssignmentActions();
+
+	const userId = Number(localStorage.getItem("userId"));
 	const [selectedChapterId, setSelectedChapterId] = useState<number | undefined>
 	(localStorage.getItem("selectedChapterId") ? Number(localStorage.getItem("selectedChapterId")) : undefined);
 
@@ -61,8 +66,12 @@ const DoAssignment: React.FC = () => {
 			localStorage.removeItem("selectedChapterId");
 		}
 	};
-	const choseAssignment = (selectedDetailAssignmentId: number) =>{
-		questionActions.setSelectedAssimentId(selectedDetailAssignmentId);
+	const choseAssignment = async (selectedDetailAssignmentId: number) =>{
+		localStorage.setItem("selectedDetailAssignmentId", selectedDetailAssignmentId.toString())
+		await questionOptionActions.getAllByQuestionId(selectedDetailAssignmentId);
+		await assignmentQuestionActions.getAllAssignmentQuestionByAssignmentId(selectedDetailAssignmentId, userId);
+		const studentAssignmentId = await studentAssignmentActions.getStudentAssignmentByStudentIDAndAssignmentId(userId,selectedDetailAssignmentId);
+		localStorage.setItem("studentAssignmentId", (studentAssignmentId.id).toString());
 		navigate("/detail-assignment");
 	}
 	return (

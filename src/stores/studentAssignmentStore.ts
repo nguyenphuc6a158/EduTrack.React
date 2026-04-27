@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { CreateStudentAssignmentDto, StudentAssignmentDto, StudentAssignmentService, UpdateStudentAssignmentDto } from "src/services/services_autogen";
+import { CreateListStudentAssignmentByListClassInput, CreateStudentAssignmentInput, StudentAssignmentDto, StudentAssignmentService, UpdateStudentAssignmentInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const studentAssignmentService = new StudentAssignmentService('',http);
 
@@ -10,11 +10,12 @@ interface StudentAssignmentState {
     loading: boolean;
     actions: {
         getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-        create: (body: CreateStudentAssignmentDto) => Promise<void>;
-        update: (body: UpdateStudentAssignmentDto) => Promise<void>;
+        create: (body: CreateStudentAssignmentInput) => Promise<void>;
+        update: (body: UpdateStudentAssignmentInput) => Promise<StudentAssignmentDto>;
         delete: (id: number) => Promise<void>;
         get: (id: number) => Promise<void>;
-        checkExist: (studentId: number, assignmentId: number) => Promise<boolean>;
+        createListStudentAssignmentByListClass: (input: CreateListStudentAssignmentByListClassInput) => Promise<StudentAssignmentDto[]>;
+        getStudentAssignmentByStudentIDAndAssignmentId: (useId: number, assignmentId: number) => Promise<StudentAssignmentDto>;
     };
 }
 const useStudentAssignmentStore = create<StudentAssignmentState>((set) => ({
@@ -23,9 +24,12 @@ const useStudentAssignmentStore = create<StudentAssignmentState>((set) => ({
     loading: false,
     studentAssignmentItem: undefined,
     actions: {
-        checkExist: async (studentId: number, assignmentId: number) : Promise<boolean> =>{
-            let existed: any = await studentAssignmentService.checkExist(studentId, assignmentId);
-            return existed.result
+        getStudentAssignmentByStudentIDAndAssignmentId: async(useId: number, assignmentId: number) : Promise<StudentAssignmentDto> =>{
+            return await studentAssignmentService.getStudentAssignmentByStudentIDAndAssignmentId(useId, assignmentId);
+        },
+        createListStudentAssignmentByListClass: async (input: CreateListStudentAssignmentByListClassInput) : Promise<StudentAssignmentDto[]> => {
+            let result = await studentAssignmentService.createListStudentAssignmentByListClass(input);
+            return result
         },
         getAll : async (keyword, skipCount, maxResultCount) : Promise<void> => {
             set({ loading: true });
@@ -57,8 +61,9 @@ const useStudentAssignmentStore = create<StudentAssignmentState>((set) => ({
         create : async (body) : Promise<void> => {
             await studentAssignmentService.create(body);
         },
-        update: async (body) : Promise<void> => {
-            await studentAssignmentService.update(body);
+        update: async (body) : Promise<StudentAssignmentDto> => {
+            const response = await studentAssignmentService.update(body);
+            return response;
         },
         delete: async (id) : Promise<void> => {
             await studentAssignmentService.delete(id);

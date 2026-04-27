@@ -12,7 +12,7 @@ interface QuestionOptionState {
 		create: (body: CreateQuestionOptionDto) => Promise<void>;
 		update: (body: UpdateQuestionOptionDto) => Promise<void>;
 		delete: (id: number) => Promise<void>;
-		get: (id: number) => Promise<void>;
+		get: (id: number) => Promise<QuestionOptionDto>;
 		getAllByQuestionId: (questionId: number) => Promise<void>;
 	};
 }
@@ -50,7 +50,7 @@ const useQuestionOptionStore = create<QuestionOptionState>((set) => ({
 				set({ loading: false });
 			}
 		},
-		get : async (id) : Promise<void> => {
+		get : async (id) : Promise<QuestionOptionDto> => {
 			set({ loading: true });
 			try{
 				const result = await questionOptionService.get(id);
@@ -59,6 +59,7 @@ const useQuestionOptionStore = create<QuestionOptionState>((set) => ({
 						questionOptionItem: result
 					})
 				}
+				return result;
 			} finally {
 				set({ loading: false });
 			}

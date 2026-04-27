@@ -1,7 +1,9 @@
 import { ClockCircleOutlined, ReadOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Row } from "antd";
+import type { ButtonProps } from "antd/lib/button";
 import type React from "react";
-import { CreateStudentAssignmentDto, type DetailAssignmentForStudentDto } from "src/services/services_autogen";
+import { DetailAssignmentActive } from "src/lib/enumconst";
+import { type DetailAssignmentForStudentDto } from "src/services/services_autogen";
 import { useAssignmentQuestionActions, useTotalCountAssignmentQuestion } from "src/stores/assignmentQuestionStore";
 import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
 interface IListAssignmentGridViewProps {
@@ -9,11 +11,6 @@ interface IListAssignmentGridViewProps {
 	choseAssignment: (id: number) => void;
 }
 const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDetailAssignmentForAssignment, choseAssignment}) => {
-	
-	const studentAsignmentActions = useStudentAssignmentActions();
-	const assignmentQuestionActions = useAssignmentQuestionActions();
-	const totalCountAssignmentQuestion = useTotalCountAssignmentQuestion();
-
 	let isDone: boolean = false;
 	const formatDisplayTime = (value?: string | Date | null) => {
 		if (!value) {
@@ -25,32 +22,107 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 		}
 		return date.toLocaleString("vi-VN");
 	};
-
-	const createStudentAsignment = async (detailAssignment: DetailAssignmentForStudentDto, totalQuestions: number) => {
-		let item: CreateStudentAssignmentDto = new CreateStudentAssignmentDto();
-		item.assignmentId = detailAssignment.id;
-		item.studentId = Number(localStorage.getItem("userId"));
-		item.submittedAt = new Date();
-		item.totalQuestions = totalQuestions;
-		item.status = 1;
-		item.score = 0;
-		await studentAsignmentActions.create(item);
-	}
-	const fetchAsigmentQuestion = async (detailAssignment: DetailAssignmentForStudentDto) => {
-		const totalQuestions = await assignmentQuestionActions.getAllAssignmentQuestionByAssignmentId(detailAssignment.id, Number(localStorage.getItem("userId")));
-		return totalQuestions;
-	}
 	const onClickDoHomeWork = async (detailAssignment: DetailAssignmentForStudentDto) => {
-		const totalQuestions = await fetchAsigmentQuestion(detailAssignment);
-		if(detailAssignment.active == 0){
-			await createStudentAsignment(detailAssignment, totalQuestions);
-		}
 		choseAssignment(detailAssignment.id);
 	}
+	const renderIcon = (detailAssignment: DetailAssignmentForStudentDto) => {
+		if(detailAssignment.active == DetailAssignmentActive.COMPLATED){
+			return (
+				<svg 
+					xmlns="http://www.w3.org/2000/svg" 
+					width="30" 
+					height="30" 
+					viewBox="0 0 24 24" 
+					fill="none" 
+					stroke="currentColor" 
+					strokeWidth="2" 
+					strokeLinecap="round" 
+					strokeLinejoin="round"
+					className="text-green-600 dark:text-green-400"
+				>
+					<path d="M20 6 9 17l-5-5" />
+				</svg>
+			)
+		} else if(detailAssignment.active == DetailAssignmentActive.NOTSTARTED){
+			return(
+				<svg 
+					xmlns="http://www.w3.org/2000/svg" 
+					width="30" 
+					height="30" 
+					viewBox="0 0 24 24" 
+					fill="none" 
+					stroke="currentColor" 
+					strokeWidth="2" 
+					strokeLinecap="round" 
+					strokeLinejoin="round"
+					className="text-red-600 dark:text-red-400"
+				>
+					<path d="M18 6 6 18"/>
+					<path d="m6 6 12 12"/>
+				</svg>
+			)
+		} else{
+			return (
+				<svg 
+					xmlns="http://www.w3.org/2000/svg" 
+					width="30" 
+					height="30" 
+					viewBox="0 0 24 24" 
+					fill="none" 
+					stroke="currentColor" 
+					strokeWidth="2" 
+					strokeLinecap="round" 
+					strokeLinejoin="round"
+					className="text-yellow-600 dark:text-yellow-400"
+				>
+					<path d="M18 6 6 18"/>
+					<path d="m6 6 12 12"/>
+				</svg>
+			)
+		}
+	}
+	const renderButton = (detailAssignment: DetailAssignmentForStudentDto) => {
+		let text = "Chưa Xong";
+		let colorButton: ButtonProps["color"] = "yellow";
+		if(detailAssignment.active == DetailAssignmentActive.COMPLATED){
+			text = "Xong";
+			colorButton = "green";
+		} else if(detailAssignment.active == DetailAssignmentActive.NOTSTARTED){
+			text = "Chưa bắt đầu";
+			colorButton = "red";
+		}
+		return (
+			<Button
+				className="flex-1"
+				color={colorButton}
+				variant="solid"
+			>
+				{text}
+			</Button>
+		)
+	}
+	const getCardStyle = (active: DetailAssignmentActive) => {
+		switch (active) {
+			case DetailAssignmentActive.COMPLATED:
+				return {
+					backgroundColor: 'var(--color-success-bg)',
+					borderColor: 'var(--color-success-border)',
+				};
+			case DetailAssignmentActive.NOTSTARTED:
+				return {
+					backgroundColor: 'var(--color-error-bg)',
+					borderColor: 'var(--color-error-border)',
+				};
+			default: // Chưa xong (màu vàng)
+				return {
+					backgroundColor: 'var(--color-warning-bg)',
+					borderColor: 'var(--color-warning-border)',
+				};
+		}
+	};
 	return(
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
 			{listDetailAssignmentForAssignment.map((detailAssignment) => {
-				isDone = detailAssignment.active !== -1;
 				const publicTime = (detailAssignment as DetailAssignmentForStudentDto & { publicTime?: string | Date }).publicTime;
 				const displayTime = formatDisplayTime(publicTime);
 
@@ -62,44 +134,13 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 						<Row align="middle" justify="space-between">
 							<Col>Tiêu đề: {detailAssignment.title || ""}</Col>
 							<Col>
-								{isDone? 
-									<svg 
-										xmlns="http://www.w3.org/2000/svg" 
-										width="30" 
-										height="30" 
-										viewBox="0 0 24 24" 
-										fill="none" 
-										stroke="currentColor" 
-										strokeWidth="2" 
-										strokeLinecap="round" 
-										strokeLinejoin="round"
-										className="text-green-600 dark:text-green-400"
-									>
-										<path d="M20 6 9 17l-5-5" />
-									</svg> : 
-									<svg 
-										xmlns="http://www.w3.org/2000/svg" 
-										width="30" 
-										height="30" 
-										viewBox="0 0 24 24" 
-										fill="none" 
-										stroke="currentColor" 
-										strokeWidth="2" 
-										strokeLinecap="round" 
-										strokeLinejoin="round"
-										className="text-red-600 dark:text-red-400"
-									>
-										<path d="M18 6 6 18"/>
-										<path d="m6 6 12 12"/>
-									</svg>
-								}
+								{renderIcon(detailAssignment)}
 							</Col>
 						</Row>
 					}
 					className="h-full rounded-2xl shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
 					style={{
-						backgroundColor: isDone ? 'var(--color-success-bg)' : 'var(--color-error-bg)',
-						borderColor: isDone ? 'var(--color-success-border)' : 'var(--color-error-border)',
+						...getCardStyle(detailAssignment.active),
 						borderWidth: '2px',
 						borderStyle: 'solid'
 					}}
@@ -118,13 +159,7 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 						</Col>
 					</Row>
 					<div className="flex gap-3">
-						<Button
-							className="flex-1"
-							color={isDone ? "green" : "danger"}
-							variant="solid"
-						>
-							{isDone ? "Hoàn thành" : "Chưa hoàn thành"}
-						</Button>
+						{renderButton(detailAssignment)}
 
 						<Button
 							className="flex-1"
