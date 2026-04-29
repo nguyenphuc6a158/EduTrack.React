@@ -1,11 +1,11 @@
-import { ClockCircleOutlined, ReadOutlined, UserOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, FireOutlined, ReadOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Row } from "antd";
 import type { ButtonProps } from "antd/lib/button";
 import type React from "react";
 import { DetailAssignmentActive } from "src/lib/enumconst";
 import { type DetailAssignmentForStudentDto } from "src/services/services_autogen";
-import { useAssignmentQuestionActions, useTotalCountAssignmentQuestion } from "src/stores/assignmentQuestionStore";
-import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
+import { SlEmotsmile } from "react-icons/sl";
+import { FaRegSadCry } from "react-icons/fa";
 interface IListAssignmentGridViewProps {
 	listDetailAssignmentForAssignment: DetailAssignmentForStudentDto[];
 	choseAssignment: (id: number) => void;
@@ -25,7 +25,7 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 	const onClickDoHomeWork = async (detailAssignment: DetailAssignmentForStudentDto) => {
 		choseAssignment(detailAssignment.id);
 	}
-	const renderIcon = (detailAssignment: DetailAssignmentForStudentDto) => {
+	const renderIconStatus = (detailAssignment: DetailAssignmentForStudentDto) => {
 		if(detailAssignment.active == DetailAssignmentActive.COMPLATED){
 			return (
 				<svg 
@@ -86,7 +86,7 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 		let colorButton: ButtonProps["color"] = "yellow";
 		if(detailAssignment.active == DetailAssignmentActive.COMPLATED){
 			text = "Xong";
-			colorButton = "green";
+			colorButton = "primary";
 		} else if(detailAssignment.active == DetailAssignmentActive.NOTSTARTED){
 			text = "Chưa bắt đầu";
 			colorButton = "red";
@@ -113,13 +113,24 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 					backgroundColor: 'var(--color-error-bg)',
 					borderColor: 'var(--color-error-border)',
 				};
-			default: // Chưa xong (màu vàng)
+			default:
 				return {
 					backgroundColor: 'var(--color-warning-bg)',
 					borderColor: 'var(--color-warning-border)',
 				};
 		}
 	};
+	const renderIconScore = (detailAssignment: DetailAssignmentForStudentDto) => {
+		if(detailAssignment.score >= 8.5 && detailAssignment.score <= 10){
+			return <FireOutlined style={{marginRight:"10px"}}/>
+		}
+		else if(detailAssignment.score < 8.5 && detailAssignment.score >= 7){
+			return <SlEmotsmile style={{marginRight:"10px"}}/>
+		}
+		else if(detailAssignment.score < 7){
+			return <FaRegSadCry style={{marginRight:"10px"}}/>
+		}
+	}
 	return(
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
 			{listDetailAssignmentForAssignment.map((detailAssignment) => {
@@ -134,7 +145,7 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 						<Row align="middle" justify="space-between">
 							<Col>Tiêu đề: {detailAssignment.title || ""}</Col>
 							<Col>
-								{renderIcon(detailAssignment)}
+								{renderIconStatus(detailAssignment)}
 							</Col>
 						</Row>
 					}
@@ -155,6 +166,9 @@ const ListAssignmentGridView: React.FC<IListAssignmentGridViewProps> = ({listDet
 							</Row>
 							<Row className="text-sm mb-2">
 								<ClockCircleOutlined style={{marginRight:"10px"}}/> Thời gian giao: {displayTime}
+							</Row>
+							<Row className="text-sm mb-2">
+								{renderIconScore(detailAssignment)} Điểm: {detailAssignment.score}
 							</Row>
 						</Col>
 					</Row>

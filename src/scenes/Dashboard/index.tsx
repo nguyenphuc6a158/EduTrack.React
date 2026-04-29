@@ -12,19 +12,17 @@ import { useUsers } from "src/stores/userStore";
 import { useRoles } from "src/stores/roleStore";
 import { useTenants } from "src/stores/tenantStore";
 import { AppConsts } from "src/lib/appconst";
+import DounutChart from "./donutChart/donutChart";
+import ChartRef from "./chartRef/chartRef";
 
 const Dashboard: React.FC = () => {
     const users = useUsers();
     const roles = useRoles();
     const tenants = useTenants();
-
-    const chartRef = useRef<HTMLDivElement>(null);
-    const donutRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!chartRef.current || !donutRef.current) return;
-
-        const areaOptions: ApexOptions = {
+    const [areaOptions, setAreaOptions] = React.useState<ApexOptions | null>(null);
+    const [donutOptions, setDonutOptions] = React.useState<ApexOptions | null>(null);
+    useEffect(()=>{
+        const configAreaOptions: ApexOptions = {
             series: [{
                 name: 'Users',
                 data: [31, 40, 28, 51, 42, 109, 100]
@@ -52,12 +50,8 @@ const Dashboard: React.FC = () => {
             },
             tooltip: { x: { format: 'dd/MM/yy HH:mm' } },
         };
-
-        const areaChart = new ApexCharts(chartRef.current, areaOptions);
-        areaChart.render();
-
-        // --- Donut Chart for Distribution ---
-        const donutOptions: ApexOptions = {
+        setAreaOptions(configAreaOptions);
+        const configDonutOptions: ApexOptions = {
             series: [44, 55, 41, 17],
             labels: ['Admin', 'Editor', 'User', 'Guest'],
             chart: {
@@ -91,16 +85,8 @@ const Dashboard: React.FC = () => {
                 }
             }]
         };
-
-        const donutChart = new ApexCharts(donutRef.current, donutOptions);
-        donutChart.render();
-
-        return () => {
-            areaChart?.destroy();
-            donutChart?.destroy();
-        };
-    }, []);
-
+        setDonutOptions(configDonutOptions);
+    },[])
     return (
         <div className="p-6 bg-layout min-h-full transition-colors duration-300">
             <h2 className="text-2xl font-bold mb-6 text-text-primary">Dashboard Overview</h2>
@@ -158,7 +144,9 @@ const Dashboard: React.FC = () => {
 
                         className="shadow-sm"
                     >
-                        <div ref={chartRef} />
+                        {areaOptions && (
+                            <ChartRef areaOptions={areaOptions} />
+                        )}
                     </Card>
                 </Col>
                 <Col xs={24} lg={8}>
@@ -167,7 +155,11 @@ const Dashboard: React.FC = () => {
 
                         className="shadow-sm"
                     >
-                        <div ref={donutRef} />
+                        {donutOptions && (
+                            <DounutChart 
+                                donutOptions={donutOptions}
+                            />
+                        )}
                     </Card>
                 </Col>
             </Row>

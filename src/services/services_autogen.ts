@@ -4757,6 +4757,62 @@ export class StudentAssignmentService {
     }
 
     /**
+     * @param userId (optional) 
+     * @return OK
+     */
+    getDetailDoHomeWorkDto(userId: number | undefined, cancelToken?: CancelToken): Promise<DatailDoHomeWorkDto> {
+        let url_ = this.baseUrl + "/api/services/app/StudentAssignment/GetDetailDoHomeWorkDto?";
+        if (userId === null)
+            throw new globalThis.Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetDetailDoHomeWorkDto(_response);
+        });
+    }
+
+    protected processGetDetailDoHomeWorkDto(response: AxiosResponse): Promise<DatailDoHomeWorkDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = DatailDoHomeWorkDto.fromJS(resultData200.result);
+            return Promise.resolve<DatailDoHomeWorkDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<DatailDoHomeWorkDto>(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return OK
      */
@@ -9613,6 +9669,61 @@ export interface ICreateUserDto {
     phoneNumber: string | undefined;
 }
 
+export class DatailDoHomeWorkDto implements IDatailDoHomeWorkDto {
+    series!: number[] | undefined;
+    avgScore!: number;
+
+    constructor(data?: IDatailDoHomeWorkDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["series"])) {
+                this.series = [] as any;
+                for (let item of _data["series"])
+                    this.series!.push(item);
+            }
+            this.avgScore = _data["avgScore"];
+        }
+    }
+
+    static fromJS(data: any): DatailDoHomeWorkDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DatailDoHomeWorkDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.series)) {
+            data["series"] = [];
+            for (let item of this.series)
+                data["series"].push(item);
+        }
+        data["avgScore"] = this.avgScore;
+        return data;
+    }
+
+    clone(): DatailDoHomeWorkDto {
+        const json = this.toJSON();
+        let result = new DatailDoHomeWorkDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDatailDoHomeWorkDto {
+    series: number[] | undefined;
+    avgScore: number;
+}
+
 export class DetailAssignmentForStudentDto implements IDetailAssignmentForStudentDto {
     id!: number;
     active!: number;
@@ -9622,6 +9733,7 @@ export class DetailAssignmentForStudentDto implements IDetailAssignmentForStuden
     createBy!: string | undefined;
     chapters!: Chapter;
     publicTime!: Date;
+    score!: number;
 
     constructor(data?: IDetailAssignmentForStudentDto) {
         if (data) {
@@ -9642,6 +9754,7 @@ export class DetailAssignmentForStudentDto implements IDetailAssignmentForStuden
             this.createBy = _data["createBy"];
             this.chapters = _data["chapters"] ? Chapter.fromJS(_data["chapters"]) : undefined as any;
             this.publicTime = _data["publicTime"] ? new Date(_data["publicTime"].toString()) : undefined as any;
+            this.score = _data["score"];
         }
     }
 
@@ -9662,6 +9775,7 @@ export class DetailAssignmentForStudentDto implements IDetailAssignmentForStuden
         data["createBy"] = this.createBy;
         data["chapters"] = this.chapters ? this.chapters.toJSON() : undefined as any;
         data["publicTime"] = this.publicTime ? this.publicTime.toISOString() : undefined as any;
+        data["score"] = this.score;
         return data;
     }
 
@@ -9682,6 +9796,7 @@ export interface IDetailAssignmentForStudentDto {
     createBy: string | undefined;
     chapters: Chapter;
     publicTime: Date;
+    score: number;
 }
 
 export class DetailAssignmentForStudentDtoPagedResultDto implements IDetailAssignmentForStudentDtoPagedResultDto {

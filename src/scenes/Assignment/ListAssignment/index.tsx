@@ -1,6 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Select, Space } from "antd";
-import type React from "react";
+import { Button, Card, Col, Row, Select, Space } from "antd";
+import React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useAssignmentActions, useAssignments, useDetailAssignmentForStudents } from "src/stores/assignmentStore";
 import { useChapterActions, useChapters } from "src/stores/chapterStore";
@@ -9,6 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { useQuestionOptionActions } from "src/stores/questionOptionStore";
 import { useAssignmentQuestionActions } from "src/stores/assignmentQuestionStore";
 import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
+import DounutChart from "src/scenes/Dashboard/donutChart/donutChart";
+import type { ApexOptions } from "apexcharts";
+import { AppConsts } from "src/lib/appconst";
+import type { DatailDoHomeWorkDto } from "src/services/services_autogen";
 
 const DoAssignment: React.FC = () => {
 	const asignmentActions = useAssignmentActions();
@@ -22,7 +26,7 @@ const DoAssignment: React.FC = () => {
 	const userId = Number(localStorage.getItem("userId"));
 	const [selectedChapterId, setSelectedChapterId] = useState<number | undefined>
 	(localStorage.getItem("selectedChapterId") ? Number(localStorage.getItem("selectedChapterId")) : undefined);
-
+	const [datailDoHomeWorkDto, setDatailDoHomeWorkDto] = useState<DatailDoHomeWorkDto | null>(null);
 	const navigate = useNavigate();
 
 	const fetchChapter = async () => {
@@ -32,9 +36,62 @@ const DoAssignment: React.FC = () => {
 			console.error("Cannot load chapters:", error);
 		}
 	};
+
 	useEffect(() => {
 		fetchChapter();
 	}, [chapterActions]);
+
+	useEffect(() => {
+		getSeriesDoHomeWorkRateDto();
+	}, []);
+	
+	const getSeriesDoHomeWorkRateDto = async () => {
+		const res = await studentAssignmentActions.getDetailDoHomeWorkDto(userId);
+		setDatailDoHomeWorkDto(res);
+	}
+
+	const donutOptions: ApexOptions | undefined = useMemo(() => {
+		if(datailDoHomeWorkDto == null ||datailDoHomeWorkDto.series == undefined){
+			return
+		}
+		return {
+			series: datailDoHomeWorkDto.series,
+			labels: ['Đã xong','Chưa xong','Chưa bắt đầu'],
+			chart: {
+				type: 'donut',
+				height: 350,
+				fontFamily: 'Inter, sans-serif'
+			},
+			colors: [AppConsts.COLOR_PRIMARY,'#f59e0b','#ef4444'],
+			tooltip: {
+				enabled: false
+			},
+			plotOptions: {
+				pie: {
+					donut: {
+						size: '70%',
+						labels: {
+							show: true,
+							total: {
+								show: true,
+								label: 'Tổng số bài',
+								fontSize: '14px',
+								color: '#6b7280'
+							}
+						}
+					}
+				}
+			},
+			legend: { position: 'bottom' },
+			responsive: [{
+				breakpoint: 480,
+				options: {
+					chart: { width: 200 },
+					legend: { position: 'bottom' }
+				}
+			}]
+		}
+	}, [datailDoHomeWorkDto]);
 
 	useEffect(() => {
 		fetchAssignmentForStudent();
@@ -76,30 +133,55 @@ const DoAssignment: React.FC = () => {
 	}
 	return (
 		<div className="p-6">
-			<Col className="flex justify-between items-center mb-6">
-				<div>
-					<h2 className="text-2xl font-bold text-gray-800">Làm bài tập</h2>
-				</div>
-			</Col>
-			<Col>
-				<Space.Compact>
-					<Select
-						allowClear
-						value={selectedChapterId}
-						onChange={(item) => onChangeChapterSelected(item)}
-						options={optionSelectChapter}
-						placeholder="Lọc theo chương..."
-						style={{ width: "200px" }}
+			<Row className="p-6" justify="space-between">
+				<Col className="flex justify-between items-center mb-6">
+					<div>
+						<h2 className="text-2xl font-bold text-gray-800">Làm bài tập</h2>
+					</div>
+				</Col>
+				<Col>
+					<Space.Compact>
+						<Select
+							allowClear
+							value={selectedChapterId}
+							onChange={(item) => onChangeChapterSelected(item)}
+							options={optionSelectChapter}
+							placeholder="Lọc theo chương..."
+							style={{ width: "200px" }}
+						/>
+						<Button type="primary" icon={<SearchOutlined />} onClick={fetchAssignmentForStudent} />
+					</Space.Compact>
+				</Col>
+				<Col className="mt-6">
+					<ListAssignmentGridView 
+						listDetailAssignmentForAssignment={listDetailAssignmentForAssignment}
+						choseAssignment={choseAssignment}
 					/>
-					<Button type="primary" icon={<SearchOutlined />} onClick={fetchAssignmentForStudent} />
-				</Space.Compact>
-			</Col>
-			<Col className="mt-6">
-				<ListAssignmentGridView 
-					listDetailAssignmentForAssignment={listDetailAssignmentForAssignment}
-					choseAssignment={choseAssignment}
-				/>
-			</Col>
+				</Col>
+			</Row>
+			<Row justify="center" style={{ marginTop: 40 }} gutter={16}>
+				<Col span={16}>
+					<Card title="Thống kê số dữ liệu học tập">
+						<Row>
+							<b><p style={{marginRight:"8px"}}>Điểm trung bình:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.avgScore : 0}
+						</Row>
+						<Row>
+							<b><p style={{marginRight:"8px"}}>Điểm tiến bộ:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.avgScore : 0}
+						</Row>
+						<Row>
+							<b><p style={{marginRight:"8px"}}>Phần kiến thức cần cải thiện thêm:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.avgScore : 0}
+						</Row>
+					</Card>
+				</Col>
+				<Col span={8}>
+					<Card title="Thống kê tỉ lệ làm bài tập">
+						{donutOptions && (
+							<DounutChart donutOptions={donutOptions} />
+							)
+						}
+					</Card>
+				</Col>
+			</Row>
 		</div>
 	);
 };

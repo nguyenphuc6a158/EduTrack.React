@@ -1,8 +1,7 @@
 import http from "src/services/httpService";
-import { CreateListStudentAssignmentByListClassInput, CreateStudentAssignmentInput, StudentAssignmentDto, StudentAssignmentService, UpdateStudentAssignmentInput } from "src/services/services_autogen";
+import { CreateListStudentAssignmentByListClassInput, CreateStudentAssignmentInput, DatailDoHomeWorkDto, StudentAssignmentDto, StudentAssignmentService, UpdateStudentAssignmentInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const studentAssignmentService = new StudentAssignmentService('',http);
-
 interface StudentAssignmentState {
     listStudentAssignmentes: StudentAssignmentDto[];
     studentAssignmentItem?: StudentAssignmentDto;
@@ -16,6 +15,7 @@ interface StudentAssignmentState {
         get: (id: number) => Promise<void>;
         createListStudentAssignmentByListClass: (input: CreateListStudentAssignmentByListClassInput) => Promise<StudentAssignmentDto[]>;
         getStudentAssignmentByStudentIDAndAssignmentId: (useId: number, assignmentId: number) => Promise<StudentAssignmentDto>;
+        getDetailDoHomeWorkDto: (useId: number) => Promise<DatailDoHomeWorkDto>;
     };
 }
 const useStudentAssignmentStore = create<StudentAssignmentState>((set) => ({
@@ -24,6 +24,10 @@ const useStudentAssignmentStore = create<StudentAssignmentState>((set) => ({
     loading: false,
     studentAssignmentItem: undefined,
     actions: {
+        getDetailDoHomeWorkDto: async(useId: number) : Promise<DatailDoHomeWorkDto> =>{
+            const result = await studentAssignmentService.getDetailDoHomeWorkDto(useId);
+            return result;
+        },
         getStudentAssignmentByStudentIDAndAssignmentId: async(useId: number, assignmentId: number) : Promise<StudentAssignmentDto> =>{
             return await studentAssignmentService.getStudentAssignmentByStudentIDAndAssignmentId(useId, assignmentId);
         },
