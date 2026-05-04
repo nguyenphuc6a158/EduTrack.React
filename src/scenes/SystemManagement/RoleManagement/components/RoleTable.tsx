@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Button, Space, Popconfirm, Tag } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface RoleTableProps {
     roles: any[];
@@ -62,6 +63,7 @@ const RoleTable: React.FC<RoleTableProps> = ({ roles, loading, onEdit, onDelete 
             dataSource={roles}
             columns={columns}
             loading={loading}
+            scroll={{ x: ResponsiveLayout.tableScrollX }}
             pagination={{
                 position: ["topRight"],
                 pageSize: 10,

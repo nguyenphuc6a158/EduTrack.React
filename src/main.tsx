@@ -9,8 +9,6 @@ import { ThemeProvider } from './ThemeProvider';
 import { ConfigProvider } from 'antd';
 import viVN from 'antd/locale/vi_VN';
 import MyApp from './App.tsx';
-import "react-pdf/dist/Page/TextLayer.css";
-import "react-pdf/dist/Page/AnnotationLayer.css";
 
 abpUserConfigurationService.getAll().then(data => {
   Utils.extend(true, window.abp, data.data.result);

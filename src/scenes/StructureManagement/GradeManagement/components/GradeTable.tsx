@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Table, Button, Space, Popconfirm, Tag } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { GradeDto } from "src/services/services_autogen";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface GradeTableProps {
     dataSource: GradeDto[];
@@ -61,6 +62,7 @@ const GradeTable: React.FC<GradeTableProps> = ({ dataSource, loading, onEdit, on
             dataSource={dataSource}
             rowKey="id"
             loading={loading}
+            scroll={{ x: ResponsiveLayout.tableScrollX }}
             pagination={{ 
                 placement: ["topEnd"],
                 pageSize: 10,

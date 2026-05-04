@@ -11,7 +11,8 @@ import { useAssignmentQuestionActions } from "src/stores/assignmentQuestionStore
 import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
 import DounutChart from "src/scenes/Dashboard/donutChart/donutChart";
 import type { ApexOptions } from "apexcharts";
-import { AppConsts } from "src/lib/appconst";
+import { PageShell } from "src/components/PageShell";
+import { AppConsts, colResponsive, ResponsiveBreakpoints, ResponsiveLayout, ResponsiveSpacing } from "src/lib/appconst";
 import type { DatailDoHomeWorkDto } from "src/services/services_autogen";
 
 const DoAssignment: React.FC = () => {
@@ -84,7 +85,7 @@ const DoAssignment: React.FC = () => {
 			},
 			legend: { position: 'bottom' },
 			responsive: [{
-				breakpoint: 480,
+				breakpoint: ResponsiveBreakpoints.sm,
 				options: {
 					chart: { width: 200 },
 					legend: { position: 'bottom' }
@@ -132,35 +133,36 @@ const DoAssignment: React.FC = () => {
 		navigate("/detail-assignment");
 	}
 	return (
-		<div className="p-6">
-			<Row className="p-6" justify="space-between">
-				<Col className="flex justify-between items-center mb-6">
+		<PageShell>
+			<Row justify="space-between" gutter={[ResponsiveSpacing.rowGutter, ResponsiveSpacing.rowGutter]}>
+				<Col xs={24} md={12} className="flex justify-between items-center mb-6">
 					<div>
 						<h2 className="text-2xl font-bold text-gray-800">Làm bài tập</h2>
 					</div>
 				</Col>
-				<Col>
-					<Space.Compact>
+				<Col xs={24} md={12}>
+					<Space.Compact className="w-full max-w-md md:max-w-none">
 						<Select
 							allowClear
 							value={selectedChapterId}
 							onChange={(item) => onChangeChapterSelected(item)}
 							options={optionSelectChapter}
 							placeholder="Lọc theo chương..."
-							style={{ width: "200px" }}
+							className="min-w-0 flex-1"
+							style={{ width: ResponsiveLayout.formControlWidth }}
 						/>
 						<Button type="primary" icon={<SearchOutlined />} onClick={fetchAssignmentForStudent} />
 					</Space.Compact>
 				</Col>
-				<Col className="mt-6">
+				<Col span={24} className="mt-6">
 					<ListAssignmentGridView 
 						listDetailAssignmentForAssignment={listDetailAssignmentForAssignment}
 						choseAssignment={choseAssignment}
 					/>
 				</Col>
 			</Row>
-			<Row justify="center" style={{ marginTop: 40 }} gutter={16}>
-				<Col span={16}>
+			<Row justify="center" style={{ marginTop: 40 }} gutter={[ResponsiveSpacing.rowGutter, ResponsiveSpacing.rowGutter]}>
+				<Col {...colResponsive(24, 24, 24, 16, 16, 16)}>
 					<Card title="Thống kê số dữ liệu học tập">
 						<Row>
 							<b><p style={{marginRight:"8px"}}>Điểm trung bình:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.avgScore : 0}
@@ -173,7 +175,7 @@ const DoAssignment: React.FC = () => {
 						</Row>
 					</Card>
 				</Col>
-				<Col span={8}>
+				<Col {...colResponsive(24, 24, 24, 8, 8, 8)}>
 					<Card title="Thống kê tỉ lệ làm bài tập">
 						{donutOptions && (
 							<DounutChart donutOptions={donutOptions} />
@@ -182,7 +184,7 @@ const DoAssignment: React.FC = () => {
 					</Card>
 				</Col>
 			</Row>
-		</div>
+		</PageShell>
 	);
 };
 

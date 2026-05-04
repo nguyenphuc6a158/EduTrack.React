@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Modal, Form, Input, Select, Row, Col, Switch } from "antd";
 import { requiredRule, duplicateNameValidator } from "src/lib/validation";
 import type { ClassDto, GradeDto, UserDto } from "src/services/services_autogen";
+import { colResponsive, ResponsiveLayout, ResponsiveSpacing } from "src/lib/appconst";
 
 interface IClassModalProps {
     visible: boolean;
@@ -62,7 +63,7 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
             onOk={handleOk}
             onCancel={onCancel}
             confirmLoading={confirmLoading}
-            width={600}
+            width={ResponsiveLayout.modalWidth.md}
         >
             <Form form={form} layout="vertical">
                 <Form.Item
@@ -76,8 +77,8 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
                     <Input placeholder="Ví dụ: 10A1" />
                 </Form.Item>
 
-                <Row gutter={16}>
-                    <Col span={12}>
+                <Row gutter={ResponsiveSpacing.rowGutter}>
+                    <Col {...colResponsive(24, 24, 12, 12, 12, 12)}>
                         <Form.Item
                             name="gradeId" 
                             label="Khối lớp"
@@ -89,7 +90,7 @@ const ClassModal: React.FC<IClassModalProps> = ({ visible, editingItem, onOk, on
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col {...colResponsive(24, 24, 12, 12, 12, 12)}>
                         <Form.Item
                             name="teacherId" 
                             label="Giáo viên"

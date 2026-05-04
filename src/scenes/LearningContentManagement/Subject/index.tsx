@@ -6,6 +6,7 @@ import SubjectTable from "./components/SubjectTable";
 import { useSubjectLoading, useSubjects, useSubjectsActions, useTotalCountSubjectSubjects } from "src/stores/subjectStore";
 import { CreateSubjectDto, SubjectDto, UpdateSubjectDto } from "src/services/services_autogen";
 import SubjectCreateUpdateModal from "./components/SubjectCreateUpdateModal";
+import { PageShell } from "src/components/PageShell";
 
 const SubjectManagement: React.FC = ()=>{
 	const { message } = App.useApp();
@@ -66,7 +67,7 @@ const SubjectManagement: React.FC = ()=>{
 		setIsCreateUpdateModalOpen(true)
 	}
 	return(
-		<div className="p-6">
+		<PageShell>
 			<div className="flex justify-between items-center mb-6">
 				<div>
 					<h2 className="text-2xl font-bold text-gray-800">Môn học</h2>
@@ -94,7 +95,7 @@ const SubjectManagement: React.FC = ()=>{
 				onDelete={handleDelete}
 				onEdit={openEditModal}
 			/>
-		</div>
+		</PageShell>
 	)
 }
 export default SubjectManagement

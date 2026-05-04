@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { Modal, Form, Select } from "antd";
 import { requiredRule } from "src/lib/validation";
 import type { StudentClassDto, ClassDto, UserDto } from "src/services/services_autogen";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface IStudentModalProps {
 	visible: boolean;
@@ -67,7 +68,7 @@ const StudentModal: React.FC<IStudentModalProps> = ({
 			onOk={handleOk}
 			onCancel={onCancel}
 			confirmLoading={confirmLoading}
-			width={600}
+			width={ResponsiveLayout.modalWidth.md}
 		>	
 			<Form form={form} layout="vertical">
 				<Form.Item

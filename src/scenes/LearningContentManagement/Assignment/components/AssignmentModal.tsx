@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { ModeTabClassesEnum } from "src/lib/enumconst";
 import ClassTable from "src/scenes/StructureManagement/ClassManagement/components/ClassTable";
 import type { AssignmentDto, ClassDto } from "src/services/services_autogen";
+import { colResponsive, ResponsiveLayout, ResponsiveSpacing } from "src/lib/appconst";
+
 export interface ClassAssignmentItem {
 	assignmentId: number;
 	listClasses: ClassDto[];
@@ -62,11 +64,11 @@ const AssigmentModal: React.FC<IAssignmentModalProps> = ({open, onCancel, onOk, 
 			open={open}
 			onCancel={onCancel}
 			onOk={handleOk}
-			width={"90%"}
+			width={ResponsiveLayout.modalWidthFluid}
 			closable={false}
 		>
-			<Row gutter={16}>
-				<Col span={12}>
+			<Row gutter={ResponsiveSpacing.rowGutter}>
+				<Col {...colResponsive(24, 24, 24, 12, 12, 12)}>
 					<Card title="Danh sách lớp học">
 						<ClassTable 
 							dataSource={listClasses}
@@ -79,12 +81,12 @@ const AssigmentModal: React.FC<IAssignmentModalProps> = ({open, onCancel, onOk, 
 						/>
 					</Card>
 				</Col>
-				<Col span={12}>
+				<Col {...colResponsive(24, 24, 24, 12, 12, 12)}>
 					<Card title="Danh sách lớp học đã chọn">
-						<Row gutter={16} justify="end">
+						<Row gutter={ResponsiveSpacing.rowGutter} justify="end">
 							<Col>
 								<Select 
-									style={{width: "240px"}} 
+									style={{ width: ResponsiveLayout.formControlWidthMd }} 
 									title="Chọn bài tập để giao"
 									placeholder="Chọn bài tập để giao"
 									options={lístAssignmentOptions}

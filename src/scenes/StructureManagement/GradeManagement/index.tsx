@@ -10,6 +10,7 @@ import {
     useTotalCountGrade
 } from "src/stores/gradeStore"; 
 import { CreateGradeDto, GradeDto, UpdateGradeDto } from "src/services/services_autogen";
+import { PageShell } from "src/components/PageShell";
 
 const GradeManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,7 +59,7 @@ const GradeManagement = () => {
     };
 
     return (
-        <div className="p-6">
+        <PageShell>
 			<div className="flex justify-between items-center mb-6">
 				<div>
 					<h2 className="text-2xl font-bold text-gray-800">Quản lý khối học</h2>
@@ -83,7 +84,7 @@ const GradeManagement = () => {
                 confirmLoading={loading}
                 listGrades={listGrades}
             />
-        </div>
+        </PageShell>
     );
 };
 

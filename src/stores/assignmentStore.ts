@@ -59,7 +59,7 @@ const useAssignmentStore = create<AssignmentState>((set) => ({
 				if(result){
 					set({
 						listAssignments: result.items || [],
-						totalCountAssignment: result.items?.length  || 0
+						totalCountAssignment: result.totalCount ?? result.items?.length ?? 0,
 					})
 				}
 			} finally {

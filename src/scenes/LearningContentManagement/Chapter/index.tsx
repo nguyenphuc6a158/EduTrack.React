@@ -7,6 +7,8 @@ import { useSubjects, useSubjectsActions } from "src/stores/subjectStore";
 import ChapterTable from "./components/ChapterTable";
 import { CreateChapterDto, ChapterDto, UpdateChapterDto } from "src/services/services_autogen";
 import ChapterCreateUpdateModal from "./components/ChapterCreateUpdateModal";
+import { PageShell } from "src/components/PageShell";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 const ChapterManagement: React.FC = ()=>{
 	const { message } = App.useApp();
@@ -105,7 +107,7 @@ const ChapterManagement: React.FC = ()=>{
 		setIsOpenModal(false)
 	}
 	return(
-		<div className="p-6">
+		<PageShell>
 			<div className="flex justify-between items-center mb-6">
 				<Col span={5}>
 					<h2 className="text-2xl font-bold text-gray-800">Chương</h2>
@@ -119,7 +121,7 @@ const ChapterManagement: React.FC = ()=>{
 							onChange={(item) => onchangeSubject(item)}
 							options={optionSubject}
 							placeholder="Tìm kiếm theo môn học..."
-							style={{ width: "200px" }}
+							style={{ width: ResponsiveLayout.formControlWidth }}
 						/>
 						<Button type="primary" icon={<SearchOutlined />} />
 					</Space.Compact>
@@ -147,7 +149,7 @@ const ChapterManagement: React.FC = ()=>{
 				selectedChapter={selectedChapter}
 				listSubject={listSubject}
 			/>
-		</div>
+		</PageShell>
 	)
 }
 export default ChapterManagement

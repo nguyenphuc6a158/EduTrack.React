@@ -5,6 +5,7 @@ import { CreateRoleDto, RoleDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
 import RoleTable from "./components/RoleTable";
 import RoleCreateUpdateModal from "./components/RoleCreateUpdateModal";
+import { PageShell } from "src/components/PageShell";
 
 const RoleManagement = () => {
     const { message } = App.useApp();
@@ -72,7 +73,7 @@ const RoleManagement = () => {
     };
 
     return (
-        <div className="p-6">
+        <PageShell>
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-800">Quản lý vai trò</h2>
@@ -101,7 +102,7 @@ const RoleManagement = () => {
                 onOk={handleOk}
                 onCancel={() => setIsModalOpen(false)}
             />
-        </div>
+        </PageShell>
     );
 };
 

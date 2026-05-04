@@ -8,6 +8,8 @@ import { useClassActions, useClasses, useClassLoading, useTotalCountClass } from
 import { ClassDto, CreateClassDto, UpdateClassDto } from "src/services/services_autogen";
 import { useTeachers, useUserActions } from "src/stores/userStore";
 import { ModeTabClassesEnum } from "src/lib/enumconst";
+import { PageShell } from "src/components/PageShell";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 const ClassManagement = () => {
 	const { message } = App.useApp();
@@ -97,7 +99,7 @@ const ClassManagement = () => {
 		message.success("Xóa lớp học thành công")
 	}
 	return (
-		<div className="p-6">
+		<PageShell>
 			<div className="flex justify-between items-center mb-6">
 				<Col span={5}>
 					<h2 className="text-2xl font-bold text-gray-800">Quản lý lớp học</h2>
@@ -109,7 +111,7 @@ const ClassManagement = () => {
 							allowClear
 							options={optionTeacher}
 							placeholder="Tìm kiếm theo giáo viên..."
-							style={{width: '200px'}}
+							style={{ width: ResponsiveLayout.formControlWidth }}
 							value={selectedTeacherName}
 							onChange={(value)=>onChangeSelectTeacher(value)}
 						/>
@@ -140,7 +142,7 @@ const ClassManagement = () => {
 				listTeachers={listTeachers}
 				listClasses={listClasses}
 			/>
-		</div>
+		</PageShell>
 	);
 };
 

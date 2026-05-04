@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Modal, Form, Input, Checkbox, Row, Col } from "antd";
 import { useRolePermissions, useRoleActions, useRoles } from "src/stores/roleStore";
 import { duplicateNameValidator, requiredRule } from "src/lib/validation";
+import { colResponsive, ResponsiveLayout, ResponsiveSpacing } from "src/lib/appconst";
 
 interface RoleCreateUpdateModalProps {
     open: boolean;
@@ -48,11 +49,11 @@ const RoleCreateUpdateModal: React.FC<RoleCreateUpdateModalProps> = ({ open, edi
             onOk={handleOk}
             onCancel={onCancel}
             okText={editingRole ? "Sửa" : "Thêm"}
-            width={800}
+            width={ResponsiveLayout.modalWidth.xl}
         >
             <Form form={form} layout="vertical">
-                <Row gutter={16}>
-                    <Col span={12}>
+                <Row gutter={ResponsiveSpacing.rowGutter}>
+                    <Col {...colResponsive(24, 24, 12, 12, 12, 12)}>
                         <Form.Item
                             name="name"
                             label="Tên vai trò"
@@ -64,7 +65,7 @@ const RoleCreateUpdateModal: React.FC<RoleCreateUpdateModalProps> = ({ open, edi
                             <Input placeholder="Nhập tên vai trò" />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col {...colResponsive(24, 24, 12, 12, 12, 12)}>
                         <Form.Item
                             name="displayName"
                             label="Tên hiển thị"
@@ -87,9 +88,9 @@ const RoleCreateUpdateModal: React.FC<RoleCreateUpdateModalProps> = ({ open, edi
                     <h4 className="font-semibold mb-2">Danh sách quyền</h4>
                     <Form.Item name="grantedPermissions">
                         <Checkbox.Group style={{ width: '100%' }}>
-                            <Row>
+                            <Row gutter={[ResponsiveSpacing.rowGutter, ResponsiveSpacing.rowGutter]}>
                                 {permissions.map((p) => (
-                                    <Col span={8} key={p.name}>
+                                    <Col {...colResponsive(24, 12, 8, 8, 8, 8)} key={p.name}>
                                         <Checkbox value={p.name}>{p.displayName}</Checkbox>
                                     </Col>
                                 ))}

@@ -15,6 +15,7 @@ import { useClassAssignmentActions, useClassAssignments } from "src/stores/class
 import EditClassAssignmentModal from "./components/EditClassAssignmentModal";
 import AssignedExercisesTableModal from "./components/AssignedExercisesTableModal";
 import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
+import { PageShell } from "src/components/PageShell";
 
 const AssignmentManagement: React.FC = () =>{
 	const listAssignment = useAssignments();
@@ -181,7 +182,7 @@ const AssignmentManagement: React.FC = () =>{
 		setListSelectedQuestions(listSelectedQuestions)
 	}
 	return (
-		<div className="p-6">
+		<PageShell>
 			<div className="flex justify-between items-center mb-6">
 				<Col span={5}>
 					<h2 className="text-2xl font-bold text-gray-800">Bài tập</h2>
@@ -259,7 +260,7 @@ const AssignmentManagement: React.FC = () =>{
 				listAssignments={listAssignment}
 				listClasses={listClasses}
 			/>
-		</div>
+		</PageShell>
 	)
 }
 export default AssignmentManagement

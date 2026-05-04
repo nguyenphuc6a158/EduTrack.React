@@ -2,6 +2,7 @@ import { Modal} from "antd";
 import ViewFilePDF from "src/components/ViewFilePDF";
 import { ModeViewFilePDF } from "src/lib/enumconst";
 import type { QuestionDto } from "src/services/services_autogen";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface IQuestionInformationModalProps {
 	open: boolean;
@@ -15,7 +16,7 @@ const QuestionInformationModal: React.FC<IQuestionInformationModalProps> = ({ op
 			title="Thông tin chi tiết câu hỏi"
 			open={open}
 			onCancel={onCancel}
-			width={"70%"}
+			width={ResponsiveLayout.modalWidthFluidNarrow}
 			footer={null}
 		>
 			{selectedQuestion && 

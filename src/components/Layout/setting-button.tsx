@@ -17,7 +17,7 @@ import { type CSSProperties, useState } from 'react';
 import { useSettingActions, useSettings } from 'src/stores/settingStore';
 import { ThemeMode, type ThemeColorPresets, type ThemeLayout } from 'src/lib/enumconst';
 import { useTheme } from 'src/ThemeProvider';
-
+import { ResponsiveLayout } from 'src/lib/appconst';
 
 /**
  * App Setting
@@ -135,6 +135,7 @@ export default function SettingButton() {
             <Drawer
                 placement="right"
                 title="Settings"
+                width={ResponsiveLayout.drawerWidth}
                 onClose={() => setDrawerOpen(false)}
                 open={drawerOpen}
                 closable={false}

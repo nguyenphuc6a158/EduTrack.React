@@ -14,9 +14,9 @@ const ChartRef: React.FC<IChartRefProps> = ({areaOptions}) => {
         const areaChart = new ApexCharts(chartRef.current, areaOptions);
         areaChart.render();
         return () => {
-            areaChart?.destroy();
+            areaChart.destroy();
         };
-    }, []);
+    }, [areaOptions]);
 	return(
 		<div ref={chartRef} />
 	)

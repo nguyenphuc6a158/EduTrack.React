@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Table, Button, Space, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { StudentClassDto, ClassDto, UserDto } from "src/services/services_autogen";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface IStudentTableProps {
 	dataSource: StudentClassDto[];
@@ -84,6 +85,7 @@ const StudentTable: React.FC<IStudentTableProps> = ({
 			dataSource={dataSource}
 			rowKey="id"
 			loading={loading}
+			scroll={{ x: ResponsiveLayout.tableScrollX }}
 			pagination={{
 				placement: ["topEnd"],
 				total: totalStudent,

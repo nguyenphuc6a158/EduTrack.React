@@ -2,6 +2,8 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table } from "antd";
 import type React from "react";
 import type { ChapterDto } from "src/services/services_autogen";
+import { ResponsiveLayout } from "src/lib/appconst";
+
 interface IChapterProps {
 	listChapter: ChapterDto[],
 	onDelete: (id: number) => void,
@@ -54,6 +56,7 @@ const ChapterTable : React.FC<IChapterProps> = ({listChapter, onDelete, onEdit, 
 		<Table 
 			columns={colums}
 			dataSource={listChapter}
+			scroll={{ x: ResponsiveLayout.tableScrollX }}
 			pagination={{
 				placement: ["topEnd"],
 				total: totalChapter,

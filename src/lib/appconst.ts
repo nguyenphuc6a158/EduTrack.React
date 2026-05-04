@@ -1,3 +1,84 @@
+/**
+ * Breakpoint tối thiểu (px), khớp Ant Design Grid / useBreakpoint để dùng chung Table, Drawer, CSS-in-JS.
+ * xs: dưới sm (mobile nhỏ); sm–xxl: min-width tương ứng.
+ */
+export const ResponsiveBreakpoints = {
+	xsMax: 575,
+	sm: 576,
+	md: 768,
+	lg: 992,
+	xl: 1200,
+	xxl: 1600,
+} as const;
+
+/** Chuỗi (min-width: …px) cho matchMedia hoặc styled-components */
+export const ResponsiveMedia = {
+	sm: `(min-width: ${ResponsiveBreakpoints.sm}px)`,
+	md: `(min-width: ${ResponsiveBreakpoints.md}px)`,
+	lg: `(min-width: ${ResponsiveBreakpoints.lg}px)`,
+	xl: `(min-width: ${ResponsiveBreakpoints.xl}px)`,
+	xxl: `(min-width: ${ResponsiveBreakpoints.xxl}px)`,
+	/** Mobile-first: chỉ áp dụng khi màn hình nhỏ (dưới sm) */
+	xsOnly: `(max-width: ${ResponsiveBreakpoints.xsMax}px)`,
+} as const;
+
+/** Gutter Row (Ant Design), padding trang — tăng dần từ mobile → desktop */
+export const ResponsiveSpacing = {
+	rowGutter: { xs: 8, sm: 12, md: 16, lg: 20, xl: 24 },
+	/** Khoảng cách ngang lớn (ví dụ nhóm nút điều hướng câu hỏi) */
+	wideRowGutter: { xs: 12, sm: 32, md: 64, lg: 120, xl: 160, xxl: 200 },
+	pagePaddingX: { xs: 12, sm: 16, md: 20, lg: 24, xl: 32 },
+	pagePaddingY: { xs: 12, sm: 16, md: 20, lg: 24 },
+} as const;
+
+/** Chiều rộng nội dung / drawer / modal theo tier màn hình */
+export const ResponsiveLayout = {
+	contentMaxWidth: { xs: '100%', sm: 540, md: 720, lg: 960, xl: 1140, xxl: 1320 },
+	drawerWidth: { xs: '100%', sm: 400, md: 480, lg: 520 },
+	modalWidth: { xs: 'calc(100vw - 32px)', sm: 520, md: 600, lg: 720, xl: 800, xxl: 920 },
+	/** Modal form lớn (thay cho width 80–90%) */
+	modalWidthFluid: 'min(94vw, 1100px)',
+	modalWidthFluidMedium: 'min(88vw, 900px)',
+	modalWidthFluidNarrow: 'min(85vw, 720px)',
+	/** Select / filter: vừa màn hình nhỏ, tối đa ~200px trên desktop */
+	formControlWidth: 'min(100%, 200px)',
+	formControlWidthMd: 'min(100%, 240px)',
+	/** Table scroll.x — bảng nhiều cột cuộn ngang trên mobile */
+	tableScrollX: 'max-content' as const,
+} as const;
+
+/** Kết quả `Grid.useBreakpoint()` từ Ant Design */
+export type ResponsiveScreens = Partial<{ xs: boolean; sm: boolean; md: boolean; lg: boolean; xl: boolean; xxl: boolean }>;
+
+/** Padding trang theo breakpoint hiện tại (dùng với `PageShell` hoặc `Grid.useBreakpoint`) */
+export function getPageShellPadding(screens: ResponsiveScreens) {
+	const px =
+		screens.xxl || screens.xl
+			? ResponsiveSpacing.pagePaddingX.xl
+			: screens.lg
+				? ResponsiveSpacing.pagePaddingX.lg
+				: screens.md
+					? ResponsiveSpacing.pagePaddingX.md
+					: screens.sm
+						? ResponsiveSpacing.pagePaddingX.sm
+						: ResponsiveSpacing.pagePaddingX.xs;
+	const py =
+		screens.xxl || screens.xl || screens.lg
+			? ResponsiveSpacing.pagePaddingY.lg
+			: screens.md
+				? ResponsiveSpacing.pagePaddingY.md
+				: screens.sm
+					? ResponsiveSpacing.pagePaddingY.sm
+					: ResponsiveSpacing.pagePaddingY.xs;
+	return {
+		paddingLeft: px,
+		paddingRight: px,
+		paddingTop: py,
+		paddingBottom: py,
+		boxSizing: 'border-box' as const,
+	};
+}
+
 export const colResponsive = (xs: number, sm: number, md: number, lg: number, xl: number, xxl: number) => {
 	return {
 		xs: { span: xs },
@@ -8,6 +89,23 @@ export const colResponsive = (xs: number, sm: number, md: number, lg: number, xl
 		xxl: { span: xxl },
 	};
 };
+
+/** Giống colResponsive nhưng có offset (ô trống bên trái) */
+export const colResponsiveOffset = (
+	xs: { span: number; offset?: number },
+	sm: { span: number; offset?: number },
+	md: { span: number; offset?: number },
+	lg: { span: number; offset?: number },
+	xl: { span: number; offset?: number },
+	xxl: { span: number; offset?: number },
+) => ({
+	xs,
+	sm,
+	md,
+	lg,
+	xl,
+	xxl,
+});
 export const formatPhoneNumber = (phoneNumber: string) => {
 	if (!phoneNumber) return "";
 
@@ -135,5 +233,12 @@ export const AppConsts = {
 		tight: '1.25',
 		normal: '1.375',
 		relaxed: '1.5',
+	},
+	/** Dùng `AppConsts.responsive` hoặc import trực tiếp các export `Responsive*`. */
+	responsive: {
+		breakpoints: ResponsiveBreakpoints,
+		media: ResponsiveMedia,
+		spacing: ResponsiveSpacing,
+		layout: ResponsiveLayout,
 	},
 };

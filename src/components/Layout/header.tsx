@@ -1,13 +1,10 @@
-import { Drawer } from 'antd';
-import { type CSSProperties, useState } from 'react';
+import { type CSSProperties } from 'react';
 
-import { HEADER_HEIGHT, NAV_COLLAPSED_WIDTH, NAV_WIDTH } from './config';
+import { HEADER_HEIGHT } from './config';
 import SettingButton from './setting-button';
 import AccountPopover from './AccountPopover';
 
 export default function Header() {
-    const [drawerOpen, setDrawerOpen] = useState(false);
-
     const headerStyle: CSSProperties = {
         borderBottom: '',
         width: '100%',

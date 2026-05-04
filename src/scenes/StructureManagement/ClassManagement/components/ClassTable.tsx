@@ -3,6 +3,8 @@ import { Table, Button, Space, Popconfirm, Tag } from "antd";
 import { EditOutlined, DeleteOutlined, RollbackOutlined } from "@ant-design/icons";
 import { ClassDto } from "src/services/services_autogen";
 import { ModeTabClassesEnum } from "src/lib/enumconst";
+import { ResponsiveLayout } from "src/lib/appconst";
+
 interface IClassTableProps {
 	dataSource: ClassDto [];
 	loading: boolean;
@@ -99,7 +101,8 @@ const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, o
 			columns={finalColumns()} 
 			dataSource={dataSource} 
 			rowKey="id" 
-			loading={loading} 
+			loading={loading}
+			scroll={{ x: ResponsiveLayout.tableScrollX }}
 			pagination={
 				mode == ModeTabClassesEnum.CLASS ? 
 					{

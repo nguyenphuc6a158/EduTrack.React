@@ -2,6 +2,7 @@ import React from "react";
 import { Table, Button, Space, Popconfirm, Tag } from "antd";
 import { TenantDto } from "src/services/services_autogen";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface TenantTableProps {
     tenants: TenantDto[];
@@ -67,6 +68,7 @@ const TenantTable: React.FC<TenantTableProps> = ({ tenants, loading, total, onEd
             dataSource={tenants}
             columns={columns}
             loading={loading}
+            scroll={{ x: ResponsiveLayout.tableScrollX }}
             pagination={{
                 position: ["topRight"],
                 total: total,

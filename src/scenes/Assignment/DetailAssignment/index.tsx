@@ -9,6 +9,8 @@ import { useQuestionOption, useQuestionOptionActions, useQuestionOptions } from 
 import { useQuestion, useQuestionActions, useQuestions, useQuestionsByAssignment, useTotalCountQuestion } from "src/stores/questionStore";
 import { useStudentAnswerActions } from "src/stores/studentAnswerStore";
 import { useStudentAssignmentActions } from "src/stores/studentAssignmentStore";
+import { ResponsiveSpacing } from "src/lib/appconst";
+
 const DetailAssignment: React.FC = () => {
 	const questionOptionActions = useQuestionOptionActions();
 	const listQuestionOptions = useQuestionOptions();
@@ -193,7 +195,7 @@ const DetailAssignment: React.FC = () => {
 					)}
 				</Col>
 			</Row>
-			<Row style={{marginTop:"20px"}} justify={"center"} gutter={200}>
+			<Row style={{ marginTop: 20 }} justify="center" gutter={ResponsiveSpacing.wideRowGutter}>
 				<Col>
 					<Button onClick={goToPreQuestion} disabled={index == 0}>Câu trước</Button>
 				</Col>

@@ -4,7 +4,7 @@ import { RoleDto, UserDto } from "src/services/services_autogen";
 import { requiredRule, emailRule, duplicateNameValidator } from "src/lib/validation";
 import dayjs from "dayjs";
 import { useUsers } from "src/stores/userStore";
-
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface UserCreateUpdateModalProps {
     open: boolean;
@@ -52,7 +52,7 @@ const UserCreateUpdateModal: React.FC<UserCreateUpdateModalProps> = ({ open, edi
             onOk={handleOk}
             onCancel={onCancel}
             okText={editingUser ? "Sửa" : "Thêm"}
-            width={600}
+            width={ResponsiveLayout.modalWidth.md}
         >
             <Form form={form} layout="vertical" initialValues={{ isActive: true }}>
                 <div className="grid grid-cols-2 gap-4">

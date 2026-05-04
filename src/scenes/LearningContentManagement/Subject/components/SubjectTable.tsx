@@ -2,6 +2,8 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table } from "antd";
 import type React from "react";
 import type { SubjectDto } from "src/services/services_autogen";
+import { ResponsiveLayout } from "src/lib/appconst";
+
 interface ISubjectTableProps {
 	listSubject: SubjectDto[];
 	loading: boolean;
@@ -53,6 +55,7 @@ const SubjectTable: React.FC<ISubjectTableProps> = ({listSubject, loading, onEdi
 			columns={colums}
 			dataSource={listSubject}
 			loading={loading}
+			scroll={{ x: ResponsiveLayout.tableScrollX }}
 			pagination={{
 				placement: ["topEnd"],
 				total: totalSubject,

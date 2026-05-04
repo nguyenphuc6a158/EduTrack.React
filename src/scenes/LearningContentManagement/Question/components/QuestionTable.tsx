@@ -2,7 +2,7 @@ import { DeleteOutlined, EditOutlined, InfoCircleOutlined, RollbackOutlined } fr
 import { Button, Popconfirm, Space, Table } from "antd";
 import type React from "react";
 import { useMemo } from "react";
-import { AppConsts } from "src/lib/appconst";
+import { AppConsts, ResponsiveLayout } from "src/lib/appconst";
 import { ModeTableQuestionsEnum } from "src/lib/enumconst";
 import type { QuestionDto } from "src/services/services_autogen";
 interface IQuestionTableProps{
@@ -160,6 +160,7 @@ const QuestionTable: React.FC<IQuestionTableProps> = ({listQuestions, onDelete, 
 			dataSource={listQuestions}
 			rowKey={"id"}
 			loading={loading}
+			scroll={{ x: ResponsiveLayout.tableScrollX }}
 			onRow={(record) => {
 				return {
 					onClick: () => pushSelectedQuestion && pushSelectedQuestion(record),

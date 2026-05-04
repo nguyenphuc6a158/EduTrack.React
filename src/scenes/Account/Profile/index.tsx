@@ -4,6 +4,8 @@ import { UserOutlined, EditOutlined, SaveOutlined, CloseOutlined, MailOutlined, 
 import { useCurrentLogin, useSessionActions } from 'src/stores/sessionStore';
 import { UserDto, UserService } from 'src/services/services_autogen';
 import http from 'src/services/httpService';
+import { PageShell } from 'src/components/PageShell';
+import { colResponsive, ResponsiveLayout, ResponsiveSpacing } from 'src/lib/appconst';
 
 const { Title, Text } = Typography;
 const userService = new UserService("", http);
@@ -43,7 +45,7 @@ const Profile: React.FC = () => {
     }, [currentLogin, form]);
 
     if (!currentLogin || !currentLogin.user) {
-        return <div className="p-6 text-center">Loading profile...</div>;
+        return <PageShell className="text-center">Loading profile...</PageShell>;
     }
 
     const { user, tenant } = currentLogin;
@@ -80,8 +82,8 @@ const Profile: React.FC = () => {
     };
 
     return (
-        <div className="p-6">
-            <Row gutter={[24, 24]}>
+        <PageShell>
+            <Row gutter={[ResponsiveSpacing.rowGutter, ResponsiveSpacing.rowGutter]}>
                 {/* Profile Card */}
                 <Col xs={24} lg={8}>
                     <Card className="text-center shadow-sm h-full">
@@ -152,7 +154,7 @@ const Profile: React.FC = () => {
                         }
                     >
                         {!isEditing ? (
-                            <Descriptions bordered column={1} labelStyle={{ width: '200px', fontWeight: 'bold' }}>
+                            <Descriptions bordered column={1} labelStyle={{ width: ResponsiveLayout.formControlWidth, fontWeight: 'bold' }}>
                                 <Descriptions.Item label="First Name">{user.name}</Descriptions.Item>
                                 <Descriptions.Item label="Last Name">{user.surname}</Descriptions.Item>
                                 <Descriptions.Item label="Full Name">{user.name} {user.surname}</Descriptions.Item>
@@ -167,8 +169,8 @@ const Profile: React.FC = () => {
                                 onFinish={handleSave}
                                 requiredMark="optional"
                             >
-                                <Row gutter={24}>
-                                    <Col span={12}>
+                                <Row gutter={ResponsiveSpacing.rowGutter}>
+                                    <Col {...colResponsive(24, 24, 12, 12, 12, 12)}>
                                         <Form.Item 
                                             name="name" 
                                             label="First Name" 
@@ -177,7 +179,7 @@ const Profile: React.FC = () => {
                                             <Input prefix={<IdcardOutlined className="text-gray-400" />} />
                                         </Form.Item>
                                     </Col>
-                                    <Col span={12}>
+                                    <Col {...colResponsive(24, 24, 12, 12, 12, 12)}>
                                         <Form.Item 
                                             name="surname" 
                                             label="Last Name" 
@@ -209,7 +211,7 @@ const Profile: React.FC = () => {
                     </Card>
                 </Col>
             </Row>
-        </div>
+        </PageShell>
     );
 };
 

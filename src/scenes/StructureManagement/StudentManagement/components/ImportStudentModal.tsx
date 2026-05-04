@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Upload, Button, Table, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { RcFile } from "antd/es/upload";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface IImportStudentModalProps {
     visible: boolean;
@@ -55,7 +56,7 @@ const ImportStudentModal: React.FC<IImportStudentModalProps> = ({
                 // setFileData([]);
                 onCancel();
             }}
-            width={800}
+            width={ResponsiveLayout.modalWidth.xl}
             footer={[
                 <Button key="cancel" onClick={() => {
                     // setFileData([]);

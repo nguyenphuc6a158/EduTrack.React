@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
 import { Button, Modal, Popconfirm, Space, Table } from "antd"
-import type { ClassAssignmentDto } from "src/services/services_autogen"
+import type { ClassAssignmentDto } from "src/services/services_autogen";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface IAssignedExercisesTableProps {
 	onEdit: (record: ClassAssignmentDto) => void;
@@ -67,13 +68,14 @@ const AssignedExercisesTableModal: React.FC<IAssignedExercisesTableProps> = ({on
 			title="Danh sách bài tập đã giao"
 			open={open}
 			onCancel={onCancel}
-			width={"80%"}
+			width={ResponsiveLayout.modalWidthFluidMedium}
 			footer={null}
 		>
 			<Table 
 				columns={colunms} 
 				dataSource={listClassAssignments}
 				rowKey={(record) => record.id}
+				scroll={{ x: ResponsiveLayout.tableScrollX }}
 			/>
 		</Modal>
 	)

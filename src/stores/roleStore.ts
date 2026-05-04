@@ -32,7 +32,7 @@ const useRoleStore = create<RoleState>((set) => ({
                 if (result) {
                     set({
                         listRoles: result.items || [],
-                        totalCountRole: result.items?.length || 0
+                        totalCountRole: result.totalCount ?? result.items?.length ?? 0,
                     });
                 }
             } finally {
@@ -65,6 +65,7 @@ const useRoleStore = create<RoleState>((set) => ({
 }));
 
 export const useRoles = () => useRoleStore((state) => state.listRoles);
+export const useRoleTotal = () => useRoleStore((state) => state.totalCountRole);
 export const useRolePermissions = () => useRoleStore((state) => state.allPermissions);
 export const useRoleLoading = () => useRoleStore((state) => state.loading);
 export const useRoleActions = () => useRoleStore((state) => state.actions);

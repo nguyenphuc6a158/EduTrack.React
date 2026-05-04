@@ -5,6 +5,8 @@ import QuestionTable from "../../Question/components/QuestionTable";
 import { useEffect, useMemo, useState } from "react";
 import { useQuestionsByAssignment } from "src/stores/questionStore";
 import {ModeTableQuestionsEnum} from "src/lib/enumconst.ts";
+import { colResponsive, ResponsiveLayout, ResponsiveSpacing } from "src/lib/appconst";
+
 interface IExerciseCreateUpdateModalProps {
 	open: boolean;
 	onCancel: () => void;
@@ -97,11 +99,11 @@ const ExerciseCreateUpdateModal : React.FC<IExerciseCreateUpdateModalProps> = ({
 			open={open}
 			onCancel={onCancel}
 			onOk={onOk}
-			width={"90%"}
+			width={ResponsiveLayout.modalWidthFluid}
 			closable={false}
 		>
-			<Row gutter={16}>
-				<Col span={12}>
+			<Row gutter={ResponsiveSpacing.rowGutter}>
+				<Col {...colResponsive(24, 24, 24, 12, 12, 12)}>
 					<Card title="Danh sách câu hỏi">
 						<QuestionTable 
 							listQuestions={listQuestions} 
@@ -114,7 +116,7 @@ const ExerciseCreateUpdateModal : React.FC<IExerciseCreateUpdateModalProps> = ({
 						/>
 					</Card>
 				</Col>
-				<Col span={12}>
+				<Col {...colResponsive(24, 24, 24, 12, 12, 12)}>
 					<Card title={selectedAssignment ? "Sửa bài tập" : "Thêm bài tập"}>
 						<Form form={formRef} onFinish={onOk} style={{ width: "100%" }} layout="vertical">
 							<Form.Item

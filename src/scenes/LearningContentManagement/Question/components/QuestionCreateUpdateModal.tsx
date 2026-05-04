@@ -7,6 +7,7 @@ import { parseAnswers, readPdfText } from "src/lib/readTextPdf";
 import { requiredRule } from "src/lib/validation";
 import { ChapterDto, QuestionDto, type FileParameter } from "src/services/services_autogen";
 import { useFileActions } from "src/stores/fileStore";
+import { colResponsive, ResponsiveLayout, ResponsiveSpacing } from "src/lib/appconst";
 
 interface IQuestionCreateUpdateModalProps {
 	onOk: (value: any) => void;
@@ -152,15 +153,15 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 			onCancel={onCancel}
 			onOk={handleOk}
 			forceRender
-			width={"90%"}
+			width={ResponsiveLayout.modalWidthFluid}
 		>
-			<Row gutter={16}>
-				<Col span={12}>
+			<Row gutter={ResponsiveSpacing.rowGutter}>
+				<Col {...colResponsive(24, 24, 24, 12, 12, 12)}>
 					{assignmentPdfUrl && <ViewFilePDF fileUrl={assignmentPdfUrl} mode={ModeViewFilePDF.DEMOQUESTIONVIEW}/>}
 					{explainPdfUrl && <ViewFilePDF fileUrl={explainPdfUrl} mode={ModeViewFilePDF.DEMOQUESTIONVIEW}/>}
 				</Col>
-				<Col span={12}>
-					<Row justify="space-between" align="middle" gutter={16} style={{ marginBottom: 16 }}>
+				<Col {...colResponsive(24, 24, 24, 12, 12, 12)}>
+					<Row justify="space-between" align="middle" gutter={ResponsiveSpacing.rowGutter} style={{ marginBottom: 16 }}>
 						<Col>
 							{selectedQuestion ? <h2><b>Chỉnh sửa câu hỏi</b></h2> : <h2><b>Tạo mới câu hỏi</b></h2>}
 						</Col>
@@ -175,7 +176,7 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 							</Button>
 						</Col>
 					</Row>
-					<Row gutter={16}>
+					<Row gutter={ResponsiveSpacing.rowGutter}>
 						<Col span={24}>
 							<Form form={form} layout="vertical">
 
@@ -200,8 +201,8 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 										options={optionDifficultyLevel}
 									/>
 								</Form.Item>
-								<Row>
-									<Col span={12}>
+								<Row gutter={ResponsiveSpacing.rowGutter}>
+									<Col {...colResponsive(24, 24, 12, 12, 12, 12)}>
 										<Form.Item
 											name="fileAssignment"
 											label="Upload câu hỏi"
@@ -226,7 +227,7 @@ const QuestionCreateUpdateModal: React.FC<IQuestionCreateUpdateModalProps> = ({ 
 											</Upload>
 										</Form.Item>
 									</Col>
-									<Col span={12}>
+									<Col {...colResponsive(24, 24, 12, 12, 12, 12)}>
 										<Form.Item
 											name="fileExplain"
 											label="Upload giải thích"

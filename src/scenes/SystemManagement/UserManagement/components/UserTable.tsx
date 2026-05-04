@@ -2,7 +2,7 @@ import React from "react";
 import { Table, Button, Space, Popconfirm, Tag } from "antd";
 import { UserDto } from "src/services/services_autogen";
 import { EditOutlined, DeleteOutlined, RedoOutlined } from "@ant-design/icons";
-import { formatPhoneNumber } from "src/lib/appconst";
+import { formatPhoneNumber, ResponsiveLayout } from "src/lib/appconst";
 import dayjs from "dayjs";
 
 interface UserTableProps {
@@ -140,6 +140,7 @@ const UserTable: React.FC<UserTableProps> = ({ users, loading, total, onEdit, on
 			dataSource={users}
 			columns={columns}
 			loading={loading}
+			scroll={{ x: ResponsiveLayout.tableScrollX }}
 			pagination={{
 				placement: ["topEnd"],
 				total: total,

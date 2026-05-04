@@ -8,6 +8,8 @@ import { useStudentClasses, useStudentClassLoading, useStudentClassActions, useT
 import { useClasses, useClassActions } from "src/stores/classStore";
 import { useUserActions, useStudents } from "src/stores/userStore";
 import { CreateStudentClassDto, UpdateStudentClassDto, StudentClassDto } from "src/services/services_autogen";
+import { PageShell } from "src/components/PageShell";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 const StudentManagement = () => {
 	const { message } = App.useApp();
@@ -94,7 +96,7 @@ const StudentManagement = () => {
 	}
 
 	return (
-		<div className="p-6">
+		<PageShell>
 			<div className="flex justify-between items-center mb-6">
 				<Col span={5}>
 					<h2 className="text-2xl font-bold text-gray-800">Quản lý học sinh lớp học</h2>
@@ -106,7 +108,7 @@ const StudentManagement = () => {
 							allowClear
 							options={optionClass}
 							placeholder="Tìm kiếm theo lớp học..."
-							style={{width: '200px'}}
+							style={{ width: ResponsiveLayout.formControlWidth }}
 							value={idSelectedClass}
 							onChange={(value)=>onChangeSelectClass(value)}
 						/>
@@ -146,7 +148,7 @@ const StudentManagement = () => {
 				onCancel={() => setIsImportModalOpen(false)}
 				confirmLoading={importLoading}
 			/> */}
-		</div>
+		</PageShell>
 	);
 };
 

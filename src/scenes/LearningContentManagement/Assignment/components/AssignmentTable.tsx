@@ -1,7 +1,8 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table } from "antd"
 import { useMemo } from "react";
-import type { Assignment, AssignmentDto } from "src/services/services_autogen"
+import type { Assignment, AssignmentDto } from "src/services/services_autogen";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface IAssignmentTableProps {
 	listAssignment: AssignmentDto[];
@@ -81,6 +82,7 @@ const AssignmentTable: React.FC<IAssignmentTableProps> = ({listAssignment, onEdi
 			columns={columns}
 			dataSource={listAssignment}
 			rowKey={`id`}
+			scroll={{ x: ResponsiveLayout.tableScrollX }}
 		/>
 	)
 }

@@ -10,6 +10,8 @@ import { useFileActions } from "src/stores/fileStore";
 import QuestionInformationModal from "./components/QuestionInformationModal";
 import QuestionCreateUpdateModal from "./components/QuestionCreateUpdateModal";
 import { ModeTableQuestionsEnum } from "src/lib/enumconst";
+import { PageShell } from "src/components/PageShell";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 const QuestionManagement: React.FC = () => {
 	const {message} = App.useApp();
@@ -131,7 +133,7 @@ const QuestionManagement: React.FC = () => {
 		setIdSelectedChapter(item)
 	}
 	return (
-		<div className="p-6">
+		<PageShell>
 			<div className="flex justify-between items-center mb-6">
 				<Col span={5}>
 					<h2 className="text-2xl font-bold text-gray-800">Ngân hàng câu hỏi</h2>
@@ -142,7 +144,7 @@ const QuestionManagement: React.FC = () => {
 						<Select 
 							allowClear
 							value={idSelectedChapter} 
-							style={{ width: "200px" }}
+							style={{ width: ResponsiveLayout.formControlWidth }}
 							options={optionChapter}
 							placeholder="Tìm kiếm theo chương..."
 							onChange={onchangeIdChapterSelected}
@@ -181,7 +183,7 @@ const QuestionManagement: React.FC = () => {
 				selectedQuestion={selectedQuestion}
 				onCancel={()=>{setIsOpenInforModal(false)}}
 			/>
-		</div>
+		</PageShell>
 	)
 }
 export default QuestionManagement

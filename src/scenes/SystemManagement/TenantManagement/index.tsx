@@ -5,6 +5,7 @@ import { CreateTenantDto, TenantDto } from "src/services/services_autogen";
 import { PlusOutlined } from "@ant-design/icons";
 import TenantTable from "./components/TenantTable";
 import TenantModal from "./components/TenantModal";
+import { PageShell } from "src/components/PageShell";
 
 const TenantManagement = () => {
     const { message } = App.useApp();
@@ -72,7 +73,7 @@ const TenantManagement = () => {
     };
 
     return (
-        <div className="p-6">
+        <PageShell>
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-800">Tenant Management</h2>
@@ -102,7 +103,7 @@ const TenantManagement = () => {
                 onOk={handleOk}
                 onCancel={() => setIsModalOpen(false)}
             />
-        </div>
+        </PageShell>
     );
 };
 

@@ -6,6 +6,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import UserTable from "./components/UserTable";
 import UserCreateUpdateModal from "./components/UserCreateUpdateModal";
 import UserResetPasswordModal from "./components/UserResetModal";
+import { PageShell } from "src/components/PageShell";
 
 const UserManagement = () => {
 	const users = useUsers();
@@ -91,7 +92,7 @@ const UserManagement = () => {
 	};
 
 	return (
-		<div className="p-6">
+		<PageShell>
 			<div className="flex justify-between items-center mb-6">
 				<div>
 					<h2 className="text-2xl font-bold text-gray-800">Quản lý người dùng</h2>
@@ -128,7 +129,7 @@ const UserManagement = () => {
 				onCancel={()=>setIsResetPasswordModalOpen(false)}
 				open={isResetPasswordModalOpen}
 			/>
-		</div>
+		</PageShell>
 	);
 };
 

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Modal, Form, Input, Switch } from "antd";
 import { TenantDto } from "src/services/services_autogen";
 import { requiredRule } from "src/lib/validation";
+import { ResponsiveLayout } from "src/lib/appconst";
 
 interface TenantModalProps {
     open: boolean;
@@ -41,7 +42,7 @@ const TenantModal: React.FC<TenantModalProps> = ({ open, editingTenant, onOk, on
             onOk={handleOk}
             onCancel={onCancel}
             okText={editingTenant ? "Update" : "Create"}
-            width={600}
+            width={ResponsiveLayout.modalWidth.md}
         >
             <Form form={form} layout="vertical" initialValues={{ isActive: true }}>
                 <Form.Item
