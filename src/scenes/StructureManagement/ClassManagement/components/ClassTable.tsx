@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
-import { Table, Button, Space, Popconfirm, Tag } from "antd";
-import { EditOutlined, DeleteOutlined, RollbackOutlined } from "@ant-design/icons";
+import React, { useMemo, useState, useEffect } from "react";
+import { Table, Button, Space, Popconfirm, Tag, Modal } from "antd";
+import { EditOutlined, DeleteOutlined, RollbackOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { ClassDto } from "src/services/services_autogen";
 import { ModeTabClassesEnum } from "src/lib/enumconst";
-import { ResponsiveLayout } from "src/lib/appconst";
-
+import StudentTable from "../../StudentManagement/components/StudentTable";
+import { useStudentClasses, useStudentClassLoading, useStudentClassActions } from "src/stores/studentClassStore";
+import { useStudents } from "src/stores/userStore";
 interface IClassTableProps {
 	dataSource: ClassDto [];
 	loading: boolean;
@@ -16,6 +17,12 @@ interface IClassTableProps {
 	onRemoveSelectedClass?: (record: ClassDto) => void;
 }
 const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, onDelete, totalClass, mode, onClickRowClass, onRemoveSelectedClass }) => {
+	const [visibleListStudentOfClass, setVisibleListStudentOfClass] = useState(false);
+	const [selectedClass, setSelectedClass] = useState<ClassDto | null>(null);
+	const listStudentClasses = useStudentClasses();
+	const studentClassLoading = useStudentClassLoading();
+	const studentClassActions = useStudentClassActions();
+	const listStudents = useStudents();
 	const filterTeacherNames = useMemo(()=>{
 		 return [...new Set(dataSource?.flatMap(dataSource => dataSource.teacherName || []))].map(item=>{
             return({
@@ -55,6 +62,17 @@ const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, o
 			key: "gradeId",
 		},
 	];
+	const openListStudentOfClass = (record: ClassDto) => {
+		setSelectedClass(record);
+		setVisibleListStudentOfClass(true);
+		if(record.id) {
+			studentClassActions.getStudentClassByClass(record.id);
+		}
+	}
+	const closeListStudentOfClass = () => {
+		setVisibleListStudentOfClass(false);
+		setSelectedClass(null);
+	}
 	const actionColumn = [
 		{
 			title: "Thao tác",
@@ -67,6 +85,7 @@ const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, o
 					<Popconfirm title="Xóa lớp học này?" onConfirm={() =>record.id && onDelete(record.id)}>
 						<Button type="link" danger icon={<DeleteOutlined />}></Button>
 					</Popconfirm>
+					<Button type="link" onClick={() => openListStudentOfClass(record)} icon={<InfoCircleOutlined />}></Button>
 				</Space>
 			),
 		},
@@ -97,26 +116,45 @@ const ClassTable: React.FC<IClassTableProps> = ({ dataSource, loading, onEdit, o
 	}
 
 	return (
-		<Table 
-			columns={finalColumns()} 
-			dataSource={dataSource} 
-			rowKey="id" 
-			loading={loading}
-			scroll={{ x: ResponsiveLayout.tableScrollX }}
-			pagination={
-				mode == ModeTabClassesEnum.CLASS ? 
-					{
-						placement: ["topEnd"],
-						total: totalClass,
-						pageSize: 10,
-						showSizeChanger: true,
-						showTotal: (total) => `Tổng: ${total}`,
-					} : false
-			}
-			onRow={onClickRowClass ? (record) => ({
-				onClick: () => onClickRowClass(record),
-			}) : undefined}
-		/>
+		
+		<>
+			<Table 
+				columns={finalColumns()} 
+				dataSource={dataSource} 
+				rowKey="id" 
+				loading={loading} 
+				pagination={
+					mode == ModeTabClassesEnum.CLASS ? 
+						{
+							placement: ["topEnd"],
+							total: totalClass,
+							pageSize: 10,
+							showSizeChanger: true,
+							showTotal: (total) => `Tổng: ${total}`,
+						} : false
+				}
+				onRow={onClickRowClass ? (record) => ({
+					onClick: () => onClickRowClass(record),
+				}) : undefined}
+			/>
+			<Modal
+				title={`Danh sách học sinh - ${selectedClass?.className}`}
+				open={visibleListStudentOfClass}
+				onCancel={closeListStudentOfClass}
+				footer={null}
+				width={"90%"}
+			>
+				<StudentTable 
+					dataSource={listStudentClasses}
+					loading={studentClassLoading}
+					onEdit={() => {}}
+					onDelete={() => {}}
+					totalStudent={listStudentClasses.length}
+					listStudents={listStudents}
+					showPagination={false}
+				/>
+			</Modal>
+		</>
 	)
 }
 

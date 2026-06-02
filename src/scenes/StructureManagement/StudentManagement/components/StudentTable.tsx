@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { Table, Button, Space, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { StudentClassDto, ClassDto, UserDto } from "src/services/services_autogen";
-import { ResponsiveLayout } from "src/lib/appconst";
 
 interface IStudentTableProps {
 	dataSource: StudentClassDto[];
@@ -13,6 +12,7 @@ interface IStudentTableProps {
 	listClasses?: ClassDto[];
 	listTeachers?: UserDto[];
 	listStudents?: UserDto[];
+	showPagination?: boolean;
 }
 
 const StudentTable: React.FC<IStudentTableProps> = ({
@@ -21,7 +21,8 @@ const StudentTable: React.FC<IStudentTableProps> = ({
 	onEdit,
 	onDelete,
 	totalStudent,
-	listStudents = []
+	listStudents = [],
+	showPagination = true
 }) => {
 
 	const getStudentInfo = (studentId: number) => {
@@ -85,14 +86,13 @@ const StudentTable: React.FC<IStudentTableProps> = ({
 			dataSource={dataSource}
 			rowKey="id"
 			loading={loading}
-			scroll={{ x: ResponsiveLayout.tableScrollX }}
-			pagination={{
+			pagination={showPagination ? {
 				placement: ["topEnd"],
 				total: totalStudent,
 				pageSize: 10,
 				showSizeChanger: true,
 				showTotal: (totalStudent) => `Tổng: ${totalStudent}`
-			}}
+			} : false}
 		/>
 	);
 };

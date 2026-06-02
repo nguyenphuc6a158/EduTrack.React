@@ -8,8 +8,8 @@ import { useClassActions, useClasses, useClassLoading, useTotalCountClass } from
 import { ClassDto, CreateClassDto, UpdateClassDto } from "src/services/services_autogen";
 import { useTeachers, useUserActions } from "src/stores/userStore";
 import { ModeTabClassesEnum } from "src/lib/enumconst";
-import { PageShell } from "src/components/PageShell";
-import { ResponsiveLayout } from "src/lib/appconst";
+import { isGranted } from "src/lib/abpUtility";
+import { AppConsts } from "src/lib/appconst";	
 
 const ClassManagement = () => {
 	const { message } = App.useApp();
@@ -29,6 +29,11 @@ const ClassManagement = () => {
 	const listTeachers = useTeachers();
 	const userActions = useUserActions();
 
+	// Check if current user has admin role using ABP permission system
+	const hasAdminRole = useMemo(() => {
+		return isGranted(AppConsts.Permission.Pages_Users);
+	}, []);
+
 	const fetchGrade = async () => {
 		await gradeActions.getAll(undefined,undefined,undefined);
 	}
@@ -39,6 +44,17 @@ const ClassManagement = () => {
 
 	useEffect(()=>{
 		const fetchClasses = async () => {
+			// If not Admin, show only classes of current teacher (logged-in user)
+			if (!hasAdminRole) {
+				const userId = localStorage.getItem('userId');
+				const currentTeacher = listTeachers.find(t => t.id === Number(userId));
+				if (currentTeacher?.id) {
+					await classActions.getClassByTeacher(currentTeacher.id);
+					return;
+				}
+			}
+
+			// If Admin, show all classes or filter by selected teacher
 			if (!selectedTeacherName) {
 				await classActions.getAll(undefined, 0, 100);
 				return;
@@ -51,7 +67,7 @@ const ClassManagement = () => {
 			await classActions.getAll(undefined, 0, 100);
 		};
 		fetchClasses();
-	},[selectedTeacherName, listTeachers])
+	},[selectedTeacherName, listTeachers, hasAdminRole])
 	
 	const optionTeacher = useMemo(()=>{
 		return(listTeachers.map(item => ({
@@ -99,25 +115,29 @@ const ClassManagement = () => {
 		message.success("Xóa lớp học thành công")
 	}
 	return (
-		<PageShell>
+		<div className="p-6">
 			<div className="flex justify-between items-center mb-6">
 				<Col span={5}>
 					<h2 className="text-2xl font-bold text-gray-800">Quản lý lớp học</h2>
 					<p className="text-gray-500">Thêm sửa xóa lớp học, thay đổi giáo viên và khối học</p>
 				</Col>
 				<Col>
-					<Space.Compact>
-						<Select 
-							allowClear
-							options={optionTeacher}
-							placeholder="Tìm kiếm theo giáo viên..."
-							style={{ width: ResponsiveLayout.formControlWidth }}
-							value={selectedTeacherName}
-							onChange={(value)=>onChangeSelectTeacher(value)}
-						/>
-						<Button type="primary" icon={<SearchOutlined />} />
-					</Space.Compact>
-					&nbsp;&nbsp;&nbsp;&nbsp;
+					{hasAdminRole && (
+						<>
+							<Space.Compact>
+								<Select 
+									allowClear
+									options={optionTeacher}
+									placeholder="Tìm kiếm theo giáo viên..."
+									style={{width: '200px'}}
+									value={selectedTeacherName}
+									onChange={(value)=>onChangeSelectTeacher(value)}
+								/>
+								<Button type="primary" icon={<SearchOutlined />} />
+							</Space.Compact>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+						</>
+					)}
 					<Button type="primary" icon={<PlusOutlined />} onClick={() => { setEditingItem(null); setIsModalOpen(true); }}>
 						Thêm lớp học
 					</Button>
@@ -142,7 +162,7 @@ const ClassManagement = () => {
 				listTeachers={listTeachers}
 				listClasses={listClasses}
 			/>
-		</PageShell>
+		</div>
 	);
 };
 

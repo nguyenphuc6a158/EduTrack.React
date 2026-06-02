@@ -2245,6 +2245,71 @@ export class ConfigurationService {
     }
 }
 
+export class DashBoardService {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "";
+
+    }
+
+    /**
+     * @return OK
+     */
+    getDetailDashBoard( cancelToken?: CancelToken): Promise<DashBoardDto> {
+        let url_ = this.baseUrl + "/api/services/app/DashBoard/GetDetailDashBoard";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetDetailDashBoard(_response);
+        });
+    }
+
+    protected processGetDetailDashBoard(response: AxiosResponse): Promise<DashBoardDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = DashBoardDto.fromJS(resultData200.result);
+            return Promise.resolve<DashBoardDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<DashBoardDto>(null as any);
+    }
+}
+
 export class FileService {
     protected instance: AxiosInstance;
     protected baseUrl: string;
@@ -6895,7 +6960,7 @@ export class UserService {
     /**
      * @return OK
      */
-    getAllTeacher( cancelToken?: CancelToken): Promise<UserDtoListResultDto> {
+    getAllTeacher( cancelToken?: CancelToken): Promise<UserDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/User/GetAllTeacher";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -6919,7 +6984,7 @@ export class UserService {
         });
     }
 
-    protected processGetAllTeacher(response: AxiosResponse): Promise<UserDtoListResultDto> {
+    protected processGetAllTeacher(response: AxiosResponse): Promise<UserDtoPagedResultDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -6933,14 +6998,14 @@ export class UserService {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = UserDtoListResultDto.fromJS(resultData200.result);
-            return Promise.resolve<UserDtoListResultDto>(result200);
+            result200 = UserDtoPagedResultDto.fromJS(resultData200.result);
+            return Promise.resolve<UserDtoPagedResultDto>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<UserDtoListResultDto>(null as any);
+        return Promise.resolve<UserDtoPagedResultDto>(null as any);
     }
 
     /**
@@ -9669,9 +9734,96 @@ export interface ICreateUserDto {
     phoneNumber: string | undefined;
 }
 
+export class DashBoardDto implements IDashBoardDto {
+    countTeachers!: number;
+    countStudents!: number;
+    countRoles!: number;
+    countClasses!: number;
+    totalUsers!: number;
+    usersGroupByDate!: UserByDateDto[] | undefined;
+    usersGroupByRole!: UserByRoleDto[] | undefined;
+
+    constructor(data?: IDashBoardDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.countTeachers = _data["countTeachers"];
+            this.countStudents = _data["countStudents"];
+            this.countRoles = _data["countRoles"];
+            this.countClasses = _data["countClasses"];
+            this.totalUsers = _data["totalUsers"];
+            if (Array.isArray(_data["usersGroupByDate"])) {
+                this.usersGroupByDate = [] as any;
+                for (let item of _data["usersGroupByDate"])
+                    this.usersGroupByDate!.push(UserByDateDto.fromJS(item));
+            }
+            if (Array.isArray(_data["usersGroupByRole"])) {
+                this.usersGroupByRole = [] as any;
+                for (let item of _data["usersGroupByRole"])
+                    this.usersGroupByRole!.push(UserByRoleDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): DashBoardDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DashBoardDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["countTeachers"] = this.countTeachers;
+        data["countStudents"] = this.countStudents;
+        data["countRoles"] = this.countRoles;
+        data["countClasses"] = this.countClasses;
+        data["totalUsers"] = this.totalUsers;
+        if (Array.isArray(this.usersGroupByDate)) {
+            data["usersGroupByDate"] = [];
+            for (let item of this.usersGroupByDate)
+                data["usersGroupByDate"].push(item ? item.toJSON() : undefined as any);
+        }
+        if (Array.isArray(this.usersGroupByRole)) {
+            data["usersGroupByRole"] = [];
+            for (let item of this.usersGroupByRole)
+                data["usersGroupByRole"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+
+    clone(): DashBoardDto {
+        const json = this.toJSON();
+        let result = new DashBoardDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDashBoardDto {
+    countTeachers: number;
+    countStudents: number;
+    countRoles: number;
+    countClasses: number;
+    totalUsers: number;
+    usersGroupByDate: UserByDateDto[] | undefined;
+    usersGroupByRole: UserByRoleDto[] | undefined;
+}
+
 export class DatailDoHomeWorkDto implements IDatailDoHomeWorkDto {
     series!: number[] | undefined;
     avgScore!: number;
+    avgScoreImprovement!: number;
+    avgScoreCurrentMonth!: number;
+    completedCurrentMonthRate!: number;
+    completedPreviousMonthRate!: number;
 
     constructor(data?: IDatailDoHomeWorkDto) {
         if (data) {
@@ -9690,6 +9842,10 @@ export class DatailDoHomeWorkDto implements IDatailDoHomeWorkDto {
                     this.series!.push(item);
             }
             this.avgScore = _data["avgScore"];
+            this.avgScoreImprovement = _data["avgScoreImprovement"];
+            this.avgScoreCurrentMonth = _data["avgScoreCurrentMonth"];
+            this.completedCurrentMonthRate = _data["completedCurrentMonthRate"];
+            this.completedPreviousMonthRate = _data["completedPreviousMonthRate"];
         }
     }
 
@@ -9708,6 +9864,10 @@ export class DatailDoHomeWorkDto implements IDatailDoHomeWorkDto {
                 data["series"].push(item);
         }
         data["avgScore"] = this.avgScore;
+        data["avgScoreImprovement"] = this.avgScoreImprovement;
+        data["avgScoreCurrentMonth"] = this.avgScoreCurrentMonth;
+        data["completedCurrentMonthRate"] = this.completedCurrentMonthRate;
+        data["completedPreviousMonthRate"] = this.completedPreviousMonthRate;
         return data;
     }
 
@@ -9722,6 +9882,10 @@ export class DatailDoHomeWorkDto implements IDatailDoHomeWorkDto {
 export interface IDatailDoHomeWorkDto {
     series: number[] | undefined;
     avgScore: number;
+    avgScoreImprovement: number;
+    avgScoreCurrentMonth: number;
+    completedCurrentMonthRate: number;
+    completedPreviousMonthRate: number;
 }
 
 export class DetailAssignmentForStudentDto implements IDetailAssignmentForStudentDto {
@@ -13851,6 +14015,100 @@ export interface IUser {
     lastModifierUser: User;
     dateOfBirth: Date;
     phoneNumber: string | undefined;
+}
+
+export class UserByDateDto implements IUserByDateDto {
+    date!: Date;
+    count!: number;
+
+    constructor(data?: IUserByDateDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : undefined as any;
+            this.count = _data["count"];
+        }
+    }
+
+    static fromJS(data: any): UserByDateDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserByDateDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["date"] = this.date ? this.date.toISOString() : undefined as any;
+        data["count"] = this.count;
+        return data;
+    }
+
+    clone(): UserByDateDto {
+        const json = this.toJSON();
+        let result = new UserByDateDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserByDateDto {
+    date: Date;
+    count: number;
+}
+
+export class UserByRoleDto implements IUserByRoleDto {
+    roleName!: string | undefined;
+    count!: number;
+
+    constructor(data?: IUserByRoleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roleName = _data["roleName"];
+            this.count = _data["count"];
+        }
+    }
+
+    static fromJS(data: any): UserByRoleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserByRoleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roleName"] = this.roleName;
+        data["count"] = this.count;
+        return data;
+    }
+
+    clone(): UserByRoleDto {
+        const json = this.toJSON();
+        let result = new UserByRoleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserByRoleDto {
+    roleName: string | undefined;
+    count: number;
 }
 
 export class UserClaim implements IUserClaim {
