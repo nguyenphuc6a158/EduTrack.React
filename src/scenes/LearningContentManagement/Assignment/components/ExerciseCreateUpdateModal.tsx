@@ -1,6 +1,6 @@
 import { App, Card, Col, Form, Input, Modal, Row, Select, Table } from "antd";
 import type React from "react";
-import { CreateAssignmentQuestionDto, CreateAssignmentWithQuestionsDto, CreateQuestionWithOptionsDto, UpdateAssignmentWithQuestionsDto, type AssignmentDto, type ChapterDto, type QuestionDto } from "src/services/services_autogen";
+import { CreateAssignmentQuestionInput, CreateAssignmentWithQuestionsInput, CreateQuestionWithOptionsInput, UpdateAssignmentWithQuestionsInput, type AssignmentDto, type ChapterDto, type QuestionDto } from "src/services/services_autogen";
 import QuestionTable from "../../Question/components/QuestionTable";
 import { useEffect, useMemo, useState } from "react";
 import { useQuestionsByAssignment } from "src/stores/questionStore";
@@ -10,7 +10,7 @@ import { colResponsive, ResponsiveLayout, ResponsiveSpacing } from "src/lib/appc
 interface IExerciseCreateUpdateModalProps {
 	open: boolean;
 	onCancel: () => void;
-	onSubmit: (values: CreateAssignmentWithQuestionsDto | UpdateAssignmentWithQuestionsDto) => void;
+	onSubmit: (values: CreateAssignmentWithQuestionsInput | UpdateAssignmentWithQuestionsInput) => void;
 	selectedAssignment?: AssignmentDto;
 	listQuestions: QuestionDto[];
 	openInforModal: (question: QuestionDto) => void;
@@ -65,10 +65,10 @@ const ExerciseCreateUpdateModal : React.FC<IExerciseCreateUpdateModalProps> = ({
 			return;
 		}
 		if(selectedAssignment != undefined) {
-			let item: UpdateAssignmentWithQuestionsDto = new UpdateAssignmentWithQuestionsDto();
-			let listassignmentQuestions: CreateAssignmentQuestionDto[] = [];
+			let item: UpdateAssignmentWithQuestionsInput = new UpdateAssignmentWithQuestionsInput();
+			let listassignmentQuestions: CreateAssignmentQuestionInput[] = [];
 			listSelectedQuestions.forEach((question, index) => {
-				let assignmentQuestion: CreateAssignmentQuestionDto = new CreateAssignmentQuestionDto();
+				let assignmentQuestion: CreateAssignmentQuestionInput = new CreateAssignmentQuestionInput();
 				assignmentQuestion.questionId = question.id;
 				assignmentQuestion.orderIndex = index + 1;
 				listassignmentQuestions.push(assignmentQuestion);
@@ -79,10 +79,10 @@ const ExerciseCreateUpdateModal : React.FC<IExerciseCreateUpdateModalProps> = ({
 			item.assignmentQuestions = listassignmentQuestions;
 			onSubmit(item);
 		} else if (selectedAssignment==undefined) {
-			let item: CreateAssignmentWithQuestionsDto = new CreateAssignmentWithQuestionsDto();
-			let listassignmentQuestions: CreateAssignmentQuestionDto[] = [];
+			let item: CreateAssignmentWithQuestionsInput = new CreateAssignmentWithQuestionsInput();
+			let listassignmentQuestions: CreateAssignmentQuestionInput[] = [];
 			listSelectedQuestions.forEach((question, index) => {
-				let assignmentQuestion: CreateAssignmentQuestionDto = new CreateAssignmentQuestionDto();
+				let assignmentQuestion: CreateAssignmentQuestionInput = new CreateAssignmentQuestionInput();
 				assignmentQuestion.questionId = question.id;
 				assignmentQuestion.orderIndex = index + 1;
 				listassignmentQuestions.push(assignmentQuestion);

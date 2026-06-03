@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { CreateAssignmentQuestionDto, AssignmentQuestionDto, AssignmentQuestionService, UpdateAssignmentQuestionDto } from "src/services/services_autogen";
+import { CreateAssignmentQuestionInput, AssignmentQuestionDto, AssignmentQuestionService, UpdateAssignmentQuestionInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const assignmentQuestionService = new AssignmentQuestionService('',http);
 interface AssignmentQuestionState {
@@ -9,8 +9,8 @@ interface AssignmentQuestionState {
     loading: boolean;
     actions: {
         getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-        create: (body: CreateAssignmentQuestionDto) => Promise<void>;
-        update: (body: UpdateAssignmentQuestionDto) => Promise<void>;
+        create: (body: CreateAssignmentQuestionInput) => Promise<void>;
+        update: (body: UpdateAssignmentQuestionInput) => Promise<void>;
         delete: (id: number) => Promise<void>;
         get: (id: number) => Promise<void>;
         getAllAssignmentQuestionByAssignmentId: (assignmentId: number, userId: number) => Promise<void>;

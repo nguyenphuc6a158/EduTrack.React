@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { AssignmentDto, AssignmentService, CreateAssignmentDto, CreateAssignmentWithQuestionsDto, DetailAssignmentForStudentDto, UpdateAssignmentDto, UpdateAssignmentWithQuestionsDto } from "src/services/services_autogen";
+import { AssignmentDto, AssignmentService, CreateAssignmentInput, CreateAssignmentWithQuestionsInput, DetailAssignmentForStudentDto, UpdateAssignmentInput, UpdateAssignmentWithQuestionsInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const assignmentService = new AssignmentService('',http);
 interface AssignmentState {
@@ -10,12 +10,12 @@ interface AssignmentState {
 	loading: boolean;
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-		create: (body: CreateAssignmentDto) => Promise<void>;
-		update: (body: UpdateAssignmentDto) => Promise<void>;
+		create: (body: CreateAssignmentInput) => Promise<void>;
+		update: (body: UpdateAssignmentInput) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
-		createAssignmentWithQuestions: (body: CreateAssignmentWithQuestionsDto) => Promise<void>;
-		updateAssignmentWithQuestions: (body: UpdateAssignmentWithQuestionsDto) => Promise<void>;
+		createAssignmentWithQuestions: (body: CreateAssignmentWithQuestionsInput) => Promise<void>;
+		updateAssignmentWithQuestions: (body: UpdateAssignmentWithQuestionsInput) => Promise<void>;
 		getAllAssignmentForStudent: (studentId?: number, chapterId?: number, keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
 	};
 }

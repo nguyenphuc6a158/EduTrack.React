@@ -168,10 +168,19 @@ const DoAssignment: React.FC = () => {
 							<b><p style={{marginRight:"8px"}}>Điểm trung bình:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.avgScore : 0}
 						</Row>
 						<Row>
-							<b><p style={{marginRight:"8px"}}>Điểm tiến bộ:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.avgScore : 0}
+							<b><p style={{marginRight:"8px"}}>Điểm trung bình tháng này:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.avgScoreCurrentMonth : 0}
 						</Row>
 						<Row>
-							<b><p style={{marginRight:"8px"}}>Phần kiến thức cần cải thiện thêm:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.avgScore : 0}
+							<b><p style={{marginRight:"8px"}}>Điểm trung bình so với tháng trước:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.avgScoreImprovement : 0}
+						</Row>
+						<Row>
+							<b><p style={{marginRight:"8px"}}>Tỉ lệ hoàn thành bài tập:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.completedOverallRate : 0} %
+						</Row>
+						<Row>
+							<b><p style={{marginRight:"8px"}}>Tỉ lệ hoàn thành bài tập của tháng này:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.completedCurrentMonthRate : 0} %
+						</Row>
+						<Row>
+							<b><p style={{marginRight:"8px"}}>Tỉ lệ hoàn thành bài tập của tháng trước:</p> </b>{datailDoHomeWorkDto? datailDoHomeWorkDto.completedPreviousMonthRate : 0} %
 						</Row>
 					</Card>
 				</Col>

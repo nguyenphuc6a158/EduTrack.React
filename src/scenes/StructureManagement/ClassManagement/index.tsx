@@ -5,7 +5,7 @@ import ClassTable from "./components/ClassTable";
 import ClassModal from "./components/ClassModal";
 import { useGradeActions, useGradees } from "src/stores/gradeStore";
 import { useClassActions, useClasses, useClassLoading, useTotalCountClass } from "src/stores/classStore";
-import { ClassDto, CreateClassDto, UpdateClassDto } from "src/services/services_autogen";
+import { ClassDto, CreateClassInput, UpdateClassInput } from "src/services/services_autogen";
 import { useTeachers, useUserActions } from "src/stores/userStore";
 import { ModeTabClassesEnum } from "src/lib/enumconst";
 import { isGranted } from "src/lib/abpUtility";
@@ -79,7 +79,7 @@ const ClassManagement = () => {
 	const handleOk = async (values: any) => {
 		try {
 			if (editingItem) {
-				let item: UpdateClassDto = new UpdateClassDto();
+				let item: UpdateClassInput = new UpdateClassInput();
 				item.id = editingItem.id
 				item.className = values.className;
 				item.gradeId = values.gradeId;
@@ -87,7 +87,7 @@ const ClassManagement = () => {
 				await classActions.update(item);
 				message.success("Cập nhật thành công");
 			} else {
-				let item: CreateClassDto = new CreateClassDto();
+				let item: CreateClassInput = new CreateClassInput();
 				item.className = values.className;
 				item.gradeId = values.gradeId;
 				item.teacherId = values.teacherId;

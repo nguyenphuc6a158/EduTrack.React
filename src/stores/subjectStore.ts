@@ -1,5 +1,5 @@
 import http from 'src/services/httpService';
-import { CreateSubjectDto, SubjectService, UpdateSubjectDto, type SubjectDto } from 'src/services/services_autogen';
+import { CreateSubjectInput, SubjectService, UpdateSubjectInput, type SubjectDto } from 'src/services/services_autogen';
 import { create } from 'zustand';
 
 const subjectService = new SubjectService("", http);
@@ -9,8 +9,8 @@ interface SubjectState {
 	totalCountSubject: number;
 	actions: {
 		getAll: (keyWord?: string, skipCount?: number, maxResultCount?: number) => Promise<void>,
-		create: (body: CreateSubjectDto) => Promise<void>,
-		update: (body: UpdateSubjectDto) => Promise<void>,
+		create: (body: CreateSubjectInput) => Promise<void>,
+		update: (body: UpdateSubjectInput) => Promise<void>,
 		delete: (id: number) => Promise<void>,
 	}
 }

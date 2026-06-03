@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useChapterActions, useChapters, usetotalCountChapter } from "src/stores/chapterStore";
 import { useSubjects, useSubjectsActions } from "src/stores/subjectStore";
 import ChapterTable from "./components/ChapterTable";
-import { CreateChapterDto, ChapterDto, UpdateChapterDto } from "src/services/services_autogen";
+import { CreateChapterInput, ChapterDto, UpdateChapterInput } from "src/services/services_autogen";
 import ChapterCreateUpdateModal from "./components/ChapterCreateUpdateModal";
 import { PageShell } from "src/components/PageShell";
 import { ResponsiveLayout } from "src/lib/appconst";
@@ -87,14 +87,14 @@ const ChapterManagement: React.FC = ()=>{
 	
 	const handleOk = async (item: any) => {
 		try {if(selectedChapter){
-			let input: UpdateChapterDto = new UpdateChapterDto ();
+			let input: UpdateChapterInput = new UpdateChapterInput ();
 			input.id = selectedChapter.id
 			input.subjectId = item.subjectId;
 			input.chapterName = item.chapterName;
 			await chapterActions.update(input);
 			message.success("Chỉnh sửa chương thành công");
 		} else {
-			let input: CreateChapterDto = new CreateChapterDto ();
+			let input: CreateChapterInput = new CreateChapterInput ();
 			input.subjectId = item.subjectId;
 			input.chapterName = item.chapterName;
 			await chapterActions.create(input);

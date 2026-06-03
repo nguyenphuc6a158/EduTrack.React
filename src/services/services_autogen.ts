@@ -153,7 +153,7 @@ export class AssignmentService {
      * @param body (optional) 
      * @return OK
      */
-    createAssignmentWithQuestions(body: CreateAssignmentWithQuestionsDto | undefined, cancelToken?: CancelToken): Promise<void> {
+    createAssignmentWithQuestions(body: CreateAssignmentWithQuestionsInput | undefined, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/services/app/Assignment/CreateAssignmentWithQuestions";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -205,7 +205,7 @@ export class AssignmentService {
      * @param body (optional) 
      * @return OK
      */
-    updateAssignmentWithQuestions(body: UpdateAssignmentWithQuestionsDto | undefined, cancelToken?: CancelToken): Promise<void> {
+    updateAssignmentWithQuestions(body: UpdateAssignmentWithQuestionsInput | undefined, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/services/app/Assignment/UpdateAssignmentWithQuestions";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -507,7 +507,7 @@ export class AssignmentService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateAssignmentDto | undefined, cancelToken?: CancelToken): Promise<AssignmentDto> {
+    create(body: CreateAssignmentInput | undefined, cancelToken?: CancelToken): Promise<AssignmentDto> {
         let url_ = this.baseUrl + "/api/services/app/Assignment/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -563,7 +563,7 @@ export class AssignmentService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateAssignmentDto | undefined, cancelToken?: CancelToken): Promise<AssignmentDto> {
+    update(body: UpdateAssignmentInput | undefined, cancelToken?: CancelToken): Promise<AssignmentDto> {
         let url_ = this.baseUrl + "/api/services/app/Assignment/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -831,7 +831,7 @@ export class AssignmentQuestionService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateAssignmentQuestionDto | undefined, cancelToken?: CancelToken): Promise<AssignmentQuestionDto> {
+    create(body: CreateAssignmentQuestionInput | undefined, cancelToken?: CancelToken): Promise<AssignmentQuestionDto> {
         let url_ = this.baseUrl + "/api/services/app/AssignmentQuestion/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -887,7 +887,7 @@ export class AssignmentQuestionService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateAssignmentQuestionDto | undefined, cancelToken?: CancelToken): Promise<AssignmentQuestionDto> {
+    update(body: UpdateAssignmentQuestionInput | undefined, cancelToken?: CancelToken): Promise<AssignmentQuestionDto> {
         let url_ = this.baseUrl + "/api/services/app/AssignmentQuestion/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1187,7 +1187,7 @@ export class ChapterService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateChapterDto | undefined, cancelToken?: CancelToken): Promise<ChapterDto> {
+    create(body: CreateChapterInput | undefined, cancelToken?: CancelToken): Promise<ChapterDto> {
         let url_ = this.baseUrl + "/api/services/app/Chapter/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1243,7 +1243,7 @@ export class ChapterService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateChapterDto | undefined, cancelToken?: CancelToken): Promise<ChapterDto> {
+    update(body: UpdateChapterInput | undefined, cancelToken?: CancelToken): Promise<ChapterDto> {
         let url_ = this.baseUrl + "/api/services/app/Chapter/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1365,7 +1365,7 @@ export class ClassService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateClassDto | undefined, cancelToken?: CancelToken): Promise<ClassDto> {
+    create(body: CreateClassInput | undefined, cancelToken?: CancelToken): Promise<ClassDto> {
         let url_ = this.baseUrl + "/api/services/app/Class/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1421,7 +1421,7 @@ export class ClassService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateClassDto | undefined, cancelToken?: CancelToken): Promise<ClassDto> {
+    update(body: UpdateClassInput | undefined, cancelToken?: CancelToken): Promise<ClassDto> {
         let url_ = this.baseUrl + "/api/services/app/Class/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1777,7 +1777,7 @@ export class ClassAssignmentService {
      * @param body (optional) 
      * @return OK
      */
-    createListClassAssignment(body: CreateListClassAssgnmentDto | undefined, cancelToken?: CancelToken): Promise<ClassAssignmentDto[]> {
+    createListClassAssignment(body: CreateListClassAssgnmentInput | undefined, cancelToken?: CancelToken): Promise<ClassAssignmentDto[]> {
         let url_ = this.baseUrl + "/api/services/app/ClassAssignment/CreateListClassAssignment";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2018,7 +2018,7 @@ export class ClassAssignmentService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateClassAssignmentDto | undefined, cancelToken?: CancelToken): Promise<ClassAssignmentDto> {
+    create(body: CreateClassAssignmentInput | undefined, cancelToken?: CancelToken): Promise<ClassAssignmentDto> {
         let url_ = this.baseUrl + "/api/services/app/ClassAssignment/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2074,7 +2074,7 @@ export class ClassAssignmentService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateClassAssignmentDto | undefined, cancelToken?: CancelToken): Promise<ClassAssignmentDto> {
+    update(body: UpdateClassAssignmentInput | undefined, cancelToken?: CancelToken): Promise<ClassAssignmentDto> {
         let url_ = this.baseUrl + "/api/services/app/ClassAssignment/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2574,7 +2574,7 @@ export class GradeService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateGradeDto | undefined, cancelToken?: CancelToken): Promise<GradeDto> {
+    create(body: CreateGradeInput | undefined, cancelToken?: CancelToken): Promise<GradeDto> {
         let url_ = this.baseUrl + "/api/services/app/Grade/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2630,7 +2630,7 @@ export class GradeService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateGradeDto | undefined, cancelToken?: CancelToken): Promise<GradeDto> {
+    update(body: UpdateGradeInput | undefined, cancelToken?: CancelToken): Promise<GradeDto> {
         let url_ = this.baseUrl + "/api/services/app/Grade/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2991,7 +2991,7 @@ export class QuestionService {
      * @param body (optional) 
      * @return OK
      */
-    createWithOptions(body: CreateQuestionWithOptionsDto | undefined, cancelToken?: CancelToken): Promise<void> {
+    createWithOptions(body: CreateQuestionWithOptionsInput | undefined, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/services/app/Question/CreateWithOptions";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3095,7 +3095,7 @@ export class QuestionService {
      * @param body (optional) 
      * @return OK
      */
-    updateWithOptions(body: UpdateQuestionWithOptionsDto | undefined, cancelToken?: CancelToken): Promise<void> {
+    updateWithOptions(body: UpdateQuestionWithOptionsInput | undefined, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/services/app/Question/UpdateWithOptions";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3203,7 +3203,7 @@ export class QuestionService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateQuestionDto | undefined, cancelToken?: CancelToken): Promise<QuestionDto> {
+    create(body: CreateQuestionInput | undefined, cancelToken?: CancelToken): Promise<QuestionDto> {
         let url_ = this.baseUrl + "/api/services/app/Question/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3259,7 +3259,7 @@ export class QuestionService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateQuestionDto | undefined, cancelToken?: CancelToken): Promise<QuestionDto> {
+    update(body: UpdateQuestionInput | undefined, cancelToken?: CancelToken): Promise<QuestionDto> {
         let url_ = this.baseUrl + "/api/services/app/Question/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3522,7 +3522,7 @@ export class QuestionOptionService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateQuestionOptionDto | undefined, cancelToken?: CancelToken): Promise<QuestionOptionDto> {
+    create(body: CreateQuestionOptionInput | undefined, cancelToken?: CancelToken): Promise<QuestionOptionDto> {
         let url_ = this.baseUrl + "/api/services/app/QuestionOption/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3578,7 +3578,7 @@ export class QuestionOptionService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateQuestionOptionDto | undefined, cancelToken?: CancelToken): Promise<QuestionOptionDto> {
+    update(body: UpdateQuestionOptionInput | undefined, cancelToken?: CancelToken): Promise<QuestionOptionDto> {
         let url_ = this.baseUrl + "/api/services/app/QuestionOption/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -5262,7 +5262,7 @@ export class StudentClassService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateStudentClassDto | undefined, cancelToken?: CancelToken): Promise<StudentClassDto> {
+    create(body: CreateStudentClassInput | undefined, cancelToken?: CancelToken): Promise<StudentClassDto> {
         let url_ = this.baseUrl + "/api/services/app/StudentClass/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -5374,7 +5374,7 @@ export class StudentClassService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateStudentClassDto | undefined, cancelToken?: CancelToken): Promise<StudentClassDto> {
+    update(body: UpdateStudentClassInput | undefined, cancelToken?: CancelToken): Promise<StudentClassDto> {
         let url_ = this.baseUrl + "/api/services/app/StudentClass/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -5618,7 +5618,7 @@ export class StudentProgressService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateStudentProgressDto | undefined, cancelToken?: CancelToken): Promise<StudentProgressDto> {
+    create(body: CreateStudentProgressInput | undefined, cancelToken?: CancelToken): Promise<StudentProgressDto> {
         let url_ = this.baseUrl + "/api/services/app/StudentProgress/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -5674,7 +5674,7 @@ export class StudentProgressService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateStudentProgressDto | undefined, cancelToken?: CancelToken): Promise<StudentProgressDto> {
+    update(body: UpdateStudentProgressInput | undefined, cancelToken?: CancelToken): Promise<StudentProgressDto> {
         let url_ = this.baseUrl + "/api/services/app/StudentProgress/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -5918,7 +5918,7 @@ export class SubjectService {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreateSubjectDto | undefined, cancelToken?: CancelToken): Promise<SubjectDto> {
+    create(body: CreateSubjectInput | undefined, cancelToken?: CancelToken): Promise<SubjectDto> {
         let url_ = this.baseUrl + "/api/services/app/Subject/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -5974,7 +5974,7 @@ export class SubjectService {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateSubjectDto | undefined, cancelToken?: CancelToken): Promise<SubjectDto> {
+    update(body: UpdateSubjectInput | undefined, cancelToken?: CancelToken): Promise<SubjectDto> {
         let url_ = this.baseUrl + "/api/services/app/Subject/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -8594,12 +8594,12 @@ export interface IClassDtoPagedResultDto {
     totalCount: number;
 }
 
-export class CreateAssignmentDto implements ICreateAssignmentDto {
+export class CreateAssignmentInput implements ICreateAssignmentInput {
     title!: string | undefined;
     chapterId!: number;
     chapters!: Chapter;
 
-    constructor(data?: ICreateAssignmentDto) {
+    constructor(data?: ICreateAssignmentInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8616,9 +8616,9 @@ export class CreateAssignmentDto implements ICreateAssignmentDto {
         }
     }
 
-    static fromJS(data: any): CreateAssignmentDto {
+    static fromJS(data: any): CreateAssignmentInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateAssignmentDto();
+        let result = new CreateAssignmentInput();
         result.init(data);
         return result;
     }
@@ -8631,26 +8631,26 @@ export class CreateAssignmentDto implements ICreateAssignmentDto {
         return data;
     }
 
-    clone(): CreateAssignmentDto {
+    clone(): CreateAssignmentInput {
         const json = this.toJSON();
-        let result = new CreateAssignmentDto();
+        let result = new CreateAssignmentInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateAssignmentDto {
+export interface ICreateAssignmentInput {
     title: string | undefined;
     chapterId: number;
     chapters: Chapter;
 }
 
-export class CreateAssignmentQuestionDto implements ICreateAssignmentQuestionDto {
+export class CreateAssignmentQuestionInput implements ICreateAssignmentQuestionInput {
     assignmentId!: number;
     questionId!: number;
     orderIndex!: number;
 
-    constructor(data?: ICreateAssignmentQuestionDto) {
+    constructor(data?: ICreateAssignmentQuestionInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8667,9 +8667,9 @@ export class CreateAssignmentQuestionDto implements ICreateAssignmentQuestionDto
         }
     }
 
-    static fromJS(data: any): CreateAssignmentQuestionDto {
+    static fromJS(data: any): CreateAssignmentQuestionInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateAssignmentQuestionDto();
+        let result = new CreateAssignmentQuestionInput();
         result.init(data);
         return result;
     }
@@ -8682,27 +8682,27 @@ export class CreateAssignmentQuestionDto implements ICreateAssignmentQuestionDto
         return data;
     }
 
-    clone(): CreateAssignmentQuestionDto {
+    clone(): CreateAssignmentQuestionInput {
         const json = this.toJSON();
-        let result = new CreateAssignmentQuestionDto();
+        let result = new CreateAssignmentQuestionInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateAssignmentQuestionDto {
+export interface ICreateAssignmentQuestionInput {
     assignmentId: number;
     questionId: number;
     orderIndex: number;
 }
 
-export class CreateAssignmentWithQuestionsDto implements ICreateAssignmentWithQuestionsDto {
+export class CreateAssignmentWithQuestionsInput implements ICreateAssignmentWithQuestionsInput {
     id!: number | undefined;
     title!: string | undefined;
     chapterId!: number;
-    assignmentQuestions!: CreateAssignmentQuestionDto[] | undefined;
+    assignmentQuestions!: CreateAssignmentQuestionInput[] | undefined;
 
-    constructor(data?: ICreateAssignmentWithQuestionsDto) {
+    constructor(data?: ICreateAssignmentWithQuestionsInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8719,14 +8719,14 @@ export class CreateAssignmentWithQuestionsDto implements ICreateAssignmentWithQu
             if (Array.isArray(_data["assignmentQuestions"])) {
                 this.assignmentQuestions = [] as any;
                 for (let item of _data["assignmentQuestions"])
-                    this.assignmentQuestions!.push(CreateAssignmentQuestionDto.fromJS(item));
+                    this.assignmentQuestions!.push(CreateAssignmentQuestionInput.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): CreateAssignmentWithQuestionsDto {
+    static fromJS(data: any): CreateAssignmentWithQuestionsInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateAssignmentWithQuestionsDto();
+        let result = new CreateAssignmentWithQuestionsInput();
         result.init(data);
         return result;
     }
@@ -8744,26 +8744,26 @@ export class CreateAssignmentWithQuestionsDto implements ICreateAssignmentWithQu
         return data;
     }
 
-    clone(): CreateAssignmentWithQuestionsDto {
+    clone(): CreateAssignmentWithQuestionsInput {
         const json = this.toJSON();
-        let result = new CreateAssignmentWithQuestionsDto();
+        let result = new CreateAssignmentWithQuestionsInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateAssignmentWithQuestionsDto {
+export interface ICreateAssignmentWithQuestionsInput {
     id: number | undefined;
     title: string | undefined;
     chapterId: number;
-    assignmentQuestions: CreateAssignmentQuestionDto[] | undefined;
+    assignmentQuestions: CreateAssignmentQuestionInput[] | undefined;
 }
 
-export class CreateChapterDto implements ICreateChapterDto {
+export class CreateChapterInput implements ICreateChapterInput {
     chapterName!: string | undefined;
     subjectId!: number;
 
-    constructor(data?: ICreateChapterDto) {
+    constructor(data?: ICreateChapterInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8779,9 +8779,9 @@ export class CreateChapterDto implements ICreateChapterDto {
         }
     }
 
-    static fromJS(data: any): CreateChapterDto {
+    static fromJS(data: any): CreateChapterInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateChapterDto();
+        let result = new CreateChapterInput();
         result.init(data);
         return result;
     }
@@ -8793,25 +8793,25 @@ export class CreateChapterDto implements ICreateChapterDto {
         return data;
     }
 
-    clone(): CreateChapterDto {
+    clone(): CreateChapterInput {
         const json = this.toJSON();
-        let result = new CreateChapterDto();
+        let result = new CreateChapterInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateChapterDto {
+export interface ICreateChapterInput {
     chapterName: string | undefined;
     subjectId: number;
 }
 
-export class CreateClassAssignmentDto implements ICreateClassAssignmentDto {
+export class CreateClassAssignmentInput implements ICreateClassAssignmentInput {
     assignmentId!: number;
     classId!: number;
     publicTime!: Date;
 
-    constructor(data?: ICreateClassAssignmentDto) {
+    constructor(data?: ICreateClassAssignmentInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8828,9 +8828,9 @@ export class CreateClassAssignmentDto implements ICreateClassAssignmentDto {
         }
     }
 
-    static fromJS(data: any): CreateClassAssignmentDto {
+    static fromJS(data: any): CreateClassAssignmentInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateClassAssignmentDto();
+        let result = new CreateClassAssignmentInput();
         result.init(data);
         return result;
     }
@@ -8843,26 +8843,26 @@ export class CreateClassAssignmentDto implements ICreateClassAssignmentDto {
         return data;
     }
 
-    clone(): CreateClassAssignmentDto {
+    clone(): CreateClassAssignmentInput {
         const json = this.toJSON();
-        let result = new CreateClassAssignmentDto();
+        let result = new CreateClassAssignmentInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateClassAssignmentDto {
+export interface ICreateClassAssignmentInput {
     assignmentId: number;
     classId: number;
     publicTime: Date;
 }
 
-export class CreateClassDto implements ICreateClassDto {
+export class CreateClassInput implements ICreateClassInput {
     className!: string | undefined;
     gradeId!: number;
     teacherId!: number;
 
-    constructor(data?: ICreateClassDto) {
+    constructor(data?: ICreateClassInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8879,9 +8879,9 @@ export class CreateClassDto implements ICreateClassDto {
         }
     }
 
-    static fromJS(data: any): CreateClassDto {
+    static fromJS(data: any): CreateClassInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateClassDto();
+        let result = new CreateClassInput();
         result.init(data);
         return result;
     }
@@ -8894,24 +8894,24 @@ export class CreateClassDto implements ICreateClassDto {
         return data;
     }
 
-    clone(): CreateClassDto {
+    clone(): CreateClassInput {
         const json = this.toJSON();
-        let result = new CreateClassDto();
+        let result = new CreateClassInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateClassDto {
+export interface ICreateClassInput {
     className: string | undefined;
     gradeId: number;
     teacherId: number;
 }
 
-export class CreateGradeDto implements ICreateGradeDto {
+export class CreateGradeInput implements ICreateGradeInput {
     gradeName!: string;
 
-    constructor(data?: ICreateGradeDto) {
+    constructor(data?: ICreateGradeInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8926,9 +8926,9 @@ export class CreateGradeDto implements ICreateGradeDto {
         }
     }
 
-    static fromJS(data: any): CreateGradeDto {
+    static fromJS(data: any): CreateGradeInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateGradeDto();
+        let result = new CreateGradeInput();
         result.init(data);
         return result;
     }
@@ -8939,24 +8939,24 @@ export class CreateGradeDto implements ICreateGradeDto {
         return data;
     }
 
-    clone(): CreateGradeDto {
+    clone(): CreateGradeInput {
         const json = this.toJSON();
-        let result = new CreateGradeDto();
+        let result = new CreateGradeInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateGradeDto {
+export interface ICreateGradeInput {
     gradeName: string;
 }
 
-export class CreateListClassAssgnmentDto implements ICreateListClassAssgnmentDto {
+export class CreateListClassAssgnmentInput implements ICreateListClassAssgnmentInput {
     assignmentId!: number;
     listClasses!: ClassDto[] | undefined;
     publicTime!: Date;
 
-    constructor(data?: ICreateListClassAssgnmentDto) {
+    constructor(data?: ICreateListClassAssgnmentInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8977,9 +8977,9 @@ export class CreateListClassAssgnmentDto implements ICreateListClassAssgnmentDto
         }
     }
 
-    static fromJS(data: any): CreateListClassAssgnmentDto {
+    static fromJS(data: any): CreateListClassAssgnmentInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateListClassAssgnmentDto();
+        let result = new CreateListClassAssgnmentInput();
         result.init(data);
         return result;
     }
@@ -8996,15 +8996,15 @@ export class CreateListClassAssgnmentDto implements ICreateListClassAssgnmentDto
         return data;
     }
 
-    clone(): CreateListClassAssgnmentDto {
+    clone(): CreateListClassAssgnmentInput {
         const json = this.toJSON();
-        let result = new CreateListClassAssgnmentDto();
+        let result = new CreateListClassAssgnmentInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateListClassAssgnmentDto {
+export interface ICreateListClassAssgnmentInput {
     assignmentId: number;
     listClasses: ClassDto[] | undefined;
     publicTime: Date;
@@ -9073,13 +9073,13 @@ export interface ICreateListStudentAssignmentByListClassInput {
     submittedAt: Date;
 }
 
-export class CreateQuestionDto implements ICreateQuestionDto {
+export class CreateQuestionInput implements ICreateQuestionInput {
     fileUrlAssignment!: string | undefined;
     fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
 
-    constructor(data?: ICreateQuestionDto) {
+    constructor(data?: ICreateQuestionInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9097,9 +9097,9 @@ export class CreateQuestionDto implements ICreateQuestionDto {
         }
     }
 
-    static fromJS(data: any): CreateQuestionDto {
+    static fromJS(data: any): CreateQuestionInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateQuestionDto();
+        let result = new CreateQuestionInput();
         result.init(data);
         return result;
     }
@@ -9113,28 +9113,28 @@ export class CreateQuestionDto implements ICreateQuestionDto {
         return data;
     }
 
-    clone(): CreateQuestionDto {
+    clone(): CreateQuestionInput {
         const json = this.toJSON();
-        let result = new CreateQuestionDto();
+        let result = new CreateQuestionInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateQuestionDto {
+export interface ICreateQuestionInput {
     fileUrlAssignment: string | undefined;
     fileUrlExplain: string | undefined;
     chapterId: number;
     difficultyLevel: number;
 }
 
-export class CreateQuestionOptionDto implements ICreateQuestionOptionDto {
+export class CreateQuestionOptionInput implements ICreateQuestionOptionInput {
     id!: number | undefined;
     content!: string | undefined;
     questionId!: number;
     isCorrect!: boolean;
 
-    constructor(data?: ICreateQuestionOptionDto) {
+    constructor(data?: ICreateQuestionOptionInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9152,9 +9152,9 @@ export class CreateQuestionOptionDto implements ICreateQuestionOptionDto {
         }
     }
 
-    static fromJS(data: any): CreateQuestionOptionDto {
+    static fromJS(data: any): CreateQuestionOptionInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateQuestionOptionDto();
+        let result = new CreateQuestionOptionInput();
         result.init(data);
         return result;
     }
@@ -9168,29 +9168,29 @@ export class CreateQuestionOptionDto implements ICreateQuestionOptionDto {
         return data;
     }
 
-    clone(): CreateQuestionOptionDto {
+    clone(): CreateQuestionOptionInput {
         const json = this.toJSON();
-        let result = new CreateQuestionOptionDto();
+        let result = new CreateQuestionOptionInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateQuestionOptionDto {
+export interface ICreateQuestionOptionInput {
     id: number | undefined;
     content: string | undefined;
     questionId: number;
     isCorrect: boolean;
 }
 
-export class CreateQuestionWithOptionsDto implements ICreateQuestionWithOptionsDto {
+export class CreateQuestionWithOptionsInput implements ICreateQuestionWithOptionsInput {
     fileUrlAssignment!: string | undefined;
     fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
-    answers!: CreateQuestionOptionDto[] | undefined;
+    answers!: CreateQuestionOptionInput[] | undefined;
 
-    constructor(data?: ICreateQuestionWithOptionsDto) {
+    constructor(data?: ICreateQuestionWithOptionsInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9208,14 +9208,14 @@ export class CreateQuestionWithOptionsDto implements ICreateQuestionWithOptionsD
             if (Array.isArray(_data["answers"])) {
                 this.answers = [] as any;
                 for (let item of _data["answers"])
-                    this.answers!.push(CreateQuestionOptionDto.fromJS(item));
+                    this.answers!.push(CreateQuestionOptionInput.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): CreateQuestionWithOptionsDto {
+    static fromJS(data: any): CreateQuestionWithOptionsInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateQuestionWithOptionsDto();
+        let result = new CreateQuestionWithOptionsInput();
         result.init(data);
         return result;
     }
@@ -9234,20 +9234,20 @@ export class CreateQuestionWithOptionsDto implements ICreateQuestionWithOptionsD
         return data;
     }
 
-    clone(): CreateQuestionWithOptionsDto {
+    clone(): CreateQuestionWithOptionsInput {
         const json = this.toJSON();
-        let result = new CreateQuestionWithOptionsDto();
+        let result = new CreateQuestionWithOptionsInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateQuestionWithOptionsDto {
+export interface ICreateQuestionWithOptionsInput {
     fileUrlAssignment: string | undefined;
     fileUrlExplain: string | undefined;
     chapterId: number;
     difficultyLevel: number;
-    answers: CreateQuestionOptionDto[] | undefined;
+    answers: CreateQuestionOptionInput[] | undefined;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {
@@ -9439,11 +9439,11 @@ export interface ICreateStudentAssignmentInput {
     submittedAt: Date;
 }
 
-export class CreateStudentClassDto implements ICreateStudentClassDto {
+export class CreateStudentClassInput implements ICreateStudentClassInput {
     studentId!: number;
     classId!: number;
 
-    constructor(data?: ICreateStudentClassDto) {
+    constructor(data?: ICreateStudentClassInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9459,9 +9459,9 @@ export class CreateStudentClassDto implements ICreateStudentClassDto {
         }
     }
 
-    static fromJS(data: any): CreateStudentClassDto {
+    static fromJS(data: any): CreateStudentClassInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateStudentClassDto();
+        let result = new CreateStudentClassInput();
         result.init(data);
         return result;
     }
@@ -9473,20 +9473,20 @@ export class CreateStudentClassDto implements ICreateStudentClassDto {
         return data;
     }
 
-    clone(): CreateStudentClassDto {
+    clone(): CreateStudentClassInput {
         const json = this.toJSON();
-        let result = new CreateStudentClassDto();
+        let result = new CreateStudentClassInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateStudentClassDto {
+export interface ICreateStudentClassInput {
     studentId: number;
     classId: number;
 }
 
-export class CreateStudentProgressDto implements ICreateStudentProgressDto {
+export class CreateStudentProgressInput implements ICreateStudentProgressInput {
     studentId!: number;
     chapterId!: number;
     avgScore!: number;
@@ -9494,7 +9494,7 @@ export class CreateStudentProgressDto implements ICreateStudentProgressDto {
     totalCorrect!: number;
     totalQuestions!: number;
 
-    constructor(data?: ICreateStudentProgressDto) {
+    constructor(data?: ICreateStudentProgressInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9514,9 +9514,9 @@ export class CreateStudentProgressDto implements ICreateStudentProgressDto {
         }
     }
 
-    static fromJS(data: any): CreateStudentProgressDto {
+    static fromJS(data: any): CreateStudentProgressInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateStudentProgressDto();
+        let result = new CreateStudentProgressInput();
         result.init(data);
         return result;
     }
@@ -9532,15 +9532,15 @@ export class CreateStudentProgressDto implements ICreateStudentProgressDto {
         return data;
     }
 
-    clone(): CreateStudentProgressDto {
+    clone(): CreateStudentProgressInput {
         const json = this.toJSON();
-        let result = new CreateStudentProgressDto();
+        let result = new CreateStudentProgressInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateStudentProgressDto {
+export interface ICreateStudentProgressInput {
     studentId: number;
     chapterId: number;
     avgScore: number;
@@ -9549,10 +9549,10 @@ export interface ICreateStudentProgressDto {
     totalQuestions: number;
 }
 
-export class CreateSubjectDto implements ICreateSubjectDto {
+export class CreateSubjectInput implements ICreateSubjectInput {
     subjectName!: string | undefined;
 
-    constructor(data?: ICreateSubjectDto) {
+    constructor(data?: ICreateSubjectInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9567,9 +9567,9 @@ export class CreateSubjectDto implements ICreateSubjectDto {
         }
     }
 
-    static fromJS(data: any): CreateSubjectDto {
+    static fromJS(data: any): CreateSubjectInput {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateSubjectDto();
+        let result = new CreateSubjectInput();
         result.init(data);
         return result;
     }
@@ -9580,15 +9580,15 @@ export class CreateSubjectDto implements ICreateSubjectDto {
         return data;
     }
 
-    clone(): CreateSubjectDto {
+    clone(): CreateSubjectInput {
         const json = this.toJSON();
-        let result = new CreateSubjectDto();
+        let result = new CreateSubjectInput();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateSubjectDto {
+export interface ICreateSubjectInput {
     subjectName: string | undefined;
 }
 
@@ -9824,6 +9824,7 @@ export class DatailDoHomeWorkDto implements IDatailDoHomeWorkDto {
     avgScoreCurrentMonth!: number;
     completedCurrentMonthRate!: number;
     completedPreviousMonthRate!: number;
+    completedOverallRate!: number;
 
     constructor(data?: IDatailDoHomeWorkDto) {
         if (data) {
@@ -9846,6 +9847,7 @@ export class DatailDoHomeWorkDto implements IDatailDoHomeWorkDto {
             this.avgScoreCurrentMonth = _data["avgScoreCurrentMonth"];
             this.completedCurrentMonthRate = _data["completedCurrentMonthRate"];
             this.completedPreviousMonthRate = _data["completedPreviousMonthRate"];
+            this.completedOverallRate = _data["completedOverallRate"];
         }
     }
 
@@ -9868,6 +9870,7 @@ export class DatailDoHomeWorkDto implements IDatailDoHomeWorkDto {
         data["avgScoreCurrentMonth"] = this.avgScoreCurrentMonth;
         data["completedCurrentMonthRate"] = this.completedCurrentMonthRate;
         data["completedPreviousMonthRate"] = this.completedPreviousMonthRate;
+        data["completedOverallRate"] = this.completedOverallRate;
         return data;
     }
 
@@ -9886,6 +9889,7 @@ export interface IDatailDoHomeWorkDto {
     avgScoreCurrentMonth: number;
     completedCurrentMonthRate: number;
     completedPreviousMonthRate: number;
+    completedOverallRate: number;
 }
 
 export class DetailAssignmentForStudentDto implements IDetailAssignmentForStudentDto {
@@ -11890,7 +11894,7 @@ export class StudentAssignment implements IStudentAssignment {
     lastModificationTime!: Date | undefined;
     lastModifierUserId!: number | undefined;
     studentId!: number;
-    assignmentId!: number | undefined;
+    assignmentId!: number;
     status!: number;
     score!: number;
     totalCorrect!: number;
@@ -11979,7 +11983,7 @@ export interface IStudentAssignment {
     lastModificationTime: Date | undefined;
     lastModifierUserId: number | undefined;
     studentId: number;
-    assignmentId: number | undefined;
+    assignmentId: number;
     status: number;
     score: number;
     totalCorrect: number;
@@ -12201,6 +12205,8 @@ export class StudentClassDto implements IStudentClassDto {
     className!: string | undefined;
     studentId!: number;
     studentName!: string | undefined;
+    avgScore!: number;
+    completedRate!: number;
 
     constructor(data?: IStudentClassDto) {
         if (data) {
@@ -12218,6 +12224,8 @@ export class StudentClassDto implements IStudentClassDto {
             this.className = _data["className"];
             this.studentId = _data["studentId"];
             this.studentName = _data["studentName"];
+            this.avgScore = _data["avgScore"];
+            this.completedRate = _data["completedRate"];
         }
     }
 
@@ -12235,6 +12243,8 @@ export class StudentClassDto implements IStudentClassDto {
         data["className"] = this.className;
         data["studentId"] = this.studentId;
         data["studentName"] = this.studentName;
+        data["avgScore"] = this.avgScore;
+        data["completedRate"] = this.completedRate;
         return data;
     }
 
@@ -12252,6 +12262,8 @@ export interface IStudentClassDto {
     className: string | undefined;
     studentId: number;
     studentName: string | undefined;
+    avgScore: number;
+    completedRate: number;
 }
 
 export class StudentClassDtoPagedResultDto implements IStudentClassDtoPagedResultDto {
@@ -12866,13 +12878,13 @@ export interface ITenantLoginInfoDto {
     name: string | undefined;
 }
 
-export class UpdateAssignmentDto implements IUpdateAssignmentDto {
+export class UpdateAssignmentInput implements IUpdateAssignmentInput {
     id!: number;
     title!: string | undefined;
     chapterId!: number;
     chapters!: Chapter;
 
-    constructor(data?: IUpdateAssignmentDto) {
+    constructor(data?: IUpdateAssignmentInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -12890,9 +12902,9 @@ export class UpdateAssignmentDto implements IUpdateAssignmentDto {
         }
     }
 
-    static fromJS(data: any): UpdateAssignmentDto {
+    static fromJS(data: any): UpdateAssignmentInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateAssignmentDto();
+        let result = new UpdateAssignmentInput();
         result.init(data);
         return result;
     }
@@ -12906,28 +12918,28 @@ export class UpdateAssignmentDto implements IUpdateAssignmentDto {
         return data;
     }
 
-    clone(): UpdateAssignmentDto {
+    clone(): UpdateAssignmentInput {
         const json = this.toJSON();
-        let result = new UpdateAssignmentDto();
+        let result = new UpdateAssignmentInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateAssignmentDto {
+export interface IUpdateAssignmentInput {
     id: number;
     title: string | undefined;
     chapterId: number;
     chapters: Chapter;
 }
 
-export class UpdateAssignmentQuestionDto implements IUpdateAssignmentQuestionDto {
+export class UpdateAssignmentQuestionInput implements IUpdateAssignmentQuestionInput {
     id!: number;
     assignmentId!: number;
     questionId!: number;
     orderIndex!: number;
 
-    constructor(data?: IUpdateAssignmentQuestionDto) {
+    constructor(data?: IUpdateAssignmentQuestionInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -12945,9 +12957,9 @@ export class UpdateAssignmentQuestionDto implements IUpdateAssignmentQuestionDto
         }
     }
 
-    static fromJS(data: any): UpdateAssignmentQuestionDto {
+    static fromJS(data: any): UpdateAssignmentQuestionInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateAssignmentQuestionDto();
+        let result = new UpdateAssignmentQuestionInput();
         result.init(data);
         return result;
     }
@@ -12961,28 +12973,28 @@ export class UpdateAssignmentQuestionDto implements IUpdateAssignmentQuestionDto
         return data;
     }
 
-    clone(): UpdateAssignmentQuestionDto {
+    clone(): UpdateAssignmentQuestionInput {
         const json = this.toJSON();
-        let result = new UpdateAssignmentQuestionDto();
+        let result = new UpdateAssignmentQuestionInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateAssignmentQuestionDto {
+export interface IUpdateAssignmentQuestionInput {
     id: number;
     assignmentId: number;
     questionId: number;
     orderIndex: number;
 }
 
-export class UpdateAssignmentWithQuestionsDto implements IUpdateAssignmentWithQuestionsDto {
+export class UpdateAssignmentWithQuestionsInput implements IUpdateAssignmentWithQuestionsInput {
     id!: number;
     title!: string | undefined;
     chapterId!: number;
-    assignmentQuestions!: CreateAssignmentQuestionDto[] | undefined;
+    assignmentQuestions!: CreateAssignmentQuestionInput[] | undefined;
 
-    constructor(data?: IUpdateAssignmentWithQuestionsDto) {
+    constructor(data?: IUpdateAssignmentWithQuestionsInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -12999,14 +13011,14 @@ export class UpdateAssignmentWithQuestionsDto implements IUpdateAssignmentWithQu
             if (Array.isArray(_data["assignmentQuestions"])) {
                 this.assignmentQuestions = [] as any;
                 for (let item of _data["assignmentQuestions"])
-                    this.assignmentQuestions!.push(CreateAssignmentQuestionDto.fromJS(item));
+                    this.assignmentQuestions!.push(CreateAssignmentQuestionInput.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): UpdateAssignmentWithQuestionsDto {
+    static fromJS(data: any): UpdateAssignmentWithQuestionsInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateAssignmentWithQuestionsDto();
+        let result = new UpdateAssignmentWithQuestionsInput();
         result.init(data);
         return result;
     }
@@ -13024,27 +13036,27 @@ export class UpdateAssignmentWithQuestionsDto implements IUpdateAssignmentWithQu
         return data;
     }
 
-    clone(): UpdateAssignmentWithQuestionsDto {
+    clone(): UpdateAssignmentWithQuestionsInput {
         const json = this.toJSON();
-        let result = new UpdateAssignmentWithQuestionsDto();
+        let result = new UpdateAssignmentWithQuestionsInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateAssignmentWithQuestionsDto {
+export interface IUpdateAssignmentWithQuestionsInput {
     id: number;
     title: string | undefined;
     chapterId: number;
-    assignmentQuestions: CreateAssignmentQuestionDto[] | undefined;
+    assignmentQuestions: CreateAssignmentQuestionInput[] | undefined;
 }
 
-export class UpdateChapterDto implements IUpdateChapterDto {
+export class UpdateChapterInput implements IUpdateChapterInput {
     id!: number;
     chapterName!: string | undefined;
     subjectId!: number;
 
-    constructor(data?: IUpdateChapterDto) {
+    constructor(data?: IUpdateChapterInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13061,9 +13073,9 @@ export class UpdateChapterDto implements IUpdateChapterDto {
         }
     }
 
-    static fromJS(data: any): UpdateChapterDto {
+    static fromJS(data: any): UpdateChapterInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateChapterDto();
+        let result = new UpdateChapterInput();
         result.init(data);
         return result;
     }
@@ -13076,27 +13088,27 @@ export class UpdateChapterDto implements IUpdateChapterDto {
         return data;
     }
 
-    clone(): UpdateChapterDto {
+    clone(): UpdateChapterInput {
         const json = this.toJSON();
-        let result = new UpdateChapterDto();
+        let result = new UpdateChapterInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateChapterDto {
+export interface IUpdateChapterInput {
     id: number;
     chapterName: string | undefined;
     subjectId: number;
 }
 
-export class UpdateClassAssignmentDto implements IUpdateClassAssignmentDto {
+export class UpdateClassAssignmentInput implements IUpdateClassAssignmentInput {
     id!: number;
     assignmentId!: number;
     classId!: number;
     publicTime!: Date;
 
-    constructor(data?: IUpdateClassAssignmentDto) {
+    constructor(data?: IUpdateClassAssignmentInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13114,9 +13126,9 @@ export class UpdateClassAssignmentDto implements IUpdateClassAssignmentDto {
         }
     }
 
-    static fromJS(data: any): UpdateClassAssignmentDto {
+    static fromJS(data: any): UpdateClassAssignmentInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateClassAssignmentDto();
+        let result = new UpdateClassAssignmentInput();
         result.init(data);
         return result;
     }
@@ -13130,28 +13142,28 @@ export class UpdateClassAssignmentDto implements IUpdateClassAssignmentDto {
         return data;
     }
 
-    clone(): UpdateClassAssignmentDto {
+    clone(): UpdateClassAssignmentInput {
         const json = this.toJSON();
-        let result = new UpdateClassAssignmentDto();
+        let result = new UpdateClassAssignmentInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateClassAssignmentDto {
+export interface IUpdateClassAssignmentInput {
     id: number;
     assignmentId: number;
     classId: number;
     publicTime: Date;
 }
 
-export class UpdateClassDto implements IUpdateClassDto {
+export class UpdateClassInput implements IUpdateClassInput {
     id!: number;
     className!: string | undefined;
     gradeId!: number;
     teacherId!: number;
 
-    constructor(data?: IUpdateClassDto) {
+    constructor(data?: IUpdateClassInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13169,9 +13181,9 @@ export class UpdateClassDto implements IUpdateClassDto {
         }
     }
 
-    static fromJS(data: any): UpdateClassDto {
+    static fromJS(data: any): UpdateClassInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateClassDto();
+        let result = new UpdateClassInput();
         result.init(data);
         return result;
     }
@@ -13185,26 +13197,26 @@ export class UpdateClassDto implements IUpdateClassDto {
         return data;
     }
 
-    clone(): UpdateClassDto {
+    clone(): UpdateClassInput {
         const json = this.toJSON();
-        let result = new UpdateClassDto();
+        let result = new UpdateClassInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateClassDto {
+export interface IUpdateClassInput {
     id: number;
     className: string | undefined;
     gradeId: number;
     teacherId: number;
 }
 
-export class UpdateGradeDto implements IUpdateGradeDto {
+export class UpdateGradeInput implements IUpdateGradeInput {
     id!: number;
     gradeName!: string;
 
-    constructor(data?: IUpdateGradeDto) {
+    constructor(data?: IUpdateGradeInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13220,9 +13232,9 @@ export class UpdateGradeDto implements IUpdateGradeDto {
         }
     }
 
-    static fromJS(data: any): UpdateGradeDto {
+    static fromJS(data: any): UpdateGradeInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateGradeDto();
+        let result = new UpdateGradeInput();
         result.init(data);
         return result;
     }
@@ -13234,27 +13246,27 @@ export class UpdateGradeDto implements IUpdateGradeDto {
         return data;
     }
 
-    clone(): UpdateGradeDto {
+    clone(): UpdateGradeInput {
         const json = this.toJSON();
-        let result = new UpdateGradeDto();
+        let result = new UpdateGradeInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateGradeDto {
+export interface IUpdateGradeInput {
     id: number;
     gradeName: string;
 }
 
-export class UpdateQuestionDto implements IUpdateQuestionDto {
+export class UpdateQuestionInput implements IUpdateQuestionInput {
     id!: number;
     fileUrlAssignment!: string;
     fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
 
-    constructor(data?: IUpdateQuestionDto) {
+    constructor(data?: IUpdateQuestionInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13273,9 +13285,9 @@ export class UpdateQuestionDto implements IUpdateQuestionDto {
         }
     }
 
-    static fromJS(data: any): UpdateQuestionDto {
+    static fromJS(data: any): UpdateQuestionInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateQuestionDto();
+        let result = new UpdateQuestionInput();
         result.init(data);
         return result;
     }
@@ -13290,15 +13302,15 @@ export class UpdateQuestionDto implements IUpdateQuestionDto {
         return data;
     }
 
-    clone(): UpdateQuestionDto {
+    clone(): UpdateQuestionInput {
         const json = this.toJSON();
-        let result = new UpdateQuestionDto();
+        let result = new UpdateQuestionInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateQuestionDto {
+export interface IUpdateQuestionInput {
     id: number;
     fileUrlAssignment: string;
     fileUrlExplain: string | undefined;
@@ -13306,13 +13318,13 @@ export interface IUpdateQuestionDto {
     difficultyLevel: number;
 }
 
-export class UpdateQuestionOptionDto implements IUpdateQuestionOptionDto {
+export class UpdateQuestionOptionInput implements IUpdateQuestionOptionInput {
     id!: number;
     content!: string | undefined;
     questionId!: number;
     isCorrect!: boolean;
 
-    constructor(data?: IUpdateQuestionOptionDto) {
+    constructor(data?: IUpdateQuestionOptionInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13330,9 +13342,9 @@ export class UpdateQuestionOptionDto implements IUpdateQuestionOptionDto {
         }
     }
 
-    static fromJS(data: any): UpdateQuestionOptionDto {
+    static fromJS(data: any): UpdateQuestionOptionInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateQuestionOptionDto();
+        let result = new UpdateQuestionOptionInput();
         result.init(data);
         return result;
     }
@@ -13346,30 +13358,30 @@ export class UpdateQuestionOptionDto implements IUpdateQuestionOptionDto {
         return data;
     }
 
-    clone(): UpdateQuestionOptionDto {
+    clone(): UpdateQuestionOptionInput {
         const json = this.toJSON();
-        let result = new UpdateQuestionOptionDto();
+        let result = new UpdateQuestionOptionInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateQuestionOptionDto {
+export interface IUpdateQuestionOptionInput {
     id: number;
     content: string | undefined;
     questionId: number;
     isCorrect: boolean;
 }
 
-export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsDto {
+export class UpdateQuestionWithOptionsInput implements IUpdateQuestionWithOptionsInput {
     id!: number;
     fileUrlAssignment!: string | undefined;
     fileUrlExplain!: string | undefined;
     chapterId!: number;
     difficultyLevel!: number;
-    answers!: CreateQuestionOptionDto[] | undefined;
+    answers!: CreateQuestionOptionInput[] | undefined;
 
-    constructor(data?: IUpdateQuestionWithOptionsDto) {
+    constructor(data?: IUpdateQuestionWithOptionsInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13388,14 +13400,14 @@ export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsD
             if (Array.isArray(_data["answers"])) {
                 this.answers = [] as any;
                 for (let item of _data["answers"])
-                    this.answers!.push(CreateQuestionOptionDto.fromJS(item));
+                    this.answers!.push(CreateQuestionOptionInput.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): UpdateQuestionWithOptionsDto {
+    static fromJS(data: any): UpdateQuestionWithOptionsInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateQuestionWithOptionsDto();
+        let result = new UpdateQuestionWithOptionsInput();
         result.init(data);
         return result;
     }
@@ -13415,21 +13427,21 @@ export class UpdateQuestionWithOptionsDto implements IUpdateQuestionWithOptionsD
         return data;
     }
 
-    clone(): UpdateQuestionWithOptionsDto {
+    clone(): UpdateQuestionWithOptionsInput {
         const json = this.toJSON();
-        let result = new UpdateQuestionWithOptionsDto();
+        let result = new UpdateQuestionWithOptionsInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateQuestionWithOptionsDto {
+export interface IUpdateQuestionWithOptionsInput {
     id: number;
     fileUrlAssignment: string | undefined;
     fileUrlExplain: string | undefined;
     chapterId: number;
     difficultyLevel: number;
-    answers: CreateQuestionOptionDto[] | undefined;
+    answers: CreateQuestionOptionInput[] | undefined;
 }
 
 export class UpdateStudentAnswerInput implements IUpdateStudentAnswerInput {
@@ -13562,12 +13574,12 @@ export interface IUpdateStudentAssignmentInput {
     submittedAt: Date;
 }
 
-export class UpdateStudentClassDto implements IUpdateStudentClassDto {
+export class UpdateStudentClassInput implements IUpdateStudentClassInput {
     id!: number;
     studentId!: number;
     classId!: number;
 
-    constructor(data?: IUpdateStudentClassDto) {
+    constructor(data?: IUpdateStudentClassInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13584,9 +13596,9 @@ export class UpdateStudentClassDto implements IUpdateStudentClassDto {
         }
     }
 
-    static fromJS(data: any): UpdateStudentClassDto {
+    static fromJS(data: any): UpdateStudentClassInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateStudentClassDto();
+        let result = new UpdateStudentClassInput();
         result.init(data);
         return result;
     }
@@ -13599,21 +13611,21 @@ export class UpdateStudentClassDto implements IUpdateStudentClassDto {
         return data;
     }
 
-    clone(): UpdateStudentClassDto {
+    clone(): UpdateStudentClassInput {
         const json = this.toJSON();
-        let result = new UpdateStudentClassDto();
+        let result = new UpdateStudentClassInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateStudentClassDto {
+export interface IUpdateStudentClassInput {
     id: number;
     studentId: number;
     classId: number;
 }
 
-export class UpdateStudentProgressDto implements IUpdateStudentProgressDto {
+export class UpdateStudentProgressInput implements IUpdateStudentProgressInput {
     id!: number;
     studentId!: number;
     chapterId!: number;
@@ -13622,7 +13634,7 @@ export class UpdateStudentProgressDto implements IUpdateStudentProgressDto {
     totalCorrect!: number;
     totalQuestions!: number;
 
-    constructor(data?: IUpdateStudentProgressDto) {
+    constructor(data?: IUpdateStudentProgressInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13643,9 +13655,9 @@ export class UpdateStudentProgressDto implements IUpdateStudentProgressDto {
         }
     }
 
-    static fromJS(data: any): UpdateStudentProgressDto {
+    static fromJS(data: any): UpdateStudentProgressInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateStudentProgressDto();
+        let result = new UpdateStudentProgressInput();
         result.init(data);
         return result;
     }
@@ -13662,15 +13674,15 @@ export class UpdateStudentProgressDto implements IUpdateStudentProgressDto {
         return data;
     }
 
-    clone(): UpdateStudentProgressDto {
+    clone(): UpdateStudentProgressInput {
         const json = this.toJSON();
-        let result = new UpdateStudentProgressDto();
+        let result = new UpdateStudentProgressInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateStudentProgressDto {
+export interface IUpdateStudentProgressInput {
     id: number;
     studentId: number;
     chapterId: number;
@@ -13680,11 +13692,11 @@ export interface IUpdateStudentProgressDto {
     totalQuestions: number;
 }
 
-export class UpdateSubjectDto implements IUpdateSubjectDto {
+export class UpdateSubjectInput implements IUpdateSubjectInput {
     id!: number;
     subjectName!: string | undefined;
 
-    constructor(data?: IUpdateSubjectDto) {
+    constructor(data?: IUpdateSubjectInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13700,9 +13712,9 @@ export class UpdateSubjectDto implements IUpdateSubjectDto {
         }
     }
 
-    static fromJS(data: any): UpdateSubjectDto {
+    static fromJS(data: any): UpdateSubjectInput {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateSubjectDto();
+        let result = new UpdateSubjectInput();
         result.init(data);
         return result;
     }
@@ -13714,15 +13726,15 @@ export class UpdateSubjectDto implements IUpdateSubjectDto {
         return data;
     }
 
-    clone(): UpdateSubjectDto {
+    clone(): UpdateSubjectInput {
         const json = this.toJSON();
-        let result = new UpdateSubjectDto();
+        let result = new UpdateSubjectInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateSubjectDto {
+export interface IUpdateSubjectInput {
     id: number;
     subjectName: string | undefined;
 }

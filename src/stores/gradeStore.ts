@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { CreateGradeDto, GradeDto, GradeService, UpdateGradeDto } from "src/services/services_autogen";
+import { CreateGradeInput, GradeDto, GradeService, UpdateGradeInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const gradeService = new GradeService('',http);
 interface GradeState {
@@ -9,8 +9,8 @@ interface GradeState {
 	loading: boolean;
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-		create: (body: CreateGradeDto) => Promise<void>;
-		update: (body: UpdateGradeDto) => Promise<void>;
+		create: (body: CreateGradeInput) => Promise<void>;
+		update: (body: UpdateGradeInput) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
 	};

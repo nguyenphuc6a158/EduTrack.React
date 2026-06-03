@@ -15,10 +15,10 @@ const Main = () => {
 
     return (
         <Content style={mainStyle} className="flex">
-            <div className="flex-grow overflow-auto size-full">
+            <div className="grow overflow-auto size-full">
                 <div
                     className={
-                        `m-auto size-full flex-grow ${themeLayout === ThemeLayout.Horizontal ? 'flex-col' : 'flex-row'}`
+                        `m-auto size-full grow ${themeLayout === ThemeLayout.Horizontal ? 'flex-col' : 'flex-row'}`
                     }
                 >
                     <Outlet />

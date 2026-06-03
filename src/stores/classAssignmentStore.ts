@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { CreateClassAssignmentDto, ClassAssignmentDto, ClassAssignmentService, UpdateClassAssignmentDto, CreateListClassAssgnmentDto } from "src/services/services_autogen";
+import { CreateClassAssignmentInput, ClassAssignmentDto, ClassAssignmentService, UpdateClassAssignmentInput, CreateListClassAssgnmentInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const classAssignmentService = new ClassAssignmentService('',http);
 interface ClassAssignmentState {
@@ -9,11 +9,11 @@ interface ClassAssignmentState {
 	loading: boolean;
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-		create: (body: CreateClassAssignmentDto) => Promise<void>;
-		update: (body: UpdateClassAssignmentDto) => Promise<void>;
+		create: (body: CreateClassAssignmentInput) => Promise<void>;
+		update: (body: UpdateClassAssignmentInput) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
-		createListClassAssignment: (body: CreateListClassAssgnmentDto) => Promise<void>;
+		createListClassAssignment: (body: CreateListClassAssgnmentInput) => Promise<void>;
 		getAllClassAssignmentByCreaterUserId: (createrUserId: number) => Promise<void>;
 	};
 }

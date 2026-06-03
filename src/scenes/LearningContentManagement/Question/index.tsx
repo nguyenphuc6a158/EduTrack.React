@@ -2,7 +2,7 @@ import { App, Button, Col, message, Select, Space } from "antd";
 import type React from "react";
 import QuestionTable from "./components/QuestionTable";
 import { useQuestionActions, useQuestions, useQuestionLoading } from "src/stores/questionStore";
-import { CreateQuestionDto, CreateQuestionOptionDto, CreateQuestionWithOptionsDto, QuestionDto, UpdateQuestionDto } from "src/services/services_autogen";
+import { CreateQuestionInput, CreateQuestionOptionInput, CreateQuestionWithOptionsInput, QuestionDto, UpdateQuestionInput } from "src/services/services_autogen";
 import { useEffect, useMemo, useState } from "react";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { useChapterActions, useChapters, usetotalCountChapter } from "src/stores/chapterStore";
@@ -78,7 +78,7 @@ const QuestionManagement: React.FC = () => {
 		console.log(value.answers)
 		try{
 			if(selectedQuestion){
-				let item: UpdateQuestionDto = new UpdateQuestionDto();
+				let item: UpdateQuestionInput = new UpdateQuestionInput();
 				item.id = selectedQuestion.id;
 				item.chapterId = value.chapterId;
 				item.fileUrlAssignment = value.fileUrlAssignment;
@@ -86,14 +86,14 @@ const QuestionManagement: React.FC = () => {
 				item.difficultyLevel = value.difficultyLevel;
 				await questionActios.update(item);
 			} else {
-				let item: CreateQuestionWithOptionsDto = new CreateQuestionWithOptionsDto();
+				let item: CreateQuestionWithOptionsInput = new CreateQuestionWithOptionsInput();
 				
 				item.chapterId = value.chapterId;
 				item.fileUrlAssignment = value.fileUrlAssignment;
 				item.fileUrlExplain = value.fileUrlExplain;
 				item.difficultyLevel = value.difficultyLevel;
 				item.answers = value.answers.map((answer: {key: string, content: string}) => {
-					let answerItem: CreateQuestionOptionDto = new CreateQuestionOptionDto();
+					let answerItem: CreateQuestionOptionInput = new CreateQuestionOptionInput();
 					answerItem.content = answer.key;
 					if(answer.key == value.correctAnswer){
 						answerItem.isCorrect = true;

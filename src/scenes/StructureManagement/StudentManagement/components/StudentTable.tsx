@@ -65,6 +65,18 @@ const StudentTable: React.FC<IStudentTableProps> = ({
 			width: 120,
 		},
 		{
+			title: "Điểm trung bình",
+			key: "avgScore",
+			dataIndex: "avgScore",
+			width: 120,
+		},
+		{
+			title: "Tỉ lệ hoàn thành bài tập",
+			key: "completedRate",
+			dataIndex: "completedRate",
+			width: 120,
+		},
+		{
 			title: "Hành động",
 			key: "action",
 			width: 200,

@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { ChapterDto, ChapterService, CreateChapterDto, UpdateChapterDto } from "src/services/services_autogen";
+import { ChapterDto, ChapterService, CreateChapterInput, UpdateChapterInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const chapterService = new ChapterService('',http);
 interface ChapterState {
@@ -10,8 +10,8 @@ interface ChapterState {
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
 		getChapterBySubject: (subjectID: number) => Promise<void>
-		create: (body: CreateChapterDto) => Promise<void>;
-		update: (body: UpdateChapterDto) => Promise<void>;
+		create: (body: CreateChapterInput) => Promise<void>;
+		update: (body: UpdateChapterInput) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
 	};

@@ -4,7 +4,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import SubjectTable from "./components/SubjectTable";
 import { useSubjectLoading, useSubjects, useSubjectsActions, useTotalCountSubjectSubjects } from "src/stores/subjectStore";
-import { CreateSubjectDto, SubjectDto, UpdateSubjectDto } from "src/services/services_autogen";
+import { CreateSubjectInput, SubjectDto, UpdateSubjectInput } from "src/services/services_autogen";
 import SubjectCreateUpdateModal from "./components/SubjectCreateUpdateModal";
 import { PageShell } from "src/components/PageShell";
 
@@ -43,7 +43,7 @@ const SubjectManagement: React.FC = ()=>{
 	const handleOk = async (value: any) => {
 		if(selectedSubject == null){
 			try{
-				let item: CreateSubjectDto = new CreateSubjectDto();
+				let item: CreateSubjectInput = new CreateSubjectInput();
 				item.subjectName = value.subjectName;
 				await actionSubjects.create(item)
 			} catch (error){
@@ -51,7 +51,7 @@ const SubjectManagement: React.FC = ()=>{
 			}
 		} else {
 			try {
-				let item: UpdateSubjectDto = new UpdateSubjectDto();
+				let item: UpdateSubjectInput = new UpdateSubjectInput();
 				item.id = selectedSubject.id;
 				item.subjectName = value.subjectName;
 				await actionSubjects.update(item)

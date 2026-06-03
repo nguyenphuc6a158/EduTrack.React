@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { QuestionOptionDto, CreateQuestionOptionDto, QuestionOptionService, UpdateQuestionOptionDto } from "src/services/services_autogen";
+import { QuestionOptionDto, CreateQuestionOptionInput, QuestionOptionService, UpdateQuestionOptionInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const questionOptionService = new QuestionOptionService('',http);
 interface QuestionOptionState {
@@ -9,8 +9,8 @@ interface QuestionOptionState {
 	loading: boolean;
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-		create: (body: CreateQuestionOptionDto) => Promise<void>;
-		update: (body: UpdateQuestionOptionDto) => Promise<void>;
+		create: (body: CreateQuestionOptionInput) => Promise<void>;
+		update: (body: UpdateQuestionOptionInput) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<QuestionOptionDto>;
 		getAllByQuestionId: (questionId: number) => Promise<void>;

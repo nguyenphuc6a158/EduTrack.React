@@ -24,7 +24,7 @@ export const routers: IMenuItem[] = [
 		label: "Trang chủ",
 		path: "/",
 		icon: <HomeOutlined />,
-		permissions: '',
+		permissions: [AppConsts.Permission.Pages_Users_Create, AppConsts.Permission.Pages_Users_Update, AppConsts.Permission.Pages_Users_Delete],
 		component: React.lazy(() => import("src/scenes/Dashboard")),
 	},
 	...homeWorkRouter,

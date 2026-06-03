@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { CreateQuestionDto, CreateQuestionWithOptionsDto, QuestionDto, QuestionService, UpdateQuestionDto, UpdateQuestionWithOptionsDto } from "src/services/services_autogen";
+import { CreateQuestionInput, CreateQuestionWithOptionsInput, QuestionDto, QuestionService, UpdateQuestionInput, UpdateQuestionWithOptionsInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const questionService = new QuestionService('',http);
 interface QuestionState {
@@ -10,13 +10,13 @@ interface QuestionState {
 	listQuestionsByAssignment: QuestionDto[];
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-		create: (body: CreateQuestionDto) => Promise<QuestionDto>;
-		update: (body: UpdateQuestionDto) => Promise<void>;
+		create: (body: CreateQuestionInput) => Promise<QuestionDto>;
+		update: (body: UpdateQuestionInput) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
 		getQuestionByChapter: (chapterId: number) => Promise<void>;
-		createWithOptions: (body?: CreateQuestionWithOptionsDto) => Promise<void>;
-		updateWithOptions: (body?: UpdateQuestionWithOptionsDto) => Promise<void>;
+		createWithOptions: (body?: CreateQuestionWithOptionsInput) => Promise<void>;
+		updateWithOptions: (body?: UpdateQuestionWithOptionsInput) => Promise<void>;
 		getAllQuestionByAssignment: (assignmentId: number) => Promise<void>;
 		getQuestionByAssignmentIdAndOrderIndex:(assignmentId: number, orderIndex: number) => Promise<void>;
 	};

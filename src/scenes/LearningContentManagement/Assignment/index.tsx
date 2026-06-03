@@ -3,7 +3,7 @@ import type React from "react";
 import AssignmentTable from "./components/AssignmentTable";
 import { useAssignmentActions, useAssignments } from "src/stores/assignmentStore";
 import { useEffect, useState } from "react";
-import { ClassAssignmentDto, CreateListClassAssgnmentDto, CreateListStudentAssignmentByListClassInput, UpdateClassAssignmentDto, type AssignmentDto, type CreateAssignmentWithQuestionsDto, type QuestionDto, type UpdateAssignmentWithQuestionsDto } from "src/services/services_autogen";
+import { ClassAssignmentDto, CreateListClassAssgnmentInput, CreateListStudentAssignmentByListClassInput, UpdateClassAssignmentInput, type AssignmentDto, type CreateAssignmentWithQuestionsInput, type QuestionDto, type UpdateAssignmentWithQuestionsInput } from "src/services/services_autogen";
 import { PlusOutlined, ReadOutlined, SendOutlined } from "@ant-design/icons";
 import { useQuestionActions, useQuestions, useQuestionsByAssignment } from "src/stores/questionStore";
 import { useChapterActions, useChapters } from "src/stores/chapterStore";
@@ -97,15 +97,15 @@ const AssignmentManagement: React.FC = () =>{
 		fetchChapter();
 		fetchQuestion();
 	}
-	const handleSubmit = async (values: CreateAssignmentWithQuestionsDto | UpdateAssignmentWithQuestionsDto) => {
+	const handleSubmit = async (values: CreateAssignmentWithQuestionsInput | UpdateAssignmentWithQuestionsInput) => {
 		try{
 			if(selectedAssignment) {
-				await assignmentActions.updateAssignmentWithQuestions(values as UpdateAssignmentWithQuestionsDto);
+				await assignmentActions.updateAssignmentWithQuestions(values as UpdateAssignmentWithQuestionsInput);
 				setIsOpenModal(false);
 				fetchAssigment();
 				message.success("Sửa bài tập thành công!");
 			} else {
-				await assignmentActions.createAssignmentWithQuestions(values as CreateAssignmentWithQuestionsDto);
+				await assignmentActions.createAssignmentWithQuestions(values as CreateAssignmentWithQuestionsInput);
 				setIsOpenModal(false);
 				fetchAssigment();
 				message.success("Tạo bài tập thành công!");
@@ -125,7 +125,7 @@ const AssignmentManagement: React.FC = () =>{
 			message.error("Vui lòng chọn đầy đủ thông tin!");
 			return;
 		}
-		let item: CreateListClassAssgnmentDto = new CreateListClassAssgnmentDto();
+		let item: CreateListClassAssgnmentInput = new CreateListClassAssgnmentInput();
 		item.assignmentId = value.assignmentId;
 		item.listClasses = value.listClasses;
 		item.publicTime = value.publicTime.toDate()
@@ -154,7 +154,7 @@ const AssignmentManagement: React.FC = () =>{
 			return;
 		}
 		try{
-			let item: UpdateClassAssignmentDto = new UpdateClassAssignmentDto();
+			let item: UpdateClassAssignmentInput = new UpdateClassAssignmentInput();
 			item.id = selectedClassAssignment.id;
 			item.assignmentId = record.assignmentId;
 			item.classId = record.classId;

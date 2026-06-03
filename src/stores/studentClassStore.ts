@@ -1,5 +1,5 @@
 import http from "src/services/httpService";
-import { CreateStudentClassDto, StudentClassDto, StudentClassService, UpdateStudentClassDto } from "src/services/services_autogen";
+import { CreateStudentClassInput, StudentClassDto, StudentClassService, UpdateStudentClassInput } from "src/services/services_autogen";
 import { create } from 'zustand';
 const studentClassService = new StudentClassService('',http);
 interface StudentClassState {
@@ -9,8 +9,8 @@ interface StudentClassState {
 	loading: boolean;
 	actions: {
 		getAll: (keyword?: string, skipCount?: number, maxResultCount?: number) => Promise<void>;
-		create: (body: CreateStudentClassDto) => Promise<void>;
-		update: (body: UpdateStudentClassDto) => Promise<void>;
+		create: (body: CreateStudentClassInput) => Promise<void>;
+		update: (body: UpdateStudentClassInput) => Promise<void>;
 		delete: (id: number) => Promise<void>;
 		get: (id: number) => Promise<void>;
 		getStudentClassByClass: (classId: number) => Promise<void>;

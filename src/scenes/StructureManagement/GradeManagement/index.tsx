@@ -9,7 +9,7 @@ import {
     useGradeActions, 
     useTotalCountGrade
 } from "src/stores/gradeStore"; 
-import { CreateGradeDto, GradeDto, UpdateGradeDto } from "src/services/services_autogen";
+import { CreateGradeInput, GradeDto, UpdateGradeInput } from "src/services/services_autogen";
 import { PageShell } from "src/components/PageShell";
 
 const GradeManagement = () => {
@@ -31,13 +31,13 @@ const GradeManagement = () => {
     const handleOk = async (values: any) => {
     try {
         if (editingGrade) {
-            let item: UpdateGradeDto = new UpdateGradeDto();
+            let item: UpdateGradeInput = new UpdateGradeInput();
             item.id = editingGrade.id;
             item.gradeName = values.gradeName;
             await gradeActions.update(item);
             message.success("Cập nhật thành công");
         } else {
-            let item: CreateGradeDto = new CreateGradeDto();
+            let item: CreateGradeInput = new CreateGradeInput();
             item.gradeName = values.gradeName;
             await gradeActions.create(item);
             message.success("Thêm mới thành công");

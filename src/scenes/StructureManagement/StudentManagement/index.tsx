@@ -7,7 +7,7 @@ import ImportStudentModal from "./components/ImportStudentModal";
 import { useStudentClasses, useStudentClassLoading, useStudentClassActions, useTotalCountStudentClass } from "src/stores/studentClassStore";
 import { useClasses, useClassActions } from "src/stores/classStore";
 import { useUserActions, useStudents } from "src/stores/userStore";
-import { CreateStudentClassDto, UpdateStudentClassDto, StudentClassDto } from "src/services/services_autogen";
+import { CreateStudentClassInput, UpdateStudentClassInput, StudentClassDto } from "src/services/services_autogen";
 import { PageShell } from "src/components/PageShell";
 import { ResponsiveLayout } from "src/lib/appconst";
 
@@ -60,14 +60,14 @@ const StudentManagement = () => {
 	const handleOk = async (values: any) => {
 		try {
 			if (editingItem) {
-				let item: UpdateStudentClassDto = new UpdateStudentClassDto();
+				let item: UpdateStudentClassInput = new UpdateStudentClassInput();
 				item.id = editingItem.id
 				item.classId = values.classId;
 				item.studentId = values.studentId;
 				await studentClassActions.update(item);
 				message.success("Cập nhật thành công");
 			} else {
-				let item: CreateStudentClassDto = new CreateStudentClassDto();
+				let item: CreateStudentClassInput = new CreateStudentClassInput();
 				item.classId = values.classId;
 				item.studentId = values.studentId;
 				await studentClassActions.create(item);

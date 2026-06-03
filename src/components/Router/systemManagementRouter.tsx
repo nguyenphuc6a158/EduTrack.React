@@ -8,14 +8,14 @@ export const systemManagementRouter = [
 		label: "Quản lý hệ thống",
 		path: "/system-management",
 		icon: <SettingOutlined />,
-		permissions: [AppConsts.Permission.Pages_Users, AppConsts.Permission.Pages_Roles],
+		permissions: [AppConsts.Permission.Pages_Users_Create, AppConsts.Permission.Pages_Users_Update, AppConsts.Permission.Pages_Users_Delete, AppConsts.Permission.Pages_Roles_Create, AppConsts.Permission.Pages_Roles_Update, AppConsts.Permission.Pages_Roles_Delete],
 		children: [
 			{
 				key: "4.1",
 				label: "Quản lý người dùng",
 				path: "/user-management",
 				icon: <UserOutlined />,
-				permissions: [AppConsts.Permission.Pages_Users],
+				permissions: [AppConsts.Permission.Pages_Users_Create, AppConsts.Permission.Pages_Users_Update, AppConsts.Permission.Pages_Users_Delete],
 				component: React.lazy(() => import("src/scenes/SystemManagement/UserManagement")),
 			},
 			{
@@ -23,7 +23,7 @@ export const systemManagementRouter = [
 				label: "Quản lý vai trò",
 				path: "/role-management",
 				icon: <FormOutlined />,
-				permissions: [AppConsts.Permission.Pages_Roles],
+				permissions: [AppConsts.Permission.Pages_Roles_Create, AppConsts.Permission.Pages_Roles_Update, AppConsts.Permission.Pages_Roles_Delete],
 				component: React.lazy(() => import("src/scenes/SystemManagement/RoleManagement")),
 			},
 			// {
